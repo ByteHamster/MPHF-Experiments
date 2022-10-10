@@ -1,23 +1,10 @@
-# SicHash
+# MPHF-Experiments
 
-A (Minimum) Perfect Hash Function based on irregular cuckoo hashing, retrieval, and overloading.
-
-[<img src="https://raw.githubusercontent.com/ByteHamster/SicHash/main/plots.png" alt="Plots preview">](https://arxiv.org/pdf/2210.01560)
-
-### Library Usage
-
-Clone (with submodules) this repo and add the following to your `CMakeLists.txt`.
-For benchmarking, this repository contains a number of competitors.
-When simply adding the `SicHash` target to your project, those are not compiled.
-
-```
-add_subdirectory(path/to/SicHash)
-target_link_libraries(YourTarget PRIVATE SicHash)
-```
+Experiments for the MPHF SicHash, comparing it with competitors.
 
 ### Reproducing Experiments
 
-This repository contains the source code and our reproducibility artifacts for SicHash.
+This repository contains the source code and our reproducibility artifacts for SicHash if they are related to competitors.
 Due to the plethora of dependencies required by our competitors, we provide an easy to use Docker image to quickly reproduce our results.
 Alternatively, you can look at the `Dockerfile` to see all libraries, tools, and commands necessary to compile SicHash and its competitors.
 
@@ -45,12 +32,11 @@ Different experiments can be started by using the following command:
 docker run --interactive --tty -v "$(pwd)/scripts/dockerVolume:/opt/dockerVolume" sichash /opt/dockerVolume/figure-<number>.sh
 ```
 
-`<number>` should be either `1`, `5` or `6`, depending on the experiment you want to run.
+`<number>` should be either `5` or `6`, depending on the experiment you want to run.
 The number also refers to the figure in the paper.
 
 | Figure in paper | Launch command                | Estimated runtime  |
 | :-------------- | :---------------------------- | :----------------- |
-| 1               | /opt/dockerVolume/figure-1.sh | 10 minutes         |
 | 5               | /opt/dockerVolume/figure-5.sh | 20 minutes         |
 | 6               | /opt/dockerVolume/figure-6.sh | 45 minutes         |
 
@@ -59,14 +45,3 @@ The resulting plots can be found in `scripts/dockerVolume` and are called `figur
 ### License
 
 This code is licensed under the [GPLv3](/LICENSE).
-If you use the project in an academic context or publication, please cite our paper:
-
-```
-@article{sichash2022,
-  author    = {Lehmann, Hans-Peter and Sanders, Peter and Walzer, Stefan},
-  title     = {SicHash -- Small Irregular Cuckoo Tables for Perfect Hashing},
-  publisher = {arXiv},
-  year      = {2022},
-  doi       = {10.48550/ARXIV.2210.01560}
-}
-```
