@@ -4,12 +4,14 @@
 #include "benchmark/SicHashContender.h"
 #include "benchmark/PTHashContender.h"
 #include "benchmark/RecSplitContender.h"
+#include "benchmark/SIMDRecSplitContender.h"
 #include "benchmark/MphfWbpmContender.h"
 
 int main(int argc, char** argv) {
     double loadFactor = 0.8;
     size_t N = 5e6;
     bool recsplit = false;
+    bool simdrecsplit = false;
     bool mphfWbpm = false;
     bool bbhash = false;
     bool sichash = false;
@@ -27,6 +29,7 @@ int main(int argc, char** argv) {
     cmd.add_bytes('q', "numQueries", Contender::numQueries, "Number of queries to perform");
 
     cmd.add_flag('r', "recsplit", recsplit, "Execute RecSplit benchmark");
+    cmd.add_flag('R', "simdrecsplit", simdrecsplit, "Execute SIMDRecSplit benchmark");
     cmd.add_flag('m', "mphfWbpm", mphfWbpm, "Execute mphfWbpm benchmark");
     cmd.add_flag('b', "bbhash", bbhash, "Execute bbhash benchmark");
     cmd.add_flag('s', "sichash", sichash, "Execute sichash benchmark");
@@ -44,6 +47,9 @@ int main(int argc, char** argv) {
 
     if (recsplit) {
         recSplitContenderRunner(N);
+    }
+    if (simdrecsplit) {
+        simdRecSplitContenderRunner(N);
     }
     if (bbhash) {
         bbHashContenderRunner(N);

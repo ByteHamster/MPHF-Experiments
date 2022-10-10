@@ -16,3 +16,6 @@
 [submodule "sux"]
 	path = extlib/sux
 	url = git@github.com:ByteHamster-etc/sux.git
+[submodule "extlib/gpurecsplit"]
+	path = extlib/gpurecsplit
+	url = git@git.scc.kit.edu:hplehmann/gpurecsplit.git

@@ -35,6 +35,9 @@ target_include_directories(MphfWbpm SYSTEM PRIVATE extlib/mphf-wbpm/lib/weighted
 target_include_directories(MphfWbpm SYSTEM PUBLIC extlib/mphf-wbpm/include)
 target_link_libraries(PerfectHashingCompetitors INTERFACE MphfWbpm)
 
+add_subdirectory(extlib/gpurecsplit)
+target_link_libraries(PerfectHashingCompetitors INTERFACE SIMDRecSplit)
+
 add_subdirectory(extlib/sichash)
 target_link_libraries(PerfectHashingCompetitors INTERFACE SicHash)
 
