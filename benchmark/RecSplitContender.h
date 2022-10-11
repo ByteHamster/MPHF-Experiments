@@ -52,9 +52,7 @@ void recSplitTestMulti(size_t N) {
     {RecSplitContender<l>(N, 100).run();}
     {RecSplitContender<l>(N, 250).run();}
     {RecSplitContender<l>(N, 500).run();}
-    {RecSplitContender<l>(N, 750).run();}
     {RecSplitContender<l>(N, 1000).run();}
-    {RecSplitContender<l>(N, 1500).run();}
     {RecSplitContender<l>(N, 2000).run();}
 }
 
