@@ -11,17 +11,12 @@ add_library(PerfectHashingCompetitors INTERFACE)
 target_compile_features(PerfectHashingCompetitors INTERFACE cxx_std_20)
 target_include_directories(PerfectHashingCompetitors SYSTEM INTERFACE extlib/pthash/include)
 target_include_directories(PerfectHashingCompetitors SYSTEM INTERFACE extlib/BBHash)
-target_link_libraries(PerfectHashingCompetitors INTERFACE SicHash)
 
 file(GLOB cmphSources extlib/cmph/src/**.c)
 list(FILTER cmphSources EXCLUDE REGEX ".*cmph/src/(bdz_gen_lookup_table|bm_numbers|sdbm_hash|fnv_hash|djb2_hash|hashtree|buffer_manage|main).c$")
 add_library(Cmph SHARED ${cmphSources})
 target_include_directories(Cmph SYSTEM INTERFACE extlib/cmph/src)
 target_link_libraries(PerfectHashingCompetitors INTERFACE Cmph)
-
-add_library(Sux INTERFACE)
-target_include_directories(Sux SYSTEM INTERFACE extlib/sux)
-target_link_libraries(PerfectHashingCompetitors INTERFACE Sux)
 
 file(GLOB_RECURSE wbpmSources extlib/mphf-wbpm/**.c)
 list(FILTER wbpmSources EXCLUDE REGEX ".*(test|cli|example|xxh_x86dispatch).*")
@@ -40,6 +35,12 @@ target_link_libraries(PerfectHashingCompetitors INTERFACE SIMDRecSplit)
 
 add_subdirectory(extlib/sichash)
 target_link_libraries(PerfectHashingCompetitors INTERFACE SicHash)
+
+if(NOT TARGET Sux)
+    add_library(Sux INTERFACE)
+    target_include_directories(Sux SYSTEM INTERFACE extlib/sux)
+    target_link_libraries(PerfectHashingCompetitors INTERFACE Sux)
+endif()
 
 ################### Benchmark build targets ###################
 add_executable(Comparison comparison.cpp)
