@@ -4,17 +4,21 @@
 #include "benchmark/PTHashContender.h"
 #include "benchmark/RecSplitContender.h"
 #include "benchmark/BBHashContender.h"
+#include "benchmark/SIMDRecSplitContender.h"
 
 int main(int argc, char** argv) {
     size_t N = 5e6;
     size_t iterations = 1;
     double pthashParameter = 3.7;
     size_t numQueries = 15e7;
+    bool minimalOnly = false;
     tlx::CmdlineParser cmd;
     cmd.add_bytes('n', "numKeys", N, "Number of objects");
     cmd.add_bytes('i', "iterations", iterations, "Number of iterations to execute");
     cmd.add_double('p', "pthashParameter", pthashParameter, "Parameter of the pthash method");
     cmd.add_bytes('q', "numQueries", numQueries, "Number of queries to perform");
+    cmd.add_bytes('t', "numThreads", Contender::numThreads, "Number of threads to run benchmarks with");
+    cmd.add_bool('m', "minimalOnly", minimalOnly, "Run only MPHF tests");
 
     if (!cmd.process(argc, argv)) {
         return 1;
@@ -24,13 +28,18 @@ int main(int argc, char** argv) {
         // Queries of PTHash and SicHash have quite a bit of noise in the measurements.
         // Run more queries to work around that.
         Contender::numQueries = numQueries;
-        {PTHashContender<false, pthash::elias_fano>(N, 0.95, pthashParameter).run();}
+        if (!minimalOnly) {
+            { PTHashContender<false, pthash::elias_fano>(N, 0.95, pthashParameter).run(); }
+            { SicHashContender<false, 64>(N, 0.95, sichash::SicHashConfig().percentages(0.46, 0.32)).run(); }
+        }
         {PTHashContender<true, pthash::elias_fano>(N, 0.95, pthashParameter).run();}
-        {SicHashContender<false, 64>(N, 0.95, sichash::SicHashConfig().percentages(0.46, 0.32)).run();}
         {SicHashContender<true, 64>(N, 0.95, sichash::SicHashConfig().percentages(0.37, 0.44)).run();}
         Contender::numQueries = numQueries / 3;
         {RecSplitContender<4>(N, 100).run();}
-        {CmphContender(N, 0.95, "CHD", CMPH_CHD_PH, 0.95, 5, false).run();}
+        {SIMDRecSplitContender<4>(N, 100).run();}
+        if (!minimalOnly) {
+            {CmphContender(N, 0.95, "CHD", CMPH_CHD_PH, 0.95, 5, false).run();}
+        }
         {BBHashContender(N, 2.3, 0).run();}
     }
     return 0;

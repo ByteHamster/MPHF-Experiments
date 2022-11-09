@@ -50,7 +50,3 @@ target_compile_features(Comparison PRIVATE cxx_std_20)
 add_executable(ComparisonN comparisonN.cpp)
 target_link_libraries(ComparisonN PRIVATE PerfectHashingCompetitors)
 target_compile_features(ComparisonN PRIVATE cxx_std_20)
-
-add_executable(ComparisonThreads comparisonThreads.cpp)
-target_link_libraries(ComparisonThreads PRIVATE PerfectHashingCompetitors)
-target_compile_features(ComparisonThreads PRIVATE cxx_std_20)
