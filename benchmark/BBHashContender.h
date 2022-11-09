@@ -40,7 +40,7 @@ class BBHashContender : public Contender {
         void construct(const std::vector<std::string> &keys) override {
             (void) keys;
             bbhash = new boomphf::mphf<u_int64_t,hasher_t>(mhcs.size(), mhcs,
-                    /* num_thread */ 1, /* gamma */ gamma, /* writeEach */ true,
+                    /* num_thread */ numThreads, /* gamma */ gamma, /* writeEach */ true,
                     /* progress */ false, perc_elem_loaded);
         }
 

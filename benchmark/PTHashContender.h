@@ -31,7 +31,7 @@ class PTHashContender : public Contender {
             pthash::build_configuration config;
             config.c = c;
             config.alpha = internalLoadFactor;
-            config.num_threads = 1;
+            config.num_threads = numThreads;
             config.minimal_output = minimal;
             config.verbose_output = false;
             pthashFunction.build_in_internal_memory(keys.begin(), keys.size(), config);

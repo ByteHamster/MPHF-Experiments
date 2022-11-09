@@ -28,7 +28,7 @@ class SIMDRecSplitContender : public Contender {
         }
 
         void construct(const std::vector<std::string> &keys) override {
-            recSplit = new bez::function::SIMDRecSplit<l>(keys, bucketSize, 1);
+            recSplit = new bez::function::SIMDRecSplit<l>(keys, bucketSize, numThreads);
         }
 
         size_t sizeBits() override {

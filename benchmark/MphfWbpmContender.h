@@ -33,7 +33,7 @@ class MphfWbpmContender : public Contender {
                     return;
                 }
             }
-            mphfq = MPHFBuilderFinalize(mphfb,sParams, 1);
+            mphfq = MPHFBuilderFinalize(mphfb,sParams, numThreads);
             MPHFBuilderFree(mphfb);
         }
 

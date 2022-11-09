@@ -16,6 +16,7 @@ class Contender {
         const double mByN;
         const size_t M;
         static size_t numQueries;
+        static size_t numThreads;
         long constructionTime = 0;
         long queryTime = 0;
 
@@ -91,6 +92,7 @@ class Contender {
                       << " numQueries=" << numQueries
                       << " N=" << N
                       << " loadFactor=" << loadFactor
+                      << " threads=" << numThreads
                       << additional
                       << std::endl;
         }
@@ -127,3 +129,4 @@ class Contender {
         }
 };
 size_t Contender::numQueries = 5e7;
+size_t Contender::numThreads = 1;
