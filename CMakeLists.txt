@@ -31,7 +31,7 @@ target_include_directories(MphfWbpm SYSTEM PUBLIC extlib/mphf-wbpm/include)
 target_link_libraries(PerfectHashingCompetitors INTERFACE MphfWbpm)
 
 add_subdirectory(extlib/gpurecsplit)
-target_link_libraries(PerfectHashingCompetitors INTERFACE SIMDRecSplit)
+target_link_libraries(PerfectHashingCompetitors INTERFACE SIMDRecSplit ShockHash)
 
 add_subdirectory(extlib/sichash)
 target_link_libraries(PerfectHashingCompetitors INTERFACE SicHash)
@@ -39,14 +39,14 @@ target_link_libraries(PerfectHashingCompetitors INTERFACE SicHash)
 if(NOT TARGET Sux)
     add_library(Sux INTERFACE)
     target_include_directories(Sux SYSTEM INTERFACE extlib/sux)
-    target_link_libraries(PerfectHashingCompetitors INTERFACE Sux)
 endif()
+target_link_libraries(PerfectHashingCompetitors INTERFACE Sux)
 
 ################### Benchmark build targets ###################
 add_executable(Comparison comparison.cpp)
-target_link_libraries(Comparison PRIVATE PerfectHashingCompetitors)
+target_link_libraries(Comparison PRIVATE PerfectHashingCompetitors Sux)
 target_compile_features(Comparison PRIVATE cxx_std_20)
 
 add_executable(ComparisonN comparisonN.cpp)
-target_link_libraries(ComparisonN PRIVATE PerfectHashingCompetitors)
+target_link_libraries(ComparisonN PRIVATE PerfectHashingCompetitors Sux)
 target_compile_features(ComparisonN PRIVATE cxx_std_20)

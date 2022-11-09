@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Contender.h"
-#include "ShockHash.h"
+#include <shockhash/ShockHash.h>
 
 template<int l>
 class ShockHashContender : public Contender {

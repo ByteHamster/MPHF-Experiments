@@ -32,7 +32,7 @@ class SIMDRecSplitContender : public Contender {
         }
 
         size_t sizeBits() override {
-            return recSplit->getBitsPerKey() * N;
+            return recSplit->getBits();
         }
 
         void performQueries(const std::vector<std::string> &keys) override {
