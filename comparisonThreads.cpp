@@ -28,7 +28,7 @@ int main(int argc, char** argv) {
         {PTHashContender<true, pthash::elias_fano>(N, 0.95, pthashParameter).run();}
         {SicHashContender<true, 64>(N, 0.9, sichash::SicHashConfig().percentages(0.21, 0.78)).run();}
         Contender::numQueries = numQueries / 3;
-        {SIMDRecSplitContender<3>(N, 50).run();}
+        {SIMDRecSplitContender<10>(N, 2000).run();}
         {BBHashContender(N, 2.0, 0).run();}
     }
     return 0;
