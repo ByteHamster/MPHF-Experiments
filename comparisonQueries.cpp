@@ -17,10 +17,8 @@ int main(int argc, char** argv) {
 
     {SIMDRecSplitContender<5>(N, 5).run();}
     {SIMDRecSplitContender<8>(N, 100).run();}
-    {SIMDRecSplitContender<16>(N, 2000).run();}
     {RecSplitContender<5>(N, 5).run();}
     {RecSplitContender<8>(N, 100).run();}
-    {RecSplitContender<16>(N, 2000).run();}
     {BBHashContender(N, 1.0, 0).run();}
     {BBHashContender(N, 5.0, 0).run();}
     {PTHashContender<true, pthash::compact_compact>(N, 0.99, 7.0).run();}
