@@ -1,22 +1,22 @@
 #pragma once
 
-#include <pthash.hpp>
+#include <partitioned_phf.hpp>
 #undef MAX_BUCKET_SIZE
 #include "Contender.h"
 
 template <bool minimal, typename encoder>
-class PTHashContender : public Contender {
+class PartitionedPTHashContender : public Contender {
     public:
         double c;
         double internalLoadFactor;
-        pthash::single_phf<pthash::murmurhash2_64, encoder, minimal> pthashFunction;
+        pthash::partitioned_phf<pthash::murmurhash2_64, encoder, minimal> pthashFunction;
 
-        PTHashContender(size_t N, double loadFactor, double c)
+        PartitionedPTHashContender(size_t N, double loadFactor, double c)
                 : Contender(N, minimal ? 1.0 : loadFactor), c(c), internalLoadFactor(loadFactor) {
         }
 
         std::string name() override {
-            return std::string("PTHash")
+            return std::string("PartitionedPTHash")
                     + " minimal=" + std::to_string(minimal)
                     + " c=" + std::to_string(c)
                     + " encoder=" + encoder::name()
@@ -49,14 +49,3 @@ class PTHashContender : public Contender {
             doPerformTest(keys, pthashFunction);
         }
 };
-
-void ptHashContenderRunner(size_t N, double loadFactor) {
-    for (double c = 3.0; c < 12.0; c += 0.4) {
-        PTHashContender<false, pthash::elias_fano>(N, loadFactor, c).run();
-        PTHashContender<true, pthash::elias_fano>(N, loadFactor, c).run();
-        PTHashContender<false, pthash::dictionary_dictionary>(N, loadFactor, c).run();
-        PTHashContender<true, pthash::dictionary_dictionary>(N, loadFactor, c).run();
-        PTHashContender<false, pthash::dictionary_elias_fano>(N, loadFactor, c).run();
-        PTHashContender<true, pthash::dictionary_elias_fano>(N, loadFactor, c).run();
-    }
-}
