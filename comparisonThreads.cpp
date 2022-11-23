@@ -1,6 +1,5 @@
 #include <tlx/cmdline_parser.hpp>
 #include "benchmark/CmphContender.h"
-#include "benchmark/SicHashContender.h"
 #include "benchmark/PartitionedSicHashContender.h"
 #include "benchmark/PTHashContender.h"
 #include "benchmark/PartitionedPTHashContender.h"
@@ -29,7 +28,6 @@ int main(int argc, char** argv) {
         Contender::numQueries = numQueries;
         {PTHashContender<true, pthash::elias_fano>(N, 0.95, pthashParameter).run();}
         {PartitionedPTHashContender<true, pthash::elias_fano>(N, 0.95, pthashParameter).run();}
-        {SicHashContender<true, 64>(N, 0.9, sichash::SicHashConfig().percentages(0.21, 0.78)).run();}
         {PartitionedSicHashContender<true, 64>(N, 0.9, sichash::SicHashConfig().percentages(0.21, 0.78)).run();}
         Contender::numQueries = numQueries / 3;
         {SIMDRecSplitContender<10>(N, 2000).run();}
