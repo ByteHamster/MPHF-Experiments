@@ -50,13 +50,16 @@ class PTHashContender : public Contender {
         }
 };
 
-void ptHashContenderRunner(size_t N, double loadFactor) {
+void ptHashContenderRunner(size_t N, double loadFactor, bool minimalOnly = false) {
     for (double c = 3.0; c < 12.0; c += 0.4) {
-        PTHashContender<false, pthash::elias_fano>(N, loadFactor, c).run();
+        if (!minimalOnly) {
+            PTHashContender<false, pthash::elias_fano>(N, loadFactor, c).run();
+            PTHashContender<false, pthash::dictionary_dictionary>(N, loadFactor, c).run();
+            PTHashContender<false, pthash::dictionary_elias_fano>(N, loadFactor, c).run();
+        }
+
         PTHashContender<true, pthash::elias_fano>(N, loadFactor, c).run();
-        PTHashContender<false, pthash::dictionary_dictionary>(N, loadFactor, c).run();
         PTHashContender<true, pthash::dictionary_dictionary>(N, loadFactor, c).run();
-        PTHashContender<false, pthash::dictionary_elias_fano>(N, loadFactor, c).run();
         PTHashContender<true, pthash::dictionary_elias_fano>(N, loadFactor, c).run();
     }
 }

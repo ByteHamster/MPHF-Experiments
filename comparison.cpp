@@ -28,12 +28,14 @@ int main(int argc, char** argv) {
     bool chm = false;
     bool fch = false;
     bool sichashOnlyPartial = false;
+    bool minimalOnly = false;
 
     tlx::CmdlineParser cmd;
     cmd.add_double('l', "loadFactor", loadFactor, "Load Factor");
     cmd.add_bytes('n', "numKeys", N, "Number of objects");
     cmd.add_bytes('q', "numQueries", Contender::numQueries, "Number of queries to perform");
     cmd.add_bytes('t', "numThreads", Contender::numThreads, "Number of threads to run benchmarks with");
+    cmd.add_flag('M', "minimalOnly", minimalOnly, "Skip generation of non-minimal variants in case the method supports both");
 
     cmd.add_flag('r', "recsplit", recsplit, "Execute RecSplit benchmark");
     cmd.add_flag('R', "simdrecsplit", simdrecsplit, "Execute SIMDRecSplit benchmark");
@@ -80,23 +82,23 @@ int main(int argc, char** argv) {
         fchContenderRunner(N, loadFactor);
     }
     if (sichash) {
-        sicHashContenderRunner<64>(N, loadFactor);
+        sicHashContenderRunner<64>(N, loadFactor, minimalOnly);
         if (!sichashOnlyPartial) {
-            sicHashContenderRunner<32>(N, loadFactor);
+            sicHashContenderRunner<32>(N, loadFactor, minimalOnly);
         }
     }
     if (partitionedSichash) {
-        partitionedSicHashContenderRunner<64>(N, loadFactor);
-        partitionedSicHashContenderRunner<32>(N, loadFactor);
+        partitionedSicHashContenderRunner<64>(N, loadFactor, minimalOnly);
+        partitionedSicHashContenderRunner<32>(N, loadFactor, minimalOnly);
     }
     if (shockhash) {
         shockHashContenderRunner(N);
     }
     if (pthash) {
-        ptHashContenderRunner(N, loadFactor);
+        ptHashContenderRunner(N, loadFactor, minimalOnly);
     }
     if (partitionedPthash) {
-        partitionedPtHashContenderRunner(N, loadFactor);
+        partitionedPtHashContenderRunner(N, loadFactor, minimalOnly);
     }
     if (mphfWbpm) {
         mphfWbpmContenderRunner(N);
