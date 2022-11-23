@@ -50,3 +50,14 @@ class PartitionedPTHashContender : public Contender {
             doPerformTest(keys, pthashFunction);
         }
 };
+
+void partitionedPtHashContenderRunner(size_t N, double loadFactor) {
+    for (double c = 3.0; c < 12.0; c += 0.4) {
+        PartitionedPTHashContender<false, pthash::elias_fano>(N, loadFactor, c).run();
+        PartitionedPTHashContender<true, pthash::elias_fano>(N, loadFactor, c).run();
+        PartitionedPTHashContender<false, pthash::dictionary_dictionary>(N, loadFactor, c).run();
+        PartitionedPTHashContender<true, pthash::dictionary_dictionary>(N, loadFactor, c).run();
+        PartitionedPTHashContender<false, pthash::dictionary_elias_fano>(N, loadFactor, c).run();
+        PartitionedPTHashContender<true, pthash::dictionary_elias_fano>(N, loadFactor, c).run();
+    }
+}

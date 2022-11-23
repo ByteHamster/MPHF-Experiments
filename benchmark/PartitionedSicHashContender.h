@@ -46,3 +46,20 @@ class PartitionedSicHashContender : public Contender {
             doPerformTest(keys, *perfectHashing);
         }
 };
+
+template <size_t ribbonWidth>
+void partitionedSicHashContenderRunner(size_t N, double loadFactor) {
+    for (float spaceBudget = 1.35; spaceBudget < 3.0; spaceBudget += 0.03) {
+        for (float x = 0.0; x < 1.0; x += 0.2) {
+            {PartitionedSicHashContender<false, ribbonWidth>(N, loadFactor, sichash::SicHashConfig().spaceBudget(spaceBudget, x)).run();}
+
+            if (loadFactor < 0.89) {
+                {PartitionedSicHashContender<true, ribbonWidth, 3>(N, loadFactor, sichash::SicHashConfig().spaceBudget(spaceBudget, x)).run();}
+            } else if (loadFactor < 0.94) {
+                {PartitionedSicHashContender<true, ribbonWidth, 4>(N, loadFactor, sichash::SicHashConfig().spaceBudget(spaceBudget, x)).run();}
+            } else {
+                {PartitionedSicHashContender<true, ribbonWidth, 5>(N, loadFactor, sichash::SicHashConfig().spaceBudget(spaceBudget, x)).run();}
+            }
+        }
+    }
+}
