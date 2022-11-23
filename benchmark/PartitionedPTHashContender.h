@@ -32,6 +32,7 @@ class PartitionedPTHashContender : public Contender {
             config.c = c;
             config.alpha = internalLoadFactor;
             config.num_threads = numThreads;
+            config.num_partitions = numThreads;
             config.minimal_output = minimal;
             config.verbose_output = false;
             pthashFunction.build_in_internal_memory(keys.begin(), keys.size(), config);
