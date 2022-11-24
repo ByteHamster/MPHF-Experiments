@@ -25,9 +25,9 @@ int main(int argc, char** argv) {
         // Queries of PTHash and SicHash have quite a bit of noise in the measurements.
         // Run more queries to work around that.
         Contender::numQueries = numQueries;
-        { PTHashContender<false, pthash::elias_fano>(N, 0.95, pthashParameter).run(); }
+        {PTHashContender<false, pthash::elias_fano>(N, 0.95, pthashParameter).run();}
         {PTHashContender<true, pthash::elias_fano>(N, 0.95, pthashParameter).run();}
-        { SicHashContender<false, 64>(N, 0.95, sichash::SicHashConfig().percentages(0.46, 0.32)).run(); }
+        {SicHashContender<false, 64>(N, 0.95, sichash::SicHashConfig().percentages(0.46, 0.32)).run();}
         {SicHashContender<true, 64>(N, 0.95, sichash::SicHashConfig().percentages(0.37, 0.44)).run();}
         Contender::numQueries = numQueries / 3;
         {RecSplitContender<4>(N, 100).run();}

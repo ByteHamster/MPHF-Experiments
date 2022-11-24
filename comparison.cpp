@@ -9,12 +9,14 @@
 #include "benchmark/ShockHashContender.h"
 #include "benchmark/PartitionedPTHashContender.h"
 #include "benchmark/PartitionedSicHashContender.h"
+#include "benchmark/PartitionedSIMDRecSplitContender.h"
 
 int main(int argc, char** argv) {
     double loadFactor = 0.8;
     size_t N = 5e6;
     bool recsplit = false;
     bool simdrecsplit = false;
+    bool partitionedSimdrecsplit = false;
     bool mphfWbpm = false;
     bool bbhash = false;
     bool sichash = false;
@@ -39,6 +41,7 @@ int main(int argc, char** argv) {
 
     cmd.add_flag('r', "recsplit", recsplit, "Execute RecSplit benchmark");
     cmd.add_flag('R', "simdrecsplit", simdrecsplit, "Execute SIMDRecSplit benchmark");
+    cmd.add_flag('D', "partitionedSimdrecsplit", partitionedSimdrecsplit, "Execute partitioned SIMDRecSplit benchmark");
     cmd.add_flag('m', "mphfWbpm", mphfWbpm, "Execute mphfWbpm benchmark");
     cmd.add_flag('b', "bbhash", bbhash, "Execute bbhash benchmark");
     cmd.add_flag('s', "sichash", sichash, "Execute sichash benchmark");
@@ -62,6 +65,9 @@ int main(int argc, char** argv) {
     }
     if (simdrecsplit) {
         simdRecSplitContenderRunner(N);
+    }
+    if (partitionedSimdrecsplit) {
+        partitionedSimdRecSplitContenderRunner(N);
     }
     if (bbhash) {
         bbHashContenderRunner(N);

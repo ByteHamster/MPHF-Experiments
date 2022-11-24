@@ -5,6 +5,7 @@
 #include "benchmark/PartitionedPTHashContender.h"
 #include "benchmark/BBHashContender.h"
 #include "benchmark/SIMDRecSplitContender.h"
+#include "benchmark/PartitionedSIMDRecSplitContender.h"
 
 int main(int argc, char** argv) {
     size_t N = 5e6;
@@ -31,6 +32,7 @@ int main(int argc, char** argv) {
         {PartitionedSicHashContender<true, 64>(N, 0.9, sichash::SicHashConfig().percentages(0.21, 0.78)).run();}
         Contender::numQueries = numQueries / 3;
         {SIMDRecSplitContender<10>(N, 2000).run();}
+        {PartitionedSIMDRecSplitContender<10>(N, 2000).run();}
         {BBHashContender(N, 2.0, 0).run();}
     }
     return 0;

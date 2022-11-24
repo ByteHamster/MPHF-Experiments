@@ -18,4 +18,4 @@
 	url = git@github.com:ByteHamster-etc/sux.git
 [submodule "extlib/gpurecsplit"]
 	path = extlib/gpurecsplit
-	url = git@git.scc.kit.edu:hplehmann/gpurecsplit.git
+	url = git@github.com:ByteHamster/GpuRecSplit.git
