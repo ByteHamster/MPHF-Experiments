@@ -16,11 +16,9 @@ int main(int argc, char** argv) {
     size_t N = 5e6;
     bool recsplit = false;
     bool simdrecsplit = false;
-    bool partitionedSimdrecsplit = false;
     bool mphfWbpm = false;
     bool bbhash = false;
     bool sichash = false;
-    bool partitionedSichash = false;
     bool pthash = false;
     bool partitionedPthash = false;
     bool shockhash = false;
@@ -38,14 +36,13 @@ int main(int argc, char** argv) {
     cmd.add_bytes('q', "numQueries", Contender::numQueries, "Number of queries to perform");
     cmd.add_bytes('t', "numThreads", Contender::numThreads, "Number of threads to run benchmarks with");
     cmd.add_flag('M', "minimalOnly", minimalOnly, "Skip generation of non-minimal variants in case the method supports both");
+    cmd.add_flag('T', "skipTests", Contender::skipTests, "Skip testing PHF for validity");
 
     cmd.add_flag('r', "recsplit", recsplit, "Execute RecSplit benchmark");
     cmd.add_flag('R', "simdrecsplit", simdrecsplit, "Execute SIMDRecSplit benchmark");
-    cmd.add_flag('D', "partitionedSimdrecsplit", partitionedSimdrecsplit, "Execute partitioned SIMDRecSplit benchmark");
     cmd.add_flag('m', "mphfWbpm", mphfWbpm, "Execute mphfWbpm benchmark");
     cmd.add_flag('b', "bbhash", bbhash, "Execute bbhash benchmark");
     cmd.add_flag('s', "sichash", sichash, "Execute sichash benchmark");
-    cmd.add_flag('X', "partitionedSichash", partitionedSichash, "Execute partitioned sichash benchmark");
     cmd.add_flag('S', "shockhash", shockhash, "Execute shockhash benchmark");
     cmd.add_flag('i', "sichashOnlyPartial", sichashOnlyPartial, "Ignore fast ribbon retrieval configurations and test fewer thresholds");
     cmd.add_flag('p', "pthash", pthash, "Execute pthash benchmark");
@@ -65,9 +62,6 @@ int main(int argc, char** argv) {
     }
     if (simdrecsplit) {
         simdRecSplitContenderRunner(N);
-    }
-    if (partitionedSimdrecsplit) {
-        partitionedSimdRecSplitContenderRunner(N);
     }
     if (bbhash) {
         bbHashContenderRunner(N);
@@ -92,10 +86,6 @@ int main(int argc, char** argv) {
         if (!sichashOnlyPartial) {
             sicHashContenderRunner<32>(N, loadFactor, minimalOnly);
         }
-    }
-    if (partitionedSichash) {
-        partitionedSicHashContenderRunner<64>(N, loadFactor, minimalOnly);
-        partitionedSicHashContenderRunner<32>(N, loadFactor, minimalOnly);
     }
     if (shockhash) {
         shockHashContenderRunner(N);

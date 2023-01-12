@@ -18,6 +18,7 @@ int main(int argc, char** argv) {
     cmd.add_double('p', "pthashParameter", pthashParameter, "Parameter of the pthash method");
     cmd.add_bytes('q', "numQueries", numQueries, "Number of queries to perform");
     cmd.add_bytes('t', "numThreads", Contender::numThreads, "Number of threads to run benchmarks with");
+    cmd.add_flag('T', "skipTests", Contender::skipTests, "Skip testing PHF for validity");
 
     if (!cmd.process(argc, argv)) {
         return 1;
@@ -29,10 +30,8 @@ int main(int argc, char** argv) {
         Contender::numQueries = numQueries;
         {PTHashContender<true, pthash::elias_fano>(N, 0.95, pthashParameter).run();}
         {PartitionedPTHashContender<true, pthash::elias_fano>(N, 0.95, pthashParameter).run();}
-        {PartitionedSicHashContender<true, 64>(N, 0.9, sichash::SicHashConfig().percentages(0.21, 0.78)).run();}
         Contender::numQueries = numQueries / 3;
         {SIMDRecSplitContender<10>(N, 2000).run();}
-        {PartitionedSIMDRecSplitContender<10>(N, 2000).run();}
         {BBHashContender(N, 2.0, 0).run();}
     }
     return 0;

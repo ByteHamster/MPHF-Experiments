@@ -17,6 +17,7 @@ class Contender {
         const size_t M;
         static size_t numQueries;
         static size_t numThreads;
+        static bool skipTests;
         long constructionTime = 0;
         long queryTime = 0;
 
@@ -56,8 +57,10 @@ class Contender {
             std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
             constructionTime = std::chrono::duration_cast<std::chrono::milliseconds>(end - begin).count();
 
-            std::cout<<"Testing"<<std::endl;
-            performTest(keys);
+            if (!skipTests) {
+                std::cout<<"Testing"<<std::endl;
+                performTest(keys);
+            }
 
             queryTime = 0;
             if (numQueries > 0) {
@@ -130,3 +133,4 @@ class Contender {
 };
 size_t Contender::numQueries = 5e7;
 size_t Contender::numThreads = 1;
+bool Contender::skipTests = false;

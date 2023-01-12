@@ -16,6 +16,7 @@ int main(int argc, char** argv) {
     cmd.add_bytes('i', "iterations", iterations, "Number of iterations to execute");
     cmd.add_double('p', "pthashParameter", pthashParameter, "Parameter of the pthash method");
     cmd.add_bytes('q', "numQueries", numQueries, "Number of queries to perform");
+    cmd.add_flag('T', "skipTests", Contender::skipTests, "Skip testing PHF for validity");
 
     if (!cmd.process(argc, argv)) {
         return 1;
