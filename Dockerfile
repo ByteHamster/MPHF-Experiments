@@ -21,4 +21,4 @@ RUN cmake -DCMAKE_BUILD_TYPE=Release ..
 RUN cmake --build . -j 8
 
 # Actual benchmark
-CMD bash /opt/dockerVolume/figure-6.sh
+CMD bash /opt/dockerVolume/pareto.sh

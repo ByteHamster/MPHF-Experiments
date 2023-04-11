@@ -73,8 +73,8 @@
 \definecolor{colorRecSplit}{HTML}{A65628}
 \definecolor{colorBbhash}{HTML}{F781BF}
 
-% IMPORT-DATA competitorNames competitorNames.txt
-% IMPORT-DATA comparisonPlot figure-6.txt
+% IMPORT-DATA competitorNames _competitorNames.txt
+% IMPORT-DATA comparisonPlot pareto.txt
 
 \begin{figure*}[t]
     \begin{tabular}{crrr}
@@ -191,26 +191,7 @@
           %% FROM competitorNames
           %% WHERE showIn LIKE "%legend%"
           %% ORDER BY MULTIPLOT,x
-          \addplot[mark=diamond,color=colorBbhash,solid] coordinates { (0,0) };
-          \addlegendentry{BBHash};
-          \addplot[mark=triangle,color=colorBdz,solid] coordinates { (0,0) };
-          \addlegendentry{BDZ};
-          \addplot[mark=asterisk,color=colorBmz,solid] coordinates { (0,0) };
-          \addlegendentry{BMZ};
-          \addplot[mark=x,color=colorChd,solid] coordinates { (0,0) };
-          \addlegendentry{CHD};
-          \addplot[mark=+,color=colorChm,solid] coordinates { (0,0) };
-          \addlegendentry{CHM};
-          \addplot[mark=oplus,color=colorFch,solid] coordinates { (0,0) };
-          \addlegendentry{FCH};
-          \addplot[mark=pentagon,color=colorPthash,solid] coordinates { (0,0) };
-          \addlegendentry{PTHash};
-          \addplot[mark=square,color=colorRecSplit,solid] coordinates { (0,0) };
-          \addlegendentry{RecSplit};
-          \addplot[mark=o,color=colorHeterogeneous,solid] coordinates { (0,0) };
-          \addlegendentry{SicHash};
-          \addplot[mark=|,color=colorBbhash,solid] coordinates { (0,0) };
-          \addlegendentry{WBPM};
+
         \end{axis}
     \end{tikzpicture}
     \end{center}

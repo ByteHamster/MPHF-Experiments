@@ -1,12 +1,21 @@
 # MPHF-Experiments
 
-Experiments for the MPHF SicHash, comparing it with competitors.
+Comparison of different minimal perfect hash functions (MPHFs).
+
+### Cloning the Repository
+
+This repository contains submodules.
+To clone the repository including submodules, use the following command.
+
+```
+git clone --recursive https://github.com/ByteHamster/MPHF-Experiments.git
+```
 
 ### Reproducing Experiments
 
-This repository contains the source code and our reproducibility artifacts for SicHash if they are related to competitors.
+This repository contains the source code and our reproducibility artifacts for our paper.
 Due to the plethora of dependencies required by our competitors, we provide an easy to use Docker image to quickly reproduce our results.
-Alternatively, you can look at the `Dockerfile` to see all libraries, tools, and commands necessary to compile SicHash and its competitors.
+Alternatively, you can look at the `Dockerfile` to see all libraries, tools, and commands necessary to compile the different competitors.
 
 #### Building the Docker Image
 
@@ -14,7 +23,7 @@ Run the following command to build the Docker image.
 Building the image takes about 5 minutes, as some packages (including LaTeX for the plots) have to be installed.
 
 ```bash
-docker build -t sichash --no-cache .
+docker build -t mmphf_experiments --no-cache .
 ```
 
 Some compiler warnings (red) are expected when building competitors and will not prevent building the image or running the experiments.
@@ -29,18 +38,17 @@ This does not require the Docker image to recompile.
 Different experiments can be started by using the following command:
 
 ```bash
-docker run --interactive --tty -v "$(pwd)/scripts/dockerVolume:/opt/dockerVolume" sichash /opt/dockerVolume/figure-<number>.sh
+docker run --interactive --tty -v "$(pwd)/scripts/dockerVolume:/opt/dockerVolume" mmphf_experiments /opt/dockerVolume/<script>.sh
 ```
 
-`<number>` should be either `5` or `6`, depending on the experiment you want to run.
-The number also refers to the figure in the paper.
+`<script>` depends on the experiment you want to run.
 
-| Figure in paper | Launch command                | Estimated runtime  |
-| :-------------- | :---------------------------- | :----------------- |
-| 5               | /opt/dockerVolume/figure-5.sh | 20 minutes         |
-| 6               | /opt/dockerVolume/figure-6.sh | 45 minutes         |
+| Figure                                                                                                    | Launch command                    | Estimated runtime  |
+| :-------------------------------------------------------------------------------------------------------- | :-------------------------------- | :----------------- |
+| [SicHash](10.1137/1.9781611977561.ch15), Figure 6 <br /><img src="preview-sichash-figure-6" width="300"/> | /opt/dockerVolume/comparison-N.sh | 20 minutes         |
+| [SicHash](10.1137/1.9781611977561.ch15), Figure 8 <br /><img src="preview-sichash-figure-8" width="300"/> | /opt/dockerVolume/pareto.sh       | 45 minutes         |
 
-The resulting plots can be found in `scripts/dockerVolume` and are called `figure-<number>.pdf`.
+The resulting plots can be found in `scripts/dockerVolume` and have the file extension `.pdf`.
 
 ### License
 
