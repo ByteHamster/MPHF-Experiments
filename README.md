@@ -20,7 +20,8 @@ Alternatively, you can look at the `Dockerfile` to see all libraries, tools, and
 #### Building the Docker Image
 
 Run the following command to build the Docker image.
-Building the image takes about 5 minutes, as some packages (including LaTeX for the plots) have to be installed.
+Building the image takes about 10 minutes, as some packages (including LaTeX for the plots) have to be installed.
+Note that your machine needs to support the AVX2 instruction set extension to successfully run the experiments.
 
 ```bash
 docker build -t mmphf_experiments --no-cache .

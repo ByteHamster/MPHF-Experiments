@@ -1,5 +1,7 @@
 FROM ubuntu:22.04
 
+RUN $(grep -qi 'avx2' /proc/cpuinfo) || (echo 'AVX2 not supported by this machine. Aborting docker build.'>&2; exit 1)
+
 RUN apt-get update && apt-get -y upgrade
 RUN apt-get install --assume-yes --no-install-recommends ca-certificates build-essential cmake git autoconf
 RUN apt-get install --assume-yes --no-install-recommends libboost-regex-dev libsqlite3-dev
