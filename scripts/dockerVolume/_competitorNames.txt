@@ -1,0 +1,11 @@
+RESULT store_code=cmph-CHD					store_name=CHD 					showIn=legend,heatmap	store_attr=mark=x,color=colorChd,solid
+RESULT store_code=SicHash					store_name=SicHash				showIn=legend,heatmap	store_attr=mark=o,color=colorSicHash,solid
+#RESULT store_code=PartitionedSicHash		store_name=SicHash Partd.		showIn=legend,heatmap	store_attr=mark=triangle,color=colorSicHash,densely dotted
+RESULT store_code=SicHashMinimal			store_name=SicHash Minimal		showIn=					store_attr=mark=o,color=colorSicHash,densely dotted
+RESULT store_code=PTHash					store_name=PTHash				showIn=legend,heatmap	store_attr=mark=pentagon,color=colorPthash,solid
+RESULT store_code=PartitionedPTHash			store_name=PTHash-HEM			showIn=legend,heatmap	store_attr=mark=asterisk,color=colorPthashHem,solid
+RESULT store_code=PTHashMinimal				store_name=PTHash Minimal		showIn=					store_attr=mark=pentagon,color=colorPthash,densely dotted
+RESULT store_code=RecSplit					store_name=RecSplit				showIn=legend,heatmap	store_attr=mark=square,color=colorRecSplit,solid
+RESULT store_code=BBHash					store_name=BBHash				showIn=legend,heatmap	store_attr=mark=diamond,color=colorBbhash,solid
+RESULT store_code=SIMDRecSplit				store_name=SIMDRecSplit			showIn=legend			store_attr=mark=+,color=colorSimdRecSplit,solid
+#RESULT store_code=PartitionedSIMDRecSplit	store_name=SIMDRecSplit Partd.	showIn=legend			store_attr=mark=flippedTriangle,color=colorSimdRecSplit,densely dotted

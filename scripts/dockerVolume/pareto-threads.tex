@@ -1,0 +1,159 @@
+\documentclass{article}
+\usepackage[a4paper, margin=2cm]{geometry}
+\usepackage{xcolor}
+\usepackage{xspace}
+\usepackage{booktabs}
+\usepackage{dsfont}
+\usepackage{footmisc}
+\usepackage{marvosym}
+\usepackage{amsmath}
+\usepackage{hyperref}
+\usepackage[capitalise,noabbrev]{cleveref}
+\usepackage{tabularx}
+\usepackage{listings}
+\usepackage{multirow}
+\usepackage{pgfplots}
+\pgfplotsset{compat=newest}
+
+\usepgfplotslibrary{groupplots}
+\pgfplotsset{every axis/.style={scale only axis}}
+
+\pgfplotsset{
+  mark repeat*/.style={
+    scatter,
+    scatter src=x,
+    scatter/@pre marker code/.code={
+      \pgfmathtruncatemacro\usemark{
+        or(mod(\coordindex,#1)==0, (\coordindex==(\numcoords-1))
+      }
+      \ifnum\usemark=0
+        \pgfplotsset{mark=none}
+      \fi
+    },
+    scatter/@post marker code/.code={}
+  },
+  major grid style={thin,dotted},
+  minor grid style={thin,dotted},
+  ymajorgrids,
+  yminorgrids,
+  every axis/.append style={
+    line width=0.7pt,
+    tick style={
+      line cap=round,
+      thin,
+      major tick length=4pt,
+      minor tick length=2pt,
+    },
+  },
+  legend cell align=left,
+  legend style={
+    line width=0.7pt,
+    /tikz/every even column/.append style={column sep=3mm,black},
+    /tikz/every odd column/.append style={black},
+  },
+  % move title closer
+  legend style={font=\small},
+  title style={yshift=-2pt},
+  % less space on left and right
+  enlarge x limits=0.04,
+  every tick label/.append style={font=\footnotesize},
+  every axis label/.append style={font=\small},
+  every axis y label/.append style={yshift=-1ex},
+  /pgf/number format/1000 sep={},
+  axis lines*=left,
+  xlabel near ticks,
+  ylabel near ticks,
+  axis lines*=left,
+  label style={font=\footnotesize},       
+  tick label style={font=\footnotesize},
+  plotPareto/.style={
+    width=36.0mm,
+    height=35.0mm,
+  },
+}
+
+\title{SicHash plot}
+\date{}
+\begin{document}
+\definecolor{veryLightGrey}{HTML}{F2F2F2}
+\definecolor{colorSimdRecSplit}{HTML}{444444}
+\definecolor{colorChd}{HTML}{377EB8}
+\definecolor{colorPthashHem}{HTML}{A65628}
+\definecolor{colorSicHash}{HTML}{4DAF4A}
+\definecolor{colorPthash}{HTML}{984EA3}
+\definecolor{colorRecSplit}{HTML}{FF7F00}
+\definecolor{colorBbhash}{HTML}{F781BF}
+
+% IMPORT-DATA competitorNames _competitorNames.txt
+% IMPORT-DATA scatterplotMinimalByThreads pareto-threads.txt
+
+\begin{figure*}[t]
+    \centering
+    \begin{tikzpicture}
+        \begin{axis}[
+            plotPareto,
+            title={1 Thread},
+            xlabel={Bits/Object},
+            ylabel={Throughput (MObjects/s)},
+            legend to name=paretoLegend,
+            legend columns=4,
+            legend style={/tikz/every even column/.append style={column sep=0.2cm}}],
+          ]
+          %% MULTIPLOT(name|ptitle|attr)
+          %% SELECT
+          %%    bitsPerElement as x,
+          %%    0.001*N/constructionTimeMilliseconds as y,
+          %%    store_attr || IIF(name LIKE "%PTHash" OR name LIKE "%SicHash", ",mark repeat*=4", "") as attr,
+          %%    store_name as ptitle,
+          %%    MULTIPLOT
+          %% FROM scatterplotMinimalByThreads scatterplot
+          %% JOIN competitorNames ON name = store_code
+          %% WHERE loadFactor == 1.0 AND threads == 1
+          %%    AND NOT EXISTS (SELECT * FROM scatterplotMinimalByThreads d
+          %%           WHERE d.loadFactor == 1.0 AND scatterplot.name = d.name AND d.threads == 1
+          %%                    AND d.bitsPerElement <= scatterplot.bitsPerElement
+          %%                    AND d.constructionTimeMilliseconds <= scatterplot.constructionTimeMilliseconds
+          %%                    AND (d.bitsPerElement < scatterplot.bitsPerElement
+          %%                        OR d.constructionTimeMilliseconds < scatterplot.constructionTimeMilliseconds))
+          %% ORDER BY store_name,x,y
+        \end{axis}
+    \end{tikzpicture}
+    \hfill
+    \begin{tikzpicture}
+        \begin{axis}[
+            plotPareto,
+            title={16 Threads},
+            xlabel={Bits/Object},
+          ]
+          %% MULTIPLOT(name|ptitle|attr)
+          %% SELECT
+          %%    bitsPerElement as x,
+          %%    0.001*N/constructionTimeMilliseconds as y,
+          %%    store_attr || IIF(name LIKE "%PTHash" OR name LIKE "%SicHash", ",mark repeat*=4", "") as attr,
+          %%    store_name as ptitle,
+          %%    MULTIPLOT
+          %% FROM scatterplotMinimalByThreads scatterplot
+          %% JOIN competitorNames ON name = store_code
+          %% WHERE loadFactor == 1.0 AND threads == 16
+          %%    AND NOT EXISTS (SELECT * FROM scatterplotMinimalByThreads d
+          %%           WHERE d.loadFactor == 1.0 AND scatterplot.name = d.name AND d.threads == 16
+          %%                    AND d.bitsPerElement <= scatterplot.bitsPerElement
+          %%                    AND d.constructionTimeMilliseconds <= scatterplot.constructionTimeMilliseconds
+          %%                    AND (d.bitsPerElement < scatterplot.bitsPerElement
+          %%                        OR d.constructionTimeMilliseconds < scatterplot.constructionTimeMilliseconds))
+          %% ORDER BY store_name,x,y
+
+          \legend{};
+        \end{axis}
+    \end{tikzpicture}
+
+    \begin{tikzpicture}
+        \ref*{paretoLegend}
+    \end{tikzpicture}
+
+     \caption{Space usage vs construction.}
+    \label{fig:paretoConstruction1M}
+\end{figure*}
+
+\end{document}
+
