@@ -5,6 +5,7 @@
 #include "benchmark/PTHashContender.h"
 #include "benchmark/RecSplitContender.h"
 #include "benchmark/SIMDRecSplitContender.h"
+#include "benchmark/RecSplitRotateContender.h"
 #include "benchmark/MphfWbpmContender.h"
 #include "benchmark/ShockHashContender.h"
 #include "benchmark/PartitionedPTHashContender.h"
@@ -16,6 +17,7 @@ int main(int argc, char** argv) {
     size_t N = 5e6;
     bool recsplit = false;
     bool simdrecsplit = false;
+    bool recsplitRotate = false;
     bool mphfWbpm = false;
     bool bbhash = false;
     bool sichash = false;
@@ -38,20 +40,21 @@ int main(int argc, char** argv) {
     cmd.add_flag('M', "minimalOnly", minimalOnly, "Skip generation of non-minimal variants in case the method supports both");
     cmd.add_flag('T', "skipTests", Contender::skipTests, "Skip testing PHF for validity");
 
-    cmd.add_flag('r', "recsplit", recsplit, "Execute RecSplit benchmark");
-    cmd.add_flag('R', "simdrecsplit", simdrecsplit, "Execute SIMDRecSplit benchmark");
-    cmd.add_flag('m', "mphfWbpm", mphfWbpm, "Execute mphfWbpm benchmark");
-    cmd.add_flag('b', "bbhash", bbhash, "Execute bbhash benchmark");
-    cmd.add_flag('s', "sichash", sichash, "Execute sichash benchmark");
-    cmd.add_flag('S', "shockhash", shockhash, "Execute shockhash benchmark");
-    cmd.add_flag('i', "sichashOnlyPartial", sichashOnlyPartial, "Ignore fast ribbon retrieval configurations and test fewer thresholds");
-    cmd.add_flag('p', "pthash", pthash, "Execute pthash benchmark");
-    cmd.add_flag('P', "partitionedPthash", partitionedPthash, "Execute partitioned pthash benchmark");
-    cmd.add_flag('c', "chd", chd, "Execute chd benchmark");
-    cmd.add_flag('d', "bdz", bdz, "Execute bdz benchmark");
-    cmd.add_flag('z', "bmz", bmz, "Execute bmz benchmark");
-    cmd.add_flag('x', "chm", chm, "Execute chm benchmark");
-    cmd.add_flag('f', "fch", fch, "Execute fch benchmark");
+    cmd.add_flag("recsplit", recsplit, "Execute RecSplit benchmark");
+    cmd.add_flag("simdrecsplit", simdrecsplit, "Execute SIMDRecSplit benchmark");
+    cmd.add_flag("recSplitRotate", recsplitRotate, "Execute RecSplit benchmark with rotation fitting");
+    cmd.add_flag("mphfWbpm", mphfWbpm, "Execute mphfWbpm benchmark");
+    cmd.add_flag("bbhash", bbhash, "Execute bbhash benchmark");
+    cmd.add_flag("sichash", sichash, "Execute sichash benchmark");
+    cmd.add_flag("shockhash", shockhash, "Execute shockhash benchmark");
+    cmd.add_flag("sichashOnlyPartial", sichashOnlyPartial, "Ignore fast ribbon retrieval configurations and test fewer thresholds");
+    cmd.add_flag("pthash", pthash, "Execute pthash benchmark");
+    cmd.add_flag("partitionedPthash", partitionedPthash, "Execute partitioned pthash benchmark");
+    cmd.add_flag("chd", chd, "Execute chd benchmark");
+    cmd.add_flag("bdz", bdz, "Execute bdz benchmark");
+    cmd.add_flag("bmz", bmz, "Execute bmz benchmark");
+    cmd.add_flag("chm", chm, "Execute chm benchmark");
+    cmd.add_flag("fch", fch, "Execute fch benchmark");
 
     if (!cmd.process(argc, argv)) {
         return 1;
@@ -62,6 +65,9 @@ int main(int argc, char** argv) {
     }
     if (simdrecsplit) {
         simdRecSplitContenderRunner(N);
+    }
+    if (recsplitRotate) {
+        recSplitRotateContenderRunner(N);
     }
     if (bbhash) {
         bbHashContenderRunner(N);
