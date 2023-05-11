@@ -19,3 +19,6 @@
 [submodule "extlib/gpurecsplit"]
 	path = extlib/gpurecsplit
 	url = https://github.com/ByteHamster/GpuRecSplit.git
+[submodule "extlib/ShockHash"]
+	path = extlib/ShockHash
+	url = https://github.com/ByteHamster/ShockHash.git
