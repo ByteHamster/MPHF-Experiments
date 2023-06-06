@@ -16,6 +16,7 @@ file(GLOB cmphSources extlib/cmph/src/**.c)
 list(FILTER cmphSources EXCLUDE REGEX ".*cmph/src/(bdz_gen_lookup_table|bm_numbers|sdbm_hash|fnv_hash|djb2_hash|hashtree|buffer_manage|main).c$")
 add_library(Cmph SHARED ${cmphSources})
 target_include_directories(Cmph SYSTEM INTERFACE extlib/cmph/src)
+
 target_link_libraries(PerfectHashingCompetitors INTERFACE Cmph)
 
 file(GLOB_RECURSE wbpmSources extlib/mphf-wbpm/**.c)
@@ -31,7 +32,7 @@ target_include_directories(MphfWbpm SYSTEM PUBLIC extlib/mphf-wbpm/include)
 target_link_libraries(PerfectHashingCompetitors INTERFACE MphfWbpm)
 
 add_subdirectory(extlib/gpurecsplit)
-target_link_libraries(PerfectHashingCompetitors INTERFACE SIMDRecSplit ShockHash)
+target_link_libraries(PerfectHashingCompetitors INTERFACE SIMDRecSplit)
 
 add_subdirectory(extlib/sichash)
 target_link_libraries(PerfectHashingCompetitors INTERFACE SicHash)

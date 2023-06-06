@@ -7,10 +7,7 @@
 #include "benchmark/SIMDRecSplitContender.h"
 #include "benchmark/RecSplitRotateContender.h"
 #include "benchmark/MphfWbpmContender.h"
-#include "benchmark/ShockHashContender.h"
 #include "benchmark/PartitionedPTHashContender.h"
-#include "benchmark/PartitionedSicHashContender.h"
-#include "benchmark/PartitionedSIMDRecSplitContender.h"
 
 int main(int argc, char** argv) {
     double loadFactor = 0.8;
@@ -23,7 +20,6 @@ int main(int argc, char** argv) {
     bool sichash = false;
     bool pthash = false;
     bool partitionedPthash = false;
-    bool shockhash = false;
     bool chd = false;
     bool bdz = false;
     bool bmz = false;
@@ -46,7 +42,6 @@ int main(int argc, char** argv) {
     cmd.add_flag("mphfWbpm", mphfWbpm, "Execute mphfWbpm benchmark");
     cmd.add_flag("bbhash", bbhash, "Execute bbhash benchmark");
     cmd.add_flag("sichash", sichash, "Execute sichash benchmark");
-    cmd.add_flag("shockhash", shockhash, "Execute shockhash benchmark");
     cmd.add_flag("sichashOnlyPartial", sichashOnlyPartial, "Ignore fast ribbon retrieval configurations and test fewer thresholds");
     cmd.add_flag("pthash", pthash, "Execute pthash benchmark");
     cmd.add_flag("partitionedPthash", partitionedPthash, "Execute partitioned pthash benchmark");
@@ -92,9 +87,6 @@ int main(int argc, char** argv) {
         if (!sichashOnlyPartial) {
             sicHashContenderRunner<32>(N, loadFactor, minimalOnly);
         }
-    }
-    if (shockhash) {
-        shockHashContenderRunner(N);
     }
     if (pthash) {
         ptHashContenderRunner(N, loadFactor, minimalOnly);

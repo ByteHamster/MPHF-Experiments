@@ -28,7 +28,7 @@ class RecSplitRotateContender : public Contender {
         }
 
         void construct(const std::vector<std::string> &keys) override {
-            recSplit = new bez::function::recsplit_rotate::RecSplit<l>(keys, bucketSize);
+            recSplit = new bez::function::recsplit_rotate::RecSplit<l>(keys, bucketSize, numThreads);
         }
 
         size_t sizeBits() override {
