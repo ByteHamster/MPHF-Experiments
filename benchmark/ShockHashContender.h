@@ -3,11 +3,11 @@
 #include "Contender.h"
 #include <ShockHash.h>
 
-template<int l>
+template<int l, bool rotationFitting = true>
 class ShockHashContender : public Contender {
     public:
         size_t bucketSize;
-        shockhash::ShockHash<l> *recSplit = nullptr;
+        shockhash::ShockHash<l, rotationFitting> *recSplit = nullptr;
 
         ShockHashContender(size_t N, size_t bucketSize)
                 : Contender(N, 1.0), bucketSize(bucketSize) {
@@ -19,6 +19,7 @@ class ShockHashContender : public Contender {
 
         std::string name() override {
             return std::string("ShockHash")
+                  + " rotationFitting=" + std::to_string(rotationFitting)
                   + " l=" + std::to_string(l)
                   + " b=" + std::to_string(bucketSize);
         }
@@ -28,7 +29,7 @@ class ShockHashContender : public Contender {
         }
 
         void construct(const std::vector<std::string> &keys) override {
-            recSplit = new shockhash::ShockHash<l>(keys, bucketSize);
+            recSplit = new shockhash::ShockHash<l, rotationFitting>(keys, bucketSize);
         }
 
         size_t sizeBits() override {
