@@ -1,11 +1,8 @@
 #include <tlx/cmdline_parser.hpp>
-#include "benchmark/CmphContender.h"
-#include "benchmark/PartitionedSicHashContender.h"
 #include "benchmark/PTHashContender.h"
 #include "benchmark/PartitionedPTHashContender.h"
 #include "benchmark/BBHashContender.h"
 #include "benchmark/SIMDRecSplitContender.h"
-#include "benchmark/PartitionedSIMDRecSplitContender.h"
 
 int main(int argc, char** argv) {
     size_t N = 5e6;
