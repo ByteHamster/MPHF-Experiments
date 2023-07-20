@@ -30,9 +30,8 @@ int main(int argc, char** argv) {
     {PTHashContender<true, pthash::elias_fano >(N, 0.99, 6.0).run();}
     {SicHashContender<true, 64>(N, 0.97, sichash::SicHashConfig().percentages(0.45, 0.31)).run();}
     {SicHashContender<true, 64>(N, 0.9, sichash::SicHashConfig().percentages(0.21, 0.78)).run();}
-    {ShockHashContender<8>(N, 100).run();}
-    {ShockHashContender<14>(N, 2000).run();}
+    {ShockHashContender<25>(N, 50).run();}
     {ShockHashContender<30>(N, 2000).run();}
-    {ShockHashContender<40>(N, 2000).run();}
+    {ShockHashContender<42>(N, 2000).run();}
     return 0;
 }

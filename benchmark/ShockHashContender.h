@@ -1,13 +1,13 @@
 #pragma once
 
 #include "Contender.h"
-#include <ShockHash.h>
+#include <SIMDShockHash.hpp>
 
 template<int l, bool rotationFitting = true>
 class ShockHashContender : public Contender {
     public:
         size_t bucketSize;
-        shockhash::ShockHash<l, rotationFitting> *recSplit = nullptr;
+        shockhash::SIMDShockHash<l, rotationFitting> *recSplit = nullptr;
 
         ShockHashContender(size_t N, size_t bucketSize)
                 : Contender(N, 1.0), bucketSize(bucketSize) {
@@ -18,7 +18,7 @@ class ShockHashContender : public Contender {
         }
 
         std::string name() override {
-            return std::string("ShockHash")
+            return std::string("ShockHashSIMD")
                   + " rotationFitting=" + std::to_string(rotationFitting)
                   + " l=" + std::to_string(l)
                   + " b=" + std::to_string(bucketSize);
@@ -29,7 +29,7 @@ class ShockHashContender : public Contender {
         }
 
         void construct(const std::vector<std::string> &keys) override {
-            recSplit = new shockhash::ShockHash<l, rotationFitting>(keys, bucketSize);
+            recSplit = new shockhash::SIMDShockHash<l, rotationFitting>(keys, bucketSize);
         }
 
         size_t sizeBits() override {
@@ -53,6 +53,10 @@ void shockHashTestMulti(size_t N) {
 }
 
 void shockHashContenderRunner(size_t N) {
+    shockHashTestMulti<4>(N);
+    shockHashTestMulti<6>(N);
+    shockHashTestMulti<8>(N);
+    shockHashTestMulti<10>(N);
     shockHashTestMulti<12>(N);
     shockHashTestMulti<15>(N);
     shockHashTestMulti<24>(N);
