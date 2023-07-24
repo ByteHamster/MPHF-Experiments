@@ -9,6 +9,7 @@
 #include "benchmark/MphfWbpmContender.h"
 #include "benchmark/ShockHashContender.h"
 #include "benchmark/PartitionedPTHashContender.h"
+#include "benchmark/RustFmphContender.h"
 
 int main(int argc, char** argv) {
     double loadFactor = 0.8;
@@ -27,6 +28,7 @@ int main(int argc, char** argv) {
     bool bmz = false;
     bool chm = false;
     bool fch = false;
+    bool rustFmphContender = false;
     bool sichashOnlyPartial = false;
     bool minimalOnly = false;
 
@@ -53,11 +55,15 @@ int main(int argc, char** argv) {
     cmd.add_flag("bmz", bmz, "Execute bmz benchmark");
     cmd.add_flag("chm", chm, "Execute chm benchmark");
     cmd.add_flag("fch", fch, "Execute fch benchmark");
+    cmd.add_flag("rustFmph", rustFmphContender, "Execute rust fmph benchmark");
 
     if (!cmd.process(argc, argv)) {
         return 1;
     }
 
+    if (rustFmphContender) {
+        rustFmphContenderRunner(N);
+    }
     if (recsplit) {
         recSplitContenderRunner(N);
     }
