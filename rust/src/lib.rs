@@ -30,10 +30,11 @@ pub extern fn createFmphStruct(len: usize, my_strings: *const *const c_char) -> 
 }
 
 #[no_mangle]
-pub extern fn constructFmph(struct_ptr: *mut FmphWrapper) {
+pub extern fn constructFmph(struct_ptr: *mut FmphWrapper, gamma : u16) {
     let struct_instance = unsafe { &mut *struct_ptr };
     let mut build_config = BuildConf::default();
     build_config.use_multiple_threads = false;
+    build_config.relative_level_size = gamma;
     struct_instance.hash_func = fmph::Function::from_slice_with_conf(&struct_instance.vector[..], build_config);
 }
 

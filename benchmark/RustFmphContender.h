@@ -4,7 +4,7 @@
 
 extern "C" {
 void *createFmphStruct(uint64_t len, const char **str);
-void constructFmph(void *rustStruct);
+void constructFmph(void *rustStruct, uint16_t);
 uint64_t queryFmph(void *rustStruct, const char *key);
 size_t sizeFmph(void *rustStruct);
 void destroyStruct(void *rustStruct);
@@ -14,10 +14,11 @@ class RustFmphContender : public Contender {
     private:
         void *rustStruct = nullptr;
         const char **data;
+        double gamma;
     public:
 
-        RustFmphContender(size_t N)
-            : Contender(N, 1.0) {
+        RustFmphContender(size_t N, double gamma)
+            : Contender(N, 1.0), gamma(gamma) {
             data = static_cast<const char **>(malloc(N * sizeof(char*)));
         }
 
@@ -27,7 +28,8 @@ class RustFmphContender : public Contender {
         }
 
         std::string name() override {
-            return std::string("RustContender");
+            return std::string("RustFmphContender")
+                + " gamma=" + std::to_string(gamma);
         }
 
         void beforeConstruction(const std::vector<std::string> &keys) override {
@@ -41,7 +43,7 @@ class RustFmphContender : public Contender {
 
         void construct(const std::vector<std::string> &keys) override {
             (void) keys;
-            constructFmph(rustStruct);
+            constructFmph(rustStruct, 100 * gamma);
         }
 
         size_t sizeBits() override {
@@ -65,5 +67,7 @@ class RustFmphContender : public Contender {
 };
 
 void rustFmphContenderRunner(size_t N) {
-    {RustFmphContender(N).run();}
+    for (double gamma = 1.0; gamma <= 2.0; gamma += 0.15) {
+        { RustFmphContender(N, gamma).run(); }
+    }
 }
