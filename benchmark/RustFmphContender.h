@@ -3,21 +3,16 @@
 #include "Contender.h"
 
 extern "C" {
-void *createQueryPlanStruct(uint64_t len, const char **str);
-void destroyQueryPlanStruct(void *rustStruct);
-
 void *createFmphStruct(uint64_t len, const char **str);
 void constructFmph(void *rustStruct, uint16_t);
 uint64_t queryFmph(void *rustStruct, const char *key);
 size_t sizeFmph(void *rustStruct);
 void destroyFmphStruct(void *rustStruct);
-void queryMultiFmph(void *rustStruct, void *queryPlan);
 }
 
 class RustFmphContender : public Contender {
     protected:
         void *rustStruct = nullptr;
-        void *queryPlanStruct = nullptr;
         const char **data;
         double gamma;
     public:
@@ -30,9 +25,6 @@ class RustFmphContender : public Contender {
         ~RustFmphContender() override {
             if (rustStruct != nullptr) {
                 destroyFmphStruct(rustStruct);
-            }
-            if (queryPlanStruct != nullptr) {
-                destroyQueryPlanStruct(queryPlanStruct);
             }
             free(data);
         }
@@ -60,18 +52,11 @@ class RustFmphContender : public Contender {
             return sizeFmph(rustStruct) * 8;
         }
 
-        void prepareQueries(const std::vector<std::string> &keys) override {
-            std::cout << "Converting query plan" << std::endl;
-            for (size_t i = 0; i < keys.size(); i++) {
-                data[i] = keys.at(i).c_str();
-            }
-            std::cout << "Sending to Rust" << std::endl;
-            queryPlanStruct = createQueryPlanStruct(N, data);
-        }
-
         void performQueries(const std::vector<std::string> &keys) override {
-            (void) keys;
-            queryMultiFmph(rustStruct, queryPlanStruct);
+            auto x = [&] (std::string &key) {
+                return queryFmph(rustStruct, key.c_str());
+            };
+            doPerformQueries(keys, x);
         }
 
         void performTest(const std::vector<std::string> &keys) override {
