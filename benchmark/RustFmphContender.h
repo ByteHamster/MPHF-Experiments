@@ -3,18 +3,19 @@
 #include "Contender.h"
 
 extern "C" {
+void *createQueryPlanStruct(uint64_t len, const char **str);
+void destroyQueryPlanStruct(void *rustStruct);
+
 void *createFmphStruct(uint64_t len, const char **str);
 void constructFmph(void *rustStruct, uint16_t);
 uint64_t queryFmph(void *rustStruct, const char *key);
 size_t sizeFmph(void *rustStruct);
 void destroyFmphStruct(void *rustStruct);
-void *createQueryPlanStruct(uint64_t len, const char **str);
-void destroyQueryPlanStruct(void *rustStruct);
 uint64_t queryMultiFmph(void *rustStruct, void *queryPlan);
 }
 
 class RustFmphContender : public Contender {
-    private:
+    protected:
         void *rustStruct = nullptr;
         void *queryPlanStruct = nullptr;
         const char **data;

@@ -10,6 +10,7 @@
 #include "benchmark/ShockHashContender.h"
 #include "benchmark/PartitionedPTHashContender.h"
 #include "benchmark/RustFmphContender.h"
+#include "benchmark/RustFmphGoContender.h"
 
 int main(int argc, char** argv) {
     double loadFactor = 0.8;
@@ -29,6 +30,7 @@ int main(int argc, char** argv) {
     bool chm = false;
     bool fch = false;
     bool rustFmphContender = false;
+    bool rustFmphGoContender = false;
     bool sichashOnlyPartial = false;
     bool minimalOnly = false;
 
@@ -56,6 +58,7 @@ int main(int argc, char** argv) {
     cmd.add_flag("chm", chm, "Execute chm benchmark");
     cmd.add_flag("fch", fch, "Execute fch benchmark");
     cmd.add_flag("rustFmph", rustFmphContender, "Execute rust fmph benchmark");
+    cmd.add_flag("rustFmphGo", rustFmphGoContender, "Execute rust fmph-go benchmark");
 
     if (!cmd.process(argc, argv)) {
         return 1;
@@ -63,6 +66,9 @@ int main(int argc, char** argv) {
 
     if (rustFmphContender) {
         rustFmphContenderRunner(N);
+    }
+    if (rustFmphGoContender) {
+        rustFmphGoContenderRunner(N);
     }
     if (recsplit) {
         recSplitContenderRunner(N);

@@ -1,5 +1,6 @@
 #pragma once
 
+#include <memory> // Otherwise PTHash misses an import
 #include <pthash.hpp>
 #undef MAX_BUCKET_SIZE
 #include "Contender.h"

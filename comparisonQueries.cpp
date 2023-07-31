@@ -1,7 +1,7 @@
 #include <tlx/cmdline_parser.hpp>
 #include "benchmark/SicHashContender.h"
 #include "benchmark/PTHashContender.h"
-#include "benchmark/BBHashContender.h"
+#include "benchmark/RustFmphGoContender.h"
 #include "benchmark/RecSplitContender.h"
 #include "benchmark/SIMDRecSplitContender.h"
 #include "benchmark/ShockHashContender.h"
@@ -23,8 +23,8 @@ int main(int argc, char** argv) {
     {RecSplitContender<5>(N, 5).run();}
     {RecSplitContender<8>(N, 100).run();}
     {RecSplitContender<14>(N, 2000).run();}
-    {BBHashContender(N, 1.0, 0).run();}
-    {BBHashContender(N, 5.0, 0).run();}
+    {RustFmphGoContender(N, 1.0).run();}
+    {RustFmphGoContender(N, 5.0).run();}
     {PTHashContender<true, pthash::compact_compact>(N, 0.99, 7.0).run();}
     {PTHashContender<true, pthash::dictionary_dictionary >(N, 0.88, 11.0).run();}
     {PTHashContender<true, pthash::elias_fano >(N, 0.99, 6.0).run();}
