@@ -28,7 +28,9 @@ class RustFmphContender : public Contender {
         }
 
         ~RustFmphContender() override {
-            destroyFmphStruct(rustStruct);
+            if (rustStruct != nullptr) {
+                destroyFmphStruct(rustStruct);
+            }
             if (queryPlanStruct != nullptr) {
                 destroyQueryPlanStruct(queryPlanStruct);
             }

@@ -19,6 +19,11 @@ class RustFmphGoContender : public RustFmphContender {
             : RustFmphContender(N, 1.0) {
         }
 
+        ~RustFmphGoContender() override {
+            destroyFmphGoStruct(rustStruct);
+            rustStruct = nullptr;
+        }
+
         std::string name() override {
             return std::string("RustFmphGoContender")
                 + " gamma=" + std::to_string(gamma);

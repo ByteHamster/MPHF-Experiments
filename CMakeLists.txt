@@ -31,11 +31,11 @@ target_include_directories(MphfWbpm SYSTEM PRIVATE extlib/mphf-wbpm/lib/weighted
 target_include_directories(MphfWbpm SYSTEM PUBLIC extlib/mphf-wbpm/include)
 target_link_libraries(PerfectHashingCompetitors INTERFACE MphfWbpm)
 
-add_subdirectory(extlib/gpurecsplit)
-target_link_libraries(PerfectHashingCompetitors INTERFACE SIMDRecSplit)
-
 add_subdirectory(extlib/ShockHash)
 target_link_libraries(PerfectHashingCompetitors INTERFACE ShockHash)
+
+add_subdirectory(extlib/gpurecsplit)
+target_link_libraries(PerfectHashingCompetitors INTERFACE SIMDRecSplit)
 
 add_subdirectory(extlib/sichash)
 target_link_libraries(PerfectHashingCompetitors INTERFACE SicHash)
@@ -52,15 +52,15 @@ add_custom_command(
     WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/rust
     DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/rust/src/lib.rs)
 add_custom_target(func DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/rust/target/release/libmphf_experiments.a")
-add_library(libc STATIC IMPORTED)
-set_property(TARGET libc PROPERTY IMPORTED_LOCATION "${CMAKE_CURRENT_SOURCE_DIR}/rust/target/release/libmphf_experiments.a")
-add_dependencies(libc func)
+add_library(RustCompetitors STATIC IMPORTED)
+set_property(TARGET RustCompetitors PROPERTY IMPORTED_LOCATION "${CMAKE_CURRENT_SOURCE_DIR}/rust/target/release/libmphf_experiments.a")
+add_dependencies(RustCompetitors func)
+target_link_libraries(PerfectHashingCompetitors INTERFACE RustCompetitors)
 
 ################### Benchmark build targets ###################
 add_executable(Comparison comparison.cpp)
 target_link_libraries(Comparison PRIVATE PerfectHashingCompetitors Sux)
 target_compile_features(Comparison PRIVATE cxx_std_20)
-target_link_libraries(Comparison PRIVATE libc)
 
 add_executable(ComparisonN comparisonN.cpp)
 target_link_libraries(ComparisonN PRIVATE PerfectHashingCompetitors Sux)
