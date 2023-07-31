@@ -11,7 +11,7 @@ void constructFmph(void *rustStruct, uint16_t);
 uint64_t queryFmph(void *rustStruct, const char *key);
 size_t sizeFmph(void *rustStruct);
 void destroyFmphStruct(void *rustStruct);
-uint64_t queryMultiFmph(void *rustStruct, void *queryPlan);
+void queryMultiFmph(void *rustStruct, void *queryPlan);
 }
 
 class RustFmphContender : public Contender {
@@ -71,8 +71,7 @@ class RustFmphContender : public Contender {
 
         void performQueries(const std::vector<std::string> &keys) override {
             (void) keys;
-            uint64_t x = queryMultiFmph(rustStruct, queryPlanStruct);
-            DO_NOT_OPTIMIZE(x);
+            queryMultiFmph(rustStruct, queryPlanStruct);
         }
 
         void performTest(const std::vector<std::string> &keys) override {

@@ -5,6 +5,7 @@ use std::os::raw::c_char;
 use libc::strlen;
 use std::slice;
 use std::str;
+use std::arch::asm;
 use ph::{fmph, GetSize};
 use ph::fmph::{BuildConf, GOBuildConf};
 
@@ -38,6 +39,9 @@ pub extern fn destroyQueryPlanStruct(struct_instance: *mut QueryPlan) {
     unsafe { let _ = Box::from_raw(struct_instance); }
 }
 
+fn do_not_optimize<T>(dummy: T) {
+    unsafe { asm!("/* {0} */", in(reg) &dummy) }
+}
 
 ////////////////////////////////////////// Fmph //////////////////////////////////////////
 pub struct FmphWrapper {
@@ -71,15 +75,14 @@ pub extern fn queryFmph(struct_ptr: *mut FmphWrapper, key_c_s : *const c_char) -
 }
 
 #[no_mangle]
-pub extern fn queryMultiFmph(struct_ptr: *mut FmphWrapper, query_plan_ptr: *mut QueryPlan) -> u64 {
+pub extern fn queryMultiFmph(struct_ptr: *mut FmphWrapper, query_plan_ptr: *mut QueryPlan) {
     let struct_instance = unsafe { &mut *struct_ptr };
     let query_plan = unsafe { &mut *query_plan_ptr };
 
-    let mut x = 0; // To avoid optimizing away
     for item in query_plan.vector.iter() {
-        x += struct_instance.hash_func.get(item).unwrap();
+        let x = struct_instance.hash_func.get(item).unwrap();
+        do_not_optimize(x);
     }
-    return x;
 }
 
 #[no_mangle]
@@ -125,15 +128,14 @@ pub extern fn queryFmphGo(struct_ptr: *mut FmphGoWrapper, key_c_s : *const c_cha
 }
 
 #[no_mangle]
-pub extern fn queryMultiFmphGo(struct_ptr: *mut FmphGoWrapper, query_plan_ptr: *mut QueryPlan) -> u64 {
+pub extern fn queryMultiFmphGo(struct_ptr: *mut FmphGoWrapper, query_plan_ptr: *mut QueryPlan) {
     let struct_instance = unsafe { &mut *struct_ptr };
     let query_plan = unsafe { &mut *query_plan_ptr };
 
-    let mut x = 0; // To avoid optimizing away
     for item in query_plan.vector.iter() {
-        x += struct_instance.hash_func.get(item).unwrap();
+        let x = struct_instance.hash_func.get(item).unwrap();
+        do_not_optimize(x);
     }
-    return x;
 }
 
 #[no_mangle]

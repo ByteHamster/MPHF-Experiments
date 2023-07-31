@@ -9,7 +9,7 @@ void constructFmphGo(void *rustStruct, uint16_t);
 uint64_t queryFmphGo(void *rustStruct, const char *key);
 size_t sizeFmphGo(void *rustStruct);
 void destroyFmphGoStruct(void *rustStruct);
-uint64_t queryMultiFmphGo(void *rustStruct, void *queryPlan);
+void queryMultiFmphGo(void *rustStruct, void *queryPlan);
 }
 
 class RustFmphGoContender : public RustFmphContender {
@@ -49,8 +49,7 @@ class RustFmphGoContender : public RustFmphContender {
 
         void performQueries(const std::vector<std::string> &keys) override {
             (void) keys;
-            uint64_t x = queryMultiFmphGo(rustStruct, queryPlanStruct);
-            DO_NOT_OPTIMIZE(x);
+            queryMultiFmphGo(rustStruct, queryPlanStruct);
         }
 
         void performTest(const std::vector<std::string> &keys) override {
