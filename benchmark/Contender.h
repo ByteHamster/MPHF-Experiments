@@ -34,6 +34,11 @@ class Contender {
         virtual void beforeConstruction(const std::vector<std::string> &keys) {
             (void) keys;
         }
+
+        virtual void prepareQueries(const std::vector<std::string> &keys) {
+            (void) keys;
+        }
+
         virtual void performQueries(const std::vector<std::string> &keys) = 0;
         virtual void performTest(const std::vector<std::string> &keys) = 0;
 
@@ -71,6 +76,7 @@ class Contender {
                 for (size_t i = 0; i < numQueries; i++) {
                     queryPlan.push_back(keys[prng(N)]);
                 }
+                prepareQueries(queryPlan);
                 std::cout << "Cooldown" << std::endl;
                 usleep(1000*1000);
                 std::cout<<"Querying"<<std::endl;

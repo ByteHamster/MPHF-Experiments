@@ -7,23 +7,30 @@ void *createFmphStruct(uint64_t len, const char **str);
 void constructFmph(void *rustStruct, uint16_t);
 uint64_t queryFmph(void *rustStruct, const char *key);
 size_t sizeFmph(void *rustStruct);
-void destroyStruct(void *rustStruct);
+void destroyFmphStruct(void *rustStruct);
+void *createQueryPlanStruct(uint64_t len, const char **str);
+void destroyQueryPlanStruct(void *rustStruct);
+uint64_t queryMultiFmph(void *rustStruct, void *queryPlan);
 }
 
 class RustFmphContender : public Contender {
     private:
         void *rustStruct = nullptr;
+        void *queryPlanStruct = nullptr;
         const char **data;
         double gamma;
     public:
 
         RustFmphContender(size_t N, double gamma)
             : Contender(N, 1.0), gamma(gamma) {
-            data = static_cast<const char **>(malloc(N * sizeof(char*)));
+            data = static_cast<const char **>(malloc(std::max(N, Contender::numQueries) * sizeof(char*)));
         }
 
         ~RustFmphContender() override {
-            destroyStruct(rustStruct);
+            destroyFmphStruct(rustStruct);
+            if (queryPlanStruct != nullptr) {
+                destroyQueryPlanStruct(queryPlanStruct);
+            }
             free(data);
         }
 
@@ -50,11 +57,19 @@ class RustFmphContender : public Contender {
             return sizeFmph(rustStruct) * 8;
         }
 
+        void prepareQueries(const std::vector<std::string> &keys) override {
+            std::cout << "Converting query plan" << std::endl;
+            for (size_t i = 0; i < keys.size(); i++) {
+                data[i] = keys.at(i).c_str();
+            }
+            std::cout << "Sending to Rust" << std::endl;
+            queryPlanStruct = createQueryPlanStruct(N, data);
+        }
+
         void performQueries(const std::vector<std::string> &keys) override {
-            auto x = [&] (std::string &key) {
-                return queryFmph(rustStruct, key.c_str());
-            };
-            doPerformQueries(keys, x);
+            (void) keys;
+            uint64_t x = queryMultiFmph(rustStruct, queryPlanStruct);
+            DO_NOT_OPTIMIZE(x);
         }
 
         void performTest(const std::vector<std::string> &keys) override {

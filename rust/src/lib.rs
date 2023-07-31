@@ -8,6 +8,38 @@ use std::str;
 use ph::{fmph, GetSize};
 use ph::fmph::BuildConf;
 
+//////////// General methods /////////
+pub struct QueryPlan {
+    vector: Vec<String>
+}
+
+fn c_strings_to_vec(len: usize, my_strings: *const *const c_char) -> Vec<String> {
+    let mut vector = Vec::new();
+    let sl = unsafe { std::slice::from_raw_parts(my_strings, len) };
+    let mut index = 0;
+    while index < sl.len() {
+        let c_s = sl[index];
+        let s = unsafe { str::from_utf8_unchecked(slice::from_raw_parts(c_s as *const u8, strlen(c_s)+1)) };
+        vector.push(String::from(s));
+        index += 1;
+    }
+    return vector;
+}
+
+#[no_mangle]
+pub extern fn createQueryPlanStruct(len: usize, my_strings: *const *const c_char) -> *mut QueryPlan {
+    let struct_instance = QueryPlan { vector: c_strings_to_vec(len, my_strings) };
+    let boxx = Box::new(struct_instance);
+    Box::into_raw(boxx)
+}
+
+#[no_mangle]
+pub extern fn destroyQueryPlanStruct(struct_instance: *mut QueryPlan) {
+    unsafe { let _ = Box::from_raw(struct_instance); }
+}
+
+
+/////// Fmph /////////
 pub struct FmphWrapper {
     vector: Vec<String>,
     hash_func: fmph::Function
@@ -15,16 +47,9 @@ pub struct FmphWrapper {
 
 #[no_mangle]
 pub extern fn createFmphStruct(len: usize, my_strings: *const *const c_char) -> *mut FmphWrapper {
-    let mut struct_instance = FmphWrapper { vector: Vec::new(), hash_func: fmph::Function::from(&[] as &[String]) };
-    let sl = unsafe { std::slice::from_raw_parts(my_strings, len) };
-    let mut index = 0;
-    while index < sl.len() {
-        let c_s = sl[index];
-        let s = unsafe { str::from_utf8_unchecked(slice::from_raw_parts(c_s as *const u8, strlen(c_s)+1)) };
-        struct_instance.vector.push(String::from(s));
-        index += 1;
-    }
-
+    let struct_instance = FmphWrapper {
+        vector: c_strings_to_vec(len, my_strings),
+        hash_func: fmph::Function::from(&[] as &[String]) };
     let boxx = Box::new(struct_instance);
     Box::into_raw(boxx)
 }
@@ -46,12 +71,24 @@ pub extern fn queryFmph(struct_ptr: *mut FmphWrapper, key_c_s : *const c_char) -
 }
 
 #[no_mangle]
+pub extern fn queryMultiFmph(struct_ptr: *mut FmphWrapper, query_plan_ptr: *mut QueryPlan) -> u64 {
+    let struct_instance = unsafe { &mut *struct_ptr };
+    let query_plan = unsafe { &mut *query_plan_ptr };
+
+    let mut x = 0; // To avoid optimizing away
+    for item in query_plan.vector.iter() {
+        x += struct_instance.hash_func.get(item).unwrap();
+    }
+    return x;
+}
+
+#[no_mangle]
 pub extern fn sizeFmph(struct_ptr: *mut FmphWrapper) -> usize {
     let struct_instance = unsafe { &mut *struct_ptr };
     struct_instance.hash_func.size_bytes()
 }
 
 #[no_mangle]
-pub extern fn destroyStruct(struct_instance: *mut FmphWrapper) {
+pub extern fn destroyFmphStruct(struct_instance: *mut FmphWrapper) {
     unsafe { let _ = Box::from_raw(struct_instance); }
 }
