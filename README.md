@@ -49,6 +49,7 @@ docker run --interactive --tty -v "$(pwd)/scripts/dockerVolume:/opt/dockerVolume
 | [SicHash](https://doi.org/10.1137/1.9781611977561.ch15), Figure 6 <br /><img src="preview-sichash-figure-6.png" width="300"/> | /opt/dockerVolume/comparison-N.sh   | 20 minutes         |
 | [SicHash](https://doi.org/10.1137/1.9781611977561.ch15), Figure 8 <br /><img src="preview-sichash-figure-8.png" width="300"/> | /opt/dockerVolume/pareto.sh         | 45 minutes         |
 | [GpuRecSplit](https://arxiv.org/pdf/2212.09562.pdf), Figure 6 <br /><img src="preview-gpurecsplit-figure-6.png" width="300"/> | /opt/dockerVolume/pareto-threads.sh | 45 minutes         |
+| ShockHash, Figure 5 <br /><img src="preview-shockhash-figure-5.png" width="300"/>                                             | /opt/dockerVolume/pareto-zoomed.sh  | 60 minutes         |
 
 The resulting plots can be found in `scripts/dockerVolume` and have the file extension `.pdf`.
 

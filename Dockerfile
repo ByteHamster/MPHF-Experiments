@@ -15,7 +15,7 @@ WORKDIR /opt/sqlplot-tools/build
 RUN cmake -DCMAKE_BUILD_TYPE=Release -DWITH_POSTGRESQL=OFF -DWITH_MYSQL=OFF ..
 RUN cmake --build . -j 8
 
-# Build SicHash
+# Build Experiments
 COPY . /opt/sichash
 RUN mkdir /opt/sichash/build
 WORKDIR /opt/sichash/build

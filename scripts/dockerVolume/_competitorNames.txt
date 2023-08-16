@@ -9,3 +9,6 @@ RESULT store_code=RecSplit					store_name=RecSplit				showIn=legend,heatmap	stor
 RESULT store_code=BBHash					store_name=BBHash				showIn=legend,heatmap	store_attr=mark=diamond,color=colorBbhash,solid
 RESULT store_code=SIMDRecSplit				store_name=SIMDRecSplit			showIn=legend			store_attr=mark=+,color=colorSimdRecSplit,solid
 #RESULT store_code=PartitionedSIMDRecSplit	store_name=SIMDRecSplit Partd.	showIn=legend			store_attr=mark=flippedTriangle,color=colorSimdRecSplit,densely dotted
+RESULT store_code=ShockHashSIMD				store_name=ShockHashSIMD + RF	showIn=legend			store_attr=mark=triangle*,color=colorShockHash,solid
+RESULT store_code=RustFmphContender			store_name=FMPH					showIn=legend			store_attr=mark=asterisk,color=colorRustFmph,solid
+RESULT store_code=RustFmphGoContender		store_name=FMPHGO				showIn=legend			store_attr=mark=diamond,color=colorRustFmphGo,solid

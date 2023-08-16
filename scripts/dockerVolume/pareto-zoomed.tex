@@ -1,0 +1,199 @@
+\documentclass{article}
+\usepackage[a4paper, margin=2cm]{geometry}
+\usepackage{xcolor}
+\usepackage{xspace}
+\usepackage{booktabs}
+\usepackage{dsfont}
+\usepackage{footmisc}
+\usepackage{marvosym}
+\usepackage{amsmath}
+\usepackage{hyperref}
+\usepackage[capitalise,noabbrev]{cleveref}
+\usepackage{tabularx}
+\usepackage{listings}
+\usepackage{multirow}
+\usepackage{pgfplots}
+\pgfplotsset{compat=newest}
+
+\usepgfplotslibrary{groupplots}
+\pgfplotsset{every axis/.style={scale only axis}}
+
+\pgfplotsset{
+  % Mark repeat, but the last mark is always drawn
+  mark repeat*/.style={
+    scatter,
+    scatter src=x,
+    scatter/@pre marker code/.code={
+      \pgfmathtruncatemacro\usemark{
+        or(mod(\coordindex,#1)==0, (\coordindex==(\numcoords-1))
+      }
+      \ifnum\usemark=0
+        \pgfplotsset{mark=none}
+      \fi
+    },
+    scatter/@post marker code/.code={}
+  },
+  major grid style={thin,dotted},
+  minor grid style={thin,dotted},
+  ymajorgrids,
+  yminorgrids,
+  every axis/.append style={
+    line width=0.7pt,
+    tick style={
+      line cap=round,
+      thin,
+      major tick length=4pt,
+      minor tick length=2pt,
+    },
+  },
+  legend cell align=left,
+  legend style={
+    line width=0.7pt,
+    /tikz/every even column/.append style={column sep=3mm,black},
+    /tikz/every odd column/.append style={black},
+  },
+  % move title closer
+  legend style={font=\small},
+  title style={yshift=-2pt},
+  % less space on left and right
+  enlarge x limits=0.04,
+  every tick label/.append style={font=\footnotesize},
+  every axis label/.append style={font=\small},
+  every axis y label/.append style={yshift=-1ex},
+  /pgf/number format/1000 sep={},
+  axis lines*=left,
+  xlabel near ticks,
+  ylabel near ticks,
+  axis lines*=left,
+  label style={font=\footnotesize},       
+  tick label style={font=\footnotesize},
+}
+
+\title{MPHF plot}
+\date{}
+\begin{document}
+\definecolor{veryLightGrey}{HTML}{F2F2F2}
+\definecolor{colorBmz}{HTML}{377EB8}
+\definecolor{colorBdz}{HTML}{E41A1C}
+\definecolor{colorFch}{HTML}{444444}
+\definecolor{colorChd}{HTML}{000000}
+\definecolor{colorChm}{HTML}{FF7F00}
+\definecolor{colorHeterogeneous}{HTML}{4DAF4A}
+\definecolor{colorPthash}{HTML}{984EA3}
+\definecolor{colorRecSplit}{HTML}{A65628}
+\definecolor{colorBbhash}{HTML}{F781BF}
+\definecolor{lightGrey}{HTML}{DDDDDD}
+\definecolor{colorSimdRecSplit}{HTML}{444444}
+\definecolor{colorChd}{HTML}{377EB8}
+\definecolor{colorRustFmph}{HTML}{A65628}
+\definecolor{colorRustFmphGo}{HTML}{A65628}
+\definecolor{colorSicHash}{HTML}{4DAF4A}
+\definecolor{colorShockHash}{HTML}{F8BA01}
+
+% IMPORT-DATA competitorNames _competitorNames.txt
+% IMPORT-DATA pareto pareto-zoomed.txt
+% SQL DELETE FROM pareto WHERE threads != 1 OR loadFactor != 1.0
+
+\begin{figure*}[t]
+
+\centering
+    \begin{tikzpicture}
+        \begin{axis}[
+            xlabel={Bits/Key},
+            ylabel={Throughput (MKeys/s)},
+            legend to name=paretoLegend,
+            legend columns=2,
+            width=4cm,
+            height=4cm,
+          ]
+          %% MULTIPLOT(name|ptitle|attr)
+          %% SELECT
+          %%    bitsPerElement as x,
+          %%    0.001*N/constructionTimeMilliseconds as y,
+          %%    store_attr || IIF(name LIKE "%PTHash" OR name LIKE "%SicHash" OR name LIKE "ShockHash%", ",mark repeat*=4", "") as attr,
+          %%    store_name as ptitle,
+          %%    MULTIPLOT
+          %% FROM pareto scatterplot
+          %% JOIN competitorNames ON name = store_code
+          %% WHERE NOT EXISTS (SELECT * FROM pareto d
+          %%           WHERE scatterplot.name = d.name
+          %%                    AND d.bitsPerElement <= scatterplot.bitsPerElement
+          %%                    AND d.constructionTimeMilliseconds <= scatterplot.constructionTimeMilliseconds
+          %%                    AND (d.bitsPerElement < scatterplot.bitsPerElement
+          %%                        OR d.constructionTimeMilliseconds < scatterplot.constructionTimeMilliseconds))
+          %% ORDER BY store_name,x,y
+          \addplot[mark=diamond,color=colorBbhash,solid] coordinates { (3.0688,8.92857) (3.26234,9.80392) (3.3737,10.2041) (3.4976,11.1111) (3.62931,11.3636) };
+          \addlegendentry{BBHash};
+          \addplot[mark=x,color=colorChd,solid] coordinates { (2.0432,0.164312) (2.08422,0.493583) (2.15034,1.2285) (2.22784,2.35849) (2.33894,3.5461) (2.6377,4.34783) (2.92653,4.6729) (4.00294,4.7619) };
+          \addlegendentry{CHD };
+          \addplot[mark=asterisk,color=colorRustFmph,solid] coordinates { (2.81242,6.17284) (2.83405,6.84932) (2.88755,7.57576) (2.97434,8.06452) (3.08045,8.62069) (3.19526,8.92857) (3.30893,9.25926) };
+          \addlegendentry{FMPH \cite{beling2023fingerprinting}};
+          \addplot[mark=diamond,color=colorRustFmphGo,solid] coordinates { (2.21555,4.71698) (2.24538,5.20833) (2.30938,5.61798) (2.50522,5.81395) (2.62618,6.32911) };
+          \addlegendentry{FMPHGO \cite{beling2023fingerprinting}};
+          \addplot[mark=pentagon,color=colorPthash,solid,mark repeat*=4] coordinates { (2.12966,1.20482) (2.19194,1.85874) (2.26419,2.45098) (2.30995,3.01205) (2.37517,3.33333) (2.43104,4.09836) (2.54499,4.16667) (2.60022,4.54545) (2.69014,4.71698) (2.78234,4.7619) (2.85558,5.74713) };
+          \addlegendentry{PTHash};
+          \addplot[mark=square,color=colorRecSplit,solid] coordinates { (1.58921,0.00496677) (1.59461,0.00910664) (1.60678,0.00973937) (1.6163,0.0296824) (1.62995,0.0545316) (1.64541,0.0574779) (1.71393,0.679348) (1.72851,0.745156) (1.77891,1.0846) (1.79354,1.31926) (1.85942,1.68919) (1.88046,2.39234) (1.94782,2.60417) (1.94844,2.97619) (2.013,3.59712) (2.08597,3.84615) (2.21358,4.03226) (2.2863,5.0) };
+          \addlegendentry{RecSplit};
+          \addplot[mark=+,color=colorSimdRecSplit,solid] coordinates { (1.56331,0.00255647) (1.57499,0.00768167) (1.58956,0.0298401) (1.59375,0.0444919) (1.60688,0.0485484) (1.61731,0.216544) (1.63082,0.220848) (1.63208,0.249004) (1.64576,0.268962) (1.66819,1.66113) (1.69885,2.04918) (1.71342,2.36967) (1.72775,2.74725) (1.74659,3.18471) (1.79459,3.47222) (1.80595,4.23729) (1.87343,5.10204) (1.89443,5.26316) (1.94125,5.55556) (2.0158,6.0241) (2.07097,6.66667) (2.0911,6.94444) (2.1446,7.46269) (2.57754,8.47458) (2.8491,8.92857) (2.96714,10.0) (3.31144,10.4167) };
+          \addlegendentry{SIMDRecSplit};
+          \addplot[mark=triangle*,color=colorShockHash,solid,mark repeat*=4] coordinates { (1.54693,0.0566508) (1.54822,0.103029) (1.55214,0.154036) (1.55606,0.213129) (1.56704,0.38432) (1.57624,0.462535) (1.58127,0.591017) (1.59513,0.621118) (1.59563,0.628931) (1.61094,0.711238) (1.64875,0.830565) (1.6659,0.877193) (1.6753,2.30415) (1.68656,2.6178) (1.74528,2.73224) (1.79563,2.89017) (1.80894,3.40136) (1.87385,3.7037) (1.94587,3.78788) (2.03226,3.81679) (2.12102,3.96825) (2.45367,4.0) };
+          \addlegendentry{ShockHashSIMD + RF};
+          \addplot[mark=o,color=colorSicHash,solid,mark repeat*=4] coordinates { (2.02523,1.6835) (2.05632,3.37838) (2.09042,3.64964) (2.11624,3.96825) (2.11726,4.03226) (2.14646,4.13223) (2.17691,4.16667) (2.17858,4.2735) (2.20851,4.54545) (2.24054,4.80769) (2.29917,4.85437) (2.4228,4.9505) (2.57262,5.37634) (2.8139,5.55556) };
+          \addlegendentry{SicHash};
+        \end{axis}
+    \end{tikzpicture}
+    \begin{tikzpicture}
+        \begin{axis}[
+            xlabel={Bits/Key},
+            xmax=1.8,
+            ymode=log,
+            width=4cm,
+            height=4cm,
+          ]
+          %% MULTIPLOT(name|ptitle|attr)
+          %% SELECT
+          %%    bitsPerElement as x,
+          %%    0.001*N/constructionTimeMilliseconds as y,
+          %%    store_attr || IIF(name LIKE "%PTHash" OR name LIKE "%SicHash", ",mark repeat*=4", "") as attr,
+          %%    store_name as ptitle,
+          %%    MULTIPLOT
+          %% FROM pareto scatterplot
+          %% JOIN competitorNames ON name = store_code
+          %% WHERE NOT EXISTS (SELECT * FROM pareto d
+          %%           WHERE scatterplot.name = d.name
+          %%                    AND d.bitsPerElement <= scatterplot.bitsPerElement
+          %%                    AND d.constructionTimeMilliseconds <= scatterplot.constructionTimeMilliseconds
+          %%                    AND (d.bitsPerElement < scatterplot.bitsPerElement
+          %%                        OR d.constructionTimeMilliseconds < scatterplot.constructionTimeMilliseconds))
+          %% ORDER BY store_name,x,y
+          \addplot[mark=diamond,color=colorBbhash,solid] coordinates { (3.0688,8.92857) (3.26234,9.80392) (3.3737,10.2041) (3.4976,11.1111) (3.62931,11.3636) };
+          \addlegendentry{BBHash};
+          \addplot[mark=x,color=colorChd,solid] coordinates { (2.0432,0.164312) (2.08422,0.493583) (2.15034,1.2285) (2.22784,2.35849) (2.33894,3.5461) (2.6377,4.34783) (2.92653,4.6729) (4.00294,4.7619) };
+          \addlegendentry{CHD };
+          \addplot[mark=asterisk,color=colorRustFmph,solid] coordinates { (2.81242,6.17284) (2.83405,6.84932) (2.88755,7.57576) (2.97434,8.06452) (3.08045,8.62069) (3.19526,8.92857) (3.30893,9.25926) };
+          \addlegendentry{FMPH \cite{beling2023fingerprinting}};
+          \addplot[mark=diamond,color=colorRustFmphGo,solid] coordinates { (2.21555,4.71698) (2.24538,5.20833) (2.30938,5.61798) (2.50522,5.81395) (2.62618,6.32911) };
+          \addlegendentry{FMPHGO \cite{beling2023fingerprinting}};
+          \addplot[mark=pentagon,color=colorPthash,solid,mark repeat*=4] coordinates { (2.12966,1.20482) (2.19194,1.85874) (2.26419,2.45098) (2.30995,3.01205) (2.37517,3.33333) (2.43104,4.09836) (2.54499,4.16667) (2.60022,4.54545) (2.69014,4.71698) (2.78234,4.7619) (2.85558,5.74713) };
+          \addlegendentry{PTHash};
+          \addplot[mark=square,color=colorRecSplit,solid] coordinates { (1.58921,0.00496677) (1.59461,0.00910664) (1.60678,0.00973937) (1.6163,0.0296824) (1.62995,0.0545316) (1.64541,0.0574779) (1.71393,0.679348) (1.72851,0.745156) (1.77891,1.0846) (1.79354,1.31926) (1.85942,1.68919) (1.88046,2.39234) (1.94782,2.60417) (1.94844,2.97619) (2.013,3.59712) (2.08597,3.84615) (2.21358,4.03226) (2.2863,5.0) };
+          \addlegendentry{RecSplit};
+          \addplot[mark=+,color=colorSimdRecSplit,solid] coordinates { (1.56331,0.00255647) (1.57499,0.00768167) (1.58956,0.0298401) (1.59375,0.0444919) (1.60688,0.0485484) (1.61731,0.216544) (1.63082,0.220848) (1.63208,0.249004) (1.64576,0.268962) (1.66819,1.66113) (1.69885,2.04918) (1.71342,2.36967) (1.72775,2.74725) (1.74659,3.18471) (1.79459,3.47222) (1.80595,4.23729) (1.87343,5.10204) (1.89443,5.26316) (1.94125,5.55556) (2.0158,6.0241) (2.07097,6.66667) (2.0911,6.94444) (2.1446,7.46269) (2.57754,8.47458) (2.8491,8.92857) (2.96714,10.0) (3.31144,10.4167) };
+          \addlegendentry{SIMDRecSplit};
+          \addplot[mark=triangle*,color=colorShockHash,solid] coordinates { (1.54693,0.0566508) (1.54822,0.103029) (1.55214,0.154036) (1.55606,0.213129) (1.56704,0.38432) (1.57624,0.462535) (1.58127,0.591017) (1.59513,0.621118) (1.59563,0.628931) (1.61094,0.711238) (1.64875,0.830565) (1.6659,0.877193) (1.6753,2.30415) (1.68656,2.6178) (1.74528,2.73224) (1.79563,2.89017) (1.80894,3.40136) (1.87385,3.7037) (1.94587,3.78788) (2.03226,3.81679) (2.12102,3.96825) (2.45367,4.0) };
+          \addlegendentry{ShockHashSIMD + RF};
+          \addplot[mark=o,color=colorSicHash,solid,mark repeat*=4] coordinates { (2.02523,1.6835) (2.05632,3.37838) (2.09042,3.64964) (2.11624,3.96825) (2.11726,4.03226) (2.14646,4.13223) (2.17691,4.16667) (2.17858,4.2735) (2.20851,4.54545) (2.24054,4.80769) (2.29917,4.85437) (2.4228,4.9505) (2.57262,5.37634) (2.8139,5.55556) };
+          \addlegendentry{SicHash};
+
+          \legend{};
+        \end{axis}
+    \end{tikzpicture}
+
+    \begin{tikzpicture}
+        \ref*{paretoLegend}
+    \end{tikzpicture}
+    \caption{Space usage vs construction throughput for $N=500 000$ objects ($10$ Million in paper).}
+\end{figure*}
+
+\end{document}
+
