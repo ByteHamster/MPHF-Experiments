@@ -8,6 +8,8 @@ void constructFmph(void *rustStruct, uint16_t);
 uint64_t queryFmph(void *rustStruct, const char *key);
 size_t sizeFmph(void *rustStruct);
 void destroyFmphStruct(void *rustStruct);
+static bool rayonThreadsInitialized = false;
+void initializeRayonThreadPool(uint64_t threads);
 }
 
 class RustFmphContender : public Contender {
@@ -40,6 +42,10 @@ class RustFmphContender : public Contender {
                 data[i] = keys.at(i).c_str();
             }
             std::cout << "Sending to Rust" << std::endl;
+            if (!rayonThreadsInitialized) {
+                rayonThreadsInitialized = true;
+                initializeRayonThreadPool(numThreads);
+            }
             rustStruct = createFmphStruct(N, data);
         }
 

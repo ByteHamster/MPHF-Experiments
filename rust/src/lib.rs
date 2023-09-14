@@ -1,5 +1,6 @@
 extern crate libc;
 extern crate ph;
+extern crate rayon;
 
 use std::os::raw::c_char;
 use libc::strlen;
@@ -22,6 +23,11 @@ fn c_strings_to_vec(len: usize, my_strings: *const *const c_char) -> Vec<String>
     return vector;
 }
 
+#[no_mangle]
+pub extern fn initializeRayonThreadPool(threads: usize) {
+    rayon::ThreadPoolBuilder::new().num_threads(threads).build_global().unwrap();
+}
+
 ////////////////////////////////////////// Fmph //////////////////////////////////////////
 pub struct FmphWrapper {
     vector: Vec<String>,
@@ -41,7 +47,7 @@ pub extern fn createFmphStruct(len: usize, my_strings: *const *const c_char) -> 
 pub extern fn constructFmph(struct_ptr: *mut FmphWrapper, gamma : u16) {
     let struct_instance = unsafe { &mut *struct_ptr };
     let mut build_config = BuildConf::default();
-    build_config.use_multiple_threads = false;
+    build_config.use_multiple_threads = true;
     build_config.relative_level_size = gamma;
     struct_instance.hash_func = fmph::Function::from_slice_with_conf(&struct_instance.vector[..], build_config);
 }
@@ -83,7 +89,7 @@ pub extern fn createFmphGoStruct(len: usize, my_strings: *const *const c_char) -
 pub extern fn constructFmphGo(struct_ptr: *mut FmphGoWrapper, gamma : u16) {
     let struct_instance = unsafe { &mut *struct_ptr };
     let mut build_config = GOBuildConf::default();
-    build_config.use_multiple_threads = false;
+    build_config.use_multiple_threads = true;
     build_config.relative_level_size = gamma;
     struct_instance.hash_func = fmph::GOFunction::from_slice_with_conf(&struct_instance.vector[..], build_config);
 }

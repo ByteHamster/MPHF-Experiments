@@ -3,6 +3,8 @@
 #include "benchmark/PartitionedPTHashContender.h"
 #include "benchmark/BBHashContender.h"
 #include "benchmark/SIMDRecSplitContender.h"
+#include "benchmark/RustFmphContender.h"
+#include "benchmark/RustFmphGoContender.h"
 
 int main(int argc, char** argv) {
     size_t N = 5e6;
@@ -27,9 +29,11 @@ int main(int argc, char** argv) {
         Contender::numQueries = numQueries;
         {PTHashContender<true, pthash::elias_fano>(N, 0.95, pthashParameter).run();}
         {PartitionedPTHashContender<true, pthash::elias_fano>(N, 0.95, pthashParameter).run();}
+        {RustFmphContender(N, 2.0).run();}
+        {RustFmphGoContender(N, 2.0).run();}
         Contender::numQueries = numQueries / 3;
         {SIMDRecSplitContender<10>(N, 2000).run();}
-        {BBHashContender(N, 2.0, 0).run();}
+        {BBHashContender(N, 2.0).run();}
     }
     return 0;
 }

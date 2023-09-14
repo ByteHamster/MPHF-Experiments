@@ -34,6 +34,10 @@ class RustFmphGoContender : public RustFmphContender {
                 data[i] = keys.at(i).c_str();
             }
             std::cout << "Sending to Rust" << std::endl;
+            if (!rayonThreadsInitialized) {
+                rayonThreadsInitialized = true;
+                initializeRayonThreadPool(numThreads);
+            }
             rustStruct = createFmphGoStruct(N, data);
         }
 

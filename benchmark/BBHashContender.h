@@ -17,7 +17,7 @@ class BBHashContender : public Contender {
         double gamma;
         double perc_elem_loaded;
 
-        BBHashContender(size_t N, double gamma, double perc_elem_loaded)
+        BBHashContender(size_t N, double gamma, double perc_elem_loaded = 0.03)
                 : Contender(N, 1.0), gamma(gamma), perc_elem_loaded(perc_elem_loaded) {
         }
 
