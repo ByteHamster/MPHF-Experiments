@@ -11,6 +11,7 @@
 #include "benchmark/PartitionedPTHashContender.h"
 #include "benchmark/RustFmphContender.h"
 #include "benchmark/RustFmphGoContender.h"
+#include "benchmark/BipartiteShockHashContender.h"
 
 int main(int argc, char** argv) {
     double loadFactor = 0.8;
@@ -32,6 +33,7 @@ int main(int argc, char** argv) {
     bool rustFmphContender = false;
     bool rustFmphGoContender = false;
     bool sichashOnlyPartial = false;
+    bool bipartiteShockHash = false;
     bool minimalOnly = false;
 
     tlx::CmdlineParser cmd;
@@ -49,6 +51,7 @@ int main(int argc, char** argv) {
     cmd.add_flag("bbhash", bbhash, "Execute bbhash benchmark");
     cmd.add_flag("sichash", sichash, "Execute sichash benchmark");
     cmd.add_flag("shockhash", shockhash, "Execute shockhash benchmark");
+    cmd.add_flag("bipartiteShockHash", bipartiteShockHash, "Execute bipartite shockhash benchmark");
     cmd.add_flag("sichashOnlyPartial", sichashOnlyPartial, "Ignore fast ribbon retrieval configurations and test fewer thresholds");
     cmd.add_flag("pthash", pthash, "Execute pthash benchmark");
     cmd.add_flag("partitionedPthash", partitionedPthash, "Execute partitioned pthash benchmark");
@@ -105,6 +108,9 @@ int main(int argc, char** argv) {
     }
     if (shockhash) {
         shockHashContenderRunner(N);
+    }
+    if (bipartiteShockHash) {
+        bipartiteShockHashContenderRunner(N);
     }
     if (pthash) {
         ptHashContenderRunner(N, loadFactor, minimalOnly);
