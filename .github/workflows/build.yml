@@ -13,10 +13,13 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install --assume-yes --no-install-recommends ca-certificates build-essential cmake git autoconf libtbb-dev libxxhash-dev
-      - uses: actions/checkout@v2
+      - name: Checkout
+        uses: actions/checkout@v2
         with:
           submodules: recursive
       - name: Build
         run: |
           cmake -B ./build
           cmake --build ./build --parallel
+      - name: Build docker image
+        run: docker build -t mmphf_experiments --no-cache .
