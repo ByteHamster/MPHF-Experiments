@@ -48,7 +48,7 @@ target_link_libraries(PerfectHashingCompetitors INTERFACE Sux)
 
 add_custom_command(
     OUTPUT ${CMAKE_CURRENT_SOURCE_DIR}/rust/target/release/libmphf_experiments.a
-    COMMAND cargo build --release
+    COMMAND bash -c "RUSTFLAGS='-C target-cpu=native' cargo build --release"
     WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/rust
     DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/rust/src/lib.rs)
 add_custom_target(func DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/rust/target/release/libmphf_experiments.a")
