@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Run benchmark
-cd /opt/sichash/build
+cd /opt/mphf_experiments/build
 ./Comparison --numKeys 5M --numQueries 0 --loadFactor 0.85 --sichash --sichashOnlyPartial --pthash --chd | tee /opt/dockerVolume/pareto.txt
 ./Comparison --numKeys 5M --numQueries 0 --loadFactor 0.95 --sichash --sichashOnlyPartial --pthash --chd | tee --append /opt/dockerVolume/pareto.txt
 ./Comparison --numKeys 5M --numQueries 0 --recsplit --bbhash | tee --append /opt/dockerVolume/pareto.txt

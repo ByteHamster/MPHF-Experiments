@@ -19,9 +19,9 @@ RUN cmake -DCMAKE_BUILD_TYPE=Release -DWITH_POSTGRESQL=OFF -DWITH_MYSQL=OFF ..
 RUN cmake --build . -j 8
 
 # Build Experiments
-COPY . /opt/sichash
-RUN mkdir /opt/sichash/build
-WORKDIR /opt/sichash/build
+COPY . /opt/mphf_experiments
+RUN mkdir /opt/mphf_experiments/build
+WORKDIR /opt/mphf_experiments/build
 RUN cmake -DCMAKE_BUILD_TYPE=Release ..
 RUN cmake --build . -j 8
 
