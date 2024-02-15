@@ -57,6 +57,14 @@ set_property(TARGET RustCompetitors PROPERTY IMPORTED_LOCATION "${CMAKE_CURRENT_
 add_dependencies(RustCompetitors func)
 target_link_libraries(PerfectHashingCompetitors INTERFACE RustCompetitors)
 
+#################### GPU Competitor setup ####################
+if (CMAKE_CUDA_COMPILER)
+    enable_language(CUDA)
+    add_library(PerfectHashingCompetitorsGpu INTERFACE)
+    target_link_libraries(PerfectHashingCompetitorsGpu INTERFACE PerfectHashingCompetitors)
+    target_link_libraries(PerfectHashingCompetitorsGpu INTERFACE GPURecSplit)
+endif()
+
 ################### Benchmark build targets ###################
 add_executable(Comparison comparison.cpp)
 target_link_libraries(Comparison PRIVATE PerfectHashingCompetitors Sux)
@@ -73,3 +81,10 @@ target_compile_features(ComparisonThreads PRIVATE cxx_std_20)
 add_executable(ComparisonQueries comparisonQueries.cpp)
 target_link_libraries(ComparisonQueries PRIVATE PerfectHashingCompetitors Sux)
 target_compile_features(ComparisonQueries PRIVATE cxx_std_20)
+
+if (CMAKE_CUDA_COMPILER)
+    add_executable(ComparisonGpu comparisonGpu.cpp)
+    target_link_libraries(ComparisonGpu PRIVATE PerfectHashingCompetitorsGpu Sux)
+    set_target_properties(ComparisonGpu PROPERTIES CUDA_SEPERABLE_COMPILATION ON)
+    set_target_properties(ComparisonGpu PROPERTIES CUDA_ARCHITECTURES "50;61;72")
+endif()
