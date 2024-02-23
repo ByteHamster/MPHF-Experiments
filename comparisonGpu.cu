@@ -4,7 +4,7 @@
 int main(int argc, char** argv) {
     double loadFactor = 0.8;
     size_t N = 5e6;
-    bool recsplit = false;
+    bool gpurecsplit = false;
 
 
     tlx::CmdlineParser cmd;
@@ -14,12 +14,12 @@ int main(int argc, char** argv) {
     cmd.add_bytes('t', "numThreads", Contender::numThreads, "Number of threads to run benchmarks with");
     cmd.add_flag('T', "skipTests", Contender::skipTests, "Skip testing PHF for validity");
 
-    cmd.add_flag("recsplit", recsplit, "Execute GPU RecSplit benchmark");
+    cmd.add_flag("gpurecsplit", gpurecsplit, "Execute GPU RecSplit benchmark");
     if (!cmd.process(argc, argv)) {
         return 1;
     }
 
-    if (recsplit) {
+    if (gpurecsplit) {
         gpuRecSplitContenderRunner(N);
     }
     return 0;

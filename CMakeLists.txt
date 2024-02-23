@@ -12,6 +12,12 @@ target_compile_features(PerfectHashingCompetitors INTERFACE cxx_std_20)
 target_include_directories(PerfectHashingCompetitors SYSTEM INTERFACE extlib/pthash/include)
 target_include_directories(PerfectHashingCompetitors SYSTEM INTERFACE extlib/BBHash)
 
+add_subdirectory(extlib/tlx)
+target_link_libraries(PerfectHashingCompetitors INTERFACE tlx)
+
+add_subdirectory(extlib/util)
+target_link_libraries(PerfectHashingCompetitors INTERFACE ByteHamsterUtil)
+
 file(GLOB cmphSources extlib/cmph/src/**.c)
 list(FILTER cmphSources EXCLUDE REGEX ".*cmph/src/(bdz_gen_lookup_table|bm_numbers|sdbm_hash|fnv_hash|djb2_hash|hashtree|buffer_manage|main).c$")
 add_library(Cmph SHARED ${cmphSources})
@@ -61,8 +67,7 @@ target_link_libraries(PerfectHashingCompetitors INTERFACE RustCompetitors)
 if (CMAKE_CUDA_COMPILER)
     enable_language(CUDA)
     add_library(PerfectHashingCompetitorsGpu INTERFACE)
-    target_link_libraries(PerfectHashingCompetitorsGpu INTERFACE PerfectHashingCompetitors)
-    target_link_libraries(PerfectHashingCompetitorsGpu INTERFACE GPURecSplit)
+    target_link_libraries(PerfectHashingCompetitorsGpu INTERFACE GPURecSplit ByteHamsterUtil)
 endif()
 
 ################### Benchmark build targets ###################
@@ -83,7 +88,7 @@ target_link_libraries(ComparisonQueries PRIVATE PerfectHashingCompetitors Sux)
 target_compile_features(ComparisonQueries PRIVATE cxx_std_20)
 
 if (CMAKE_CUDA_COMPILER)
-    add_executable(ComparisonGpu comparisonGpu.cpp)
+    add_executable(ComparisonGpu comparisonGpu.cu)
     target_link_libraries(ComparisonGpu PRIVATE PerfectHashingCompetitorsGpu Sux)
     set_target_properties(ComparisonGpu PROPERTIES CUDA_SEPERABLE_COMPILATION ON)
     set_target_properties(ComparisonGpu PROPERTIES CUDA_ARCHITECTURES "50;61;72")

@@ -1,13 +1,13 @@
 #pragma once
 
-#include <sux/function/RecSplit.hpp>
+#include <function/GPURecSplit.cuh>
 #include "Contender.h"
 
 template<int l>
 class GpuRecSplitContender : public Contender {
     public:
         size_t bucketSize;
-        sux::function::RecSplit<l> *recSplit = nullptr;
+        bez::function::GPURecSplit<l> *recSplit = nullptr;
 
         GpuRecSplitContender(size_t N, size_t bucketSize)
                 : Contender(N, 1.0), bucketSize(bucketSize) {
@@ -28,7 +28,7 @@ class GpuRecSplitContender : public Contender {
         }
 
         void construct(const std::vector<std::string> &keys) override {
-            recSplit = new sux::function::RecSplit<l>(keys, bucketSize);
+            recSplit = new bez::function::GPURecSplit<l>(keys, bucketSize, numThreads);
         }
 
         size_t sizeBits() override {
@@ -46,21 +46,14 @@ class GpuRecSplitContender : public Contender {
 
 template <int l>
 void gpuRecSplitTestMulti(size_t N) {
-    {GpuRecSplitContender<l>(N, l).run();}
-    {GpuRecSplitContender<l>(N, 50).run();}
     {GpuRecSplitContender<l>(N, 100).run();}
     {GpuRecSplitContender<l>(N, 500).run();}
     {GpuRecSplitContender<l>(N, 2000).run();}
 }
 
 void gpuRecSplitContenderRunner(size_t N) {
-    gpuRecSplitTestMulti<4>(N);
-    gpuRecSplitTestMulti<5>(N);
-    gpuRecSplitTestMulti<6>(N);
-    gpuRecSplitTestMulti<7>(N);
-    gpuRecSplitTestMulti<8>(N);
-    gpuRecSplitTestMulti<11>(N);
     gpuRecSplitTestMulti<12>(N);
-    gpuRecSplitTestMulti<13>(N);
-    gpuRecSplitTestMulti<14>(N);
+    gpuRecSplitTestMulti<16>(N);
+    gpuRecSplitTestMulti<18>(N);
+    gpuRecSplitTestMulti<20>(N);
 }

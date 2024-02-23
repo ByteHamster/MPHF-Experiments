@@ -22,3 +22,9 @@
 [submodule "extlib/ShockHash"]
 	path = extlib/ShockHash
 	url = https://github.com/ByteHamster/ShockHash.git
+[submodule "extlib/util"]
+	path = extlib/util
+	url = https://github.com/ByteHamster/Util.git
+[submodule "extlib/tlx"]
+	path = extlib/tlx
+	url = https://github.com/tlx/tlx.git
