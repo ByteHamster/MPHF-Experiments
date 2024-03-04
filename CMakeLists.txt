@@ -3,7 +3,7 @@ list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 project(MPHF-Experiments)
 
 if(CMAKE_BUILD_TYPE STREQUAL "Release" AND CMAKE_SOURCE_DIR STREQUAL CMAKE_CURRENT_SOURCE_DIR)
-    add_compile_options(-march=native)
+    add_compile_options($<$<COMPILE_LANGUAGE:CXX>:-march=native>)
 endif()
 
 ###################### Competitor setup ######################
@@ -63,11 +63,14 @@ set_property(TARGET RustCompetitors PROPERTY IMPORTED_LOCATION "${CMAKE_CURRENT_
 add_dependencies(RustCompetitors func)
 target_link_libraries(PerfectHashingCompetitors INTERFACE RustCompetitors)
 
-#################### GPU Competitor setup ####################
+add_subdirectory(extlib/pthash-gpu)
+target_link_libraries(PerfectHashingCompetitors INTERFACE GpuPTHash)
+
+#################### CUDA Competitor setup ####################
 if (CMAKE_CUDA_COMPILER)
     enable_language(CUDA)
-    add_library(PerfectHashingCompetitorsGpu INTERFACE)
-    target_link_libraries(PerfectHashingCompetitorsGpu INTERFACE GPURecSplit ByteHamsterUtil)
+    add_library(PerfectHashingCompetitorsCuda INTERFACE)
+    target_link_libraries(PerfectHashingCompetitorsCuda INTERFACE GPURecSplit ByteHamsterUtil)
 endif()
 
 ################### Benchmark build targets ###################
@@ -88,8 +91,8 @@ target_link_libraries(ComparisonQueries PRIVATE PerfectHashingCompetitors Sux)
 target_compile_features(ComparisonQueries PRIVATE cxx_std_20)
 
 if (CMAKE_CUDA_COMPILER)
-    add_executable(ComparisonGpu comparisonGpu.cu)
-    target_link_libraries(ComparisonGpu PRIVATE PerfectHashingCompetitorsGpu Sux)
-    set_target_properties(ComparisonGpu PROPERTIES CUDA_SEPERABLE_COMPILATION ON)
-    set_target_properties(ComparisonGpu PROPERTIES CUDA_ARCHITECTURES "50;61;72")
+    add_executable(ComparisonCuda comparisonCuda.cu)
+    target_link_libraries(ComparisonCuda PRIVATE PerfectHashingCompetitorsCuda Sux)
+    set_target_properties(ComparisonCuda PROPERTIES CUDA_SEPERABLE_COMPILATION ON)
+    set_target_properties(ComparisonCuda PROPERTIES CUDA_ARCHITECTURES "50;61;72")
 endif()

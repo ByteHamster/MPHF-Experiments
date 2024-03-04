@@ -12,6 +12,7 @@
 #include "benchmark/RustFmphContender.h"
 #include "benchmark/RustFmphGoContender.h"
 #include "benchmark/BipartiteShockHashContender.h"
+#include "benchmark/GpuPtHashContender.h"
 
 int main(int argc, char** argv) {
     double loadFactor = 0.8;
@@ -34,6 +35,7 @@ int main(int argc, char** argv) {
     bool rustFmphGoContender = false;
     bool sichashOnlyPartial = false;
     bool bipartiteShockHash = false;
+    bool gpuPtHash = false;
     bool minimalOnly = false;
 
     tlx::CmdlineParser cmd;
@@ -62,6 +64,7 @@ int main(int argc, char** argv) {
     cmd.add_flag("fch", fch, "Execute fch benchmark");
     cmd.add_flag("rustFmph", rustFmphContender, "Execute rust fmph benchmark");
     cmd.add_flag("rustFmphGo", rustFmphGoContender, "Execute rust fmph-go benchmark");
+    cmd.add_flag("gpuPtHash", gpuPtHash, "Execute PTHash on the GPU benchmark");
 
     if (!cmd.process(argc, argv)) {
         return 1;
@@ -117,6 +120,9 @@ int main(int argc, char** argv) {
     }
     if (partitionedPthash) {
         partitionedPtHashContenderRunner(N, loadFactor, minimalOnly);
+    }
+    if (gpuPtHash) {
+        gpuPtHashContenderRunner(N);
     }
     if (mphfWbpm) {
         mphfWbpmContenderRunner(N);

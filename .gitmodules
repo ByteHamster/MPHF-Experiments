@@ -28,3 +28,6 @@
 [submodule "extlib/tlx"]
 	path = extlib/tlx
 	url = https://github.com/tlx/tlx.git
+[submodule "extlib/pthash-gpu"]
+	path = extlib/pthash-gpu
+	url = https://github.com/stefanfred/PTHash-GPU.git
