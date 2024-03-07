@@ -9,7 +9,6 @@ endif()
 ###################### Competitor setup ######################
 add_library(PerfectHashingCompetitors INTERFACE)
 target_compile_features(PerfectHashingCompetitors INTERFACE cxx_std_20)
-target_include_directories(PerfectHashingCompetitors SYSTEM INTERFACE extlib/pthash/include)
 target_include_directories(PerfectHashingCompetitors SYSTEM INTERFACE extlib/BBHash)
 target_include_directories(PerfectHashingCompetitors SYSTEM INTERFACE extlib/fch/include)
 
@@ -67,6 +66,9 @@ target_link_libraries(PerfectHashingCompetitors INTERFACE RustCompetitors)
 add_subdirectory(extlib/pthash-gpu)
 target_link_libraries(PerfectHashingCompetitors INTERFACE GpuPTHash)
 
+add_subdirectory(extlib/pthash)
+target_link_libraries(PerfectHashingCompetitors INTERFACE PTHASH)
+
 #################### CUDA Competitor setup ####################
 if (CMAKE_CUDA_COMPILER)
     enable_language(CUDA)
@@ -90,6 +92,10 @@ target_compile_features(ComparisonThreads PRIVATE cxx_std_20)
 add_executable(ComparisonQueries comparisonQueries.cpp)
 target_link_libraries(ComparisonQueries PRIVATE PerfectHashingCompetitors Sux)
 target_compile_features(ComparisonQueries PRIVATE cxx_std_20)
+
+add_executable(ComparisonPtHash comparisonPtHash.cpp)
+target_link_libraries(ComparisonPtHash PRIVATE PerfectHashingCompetitors Sux)
+target_compile_features(ComparisonPtHash PRIVATE cxx_std_20)
 
 if (CMAKE_CUDA_COMPILER)
     add_executable(ComparisonCuda comparisonCuda.cu)
