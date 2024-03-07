@@ -31,3 +31,6 @@
 [submodule "extlib/pthash-gpu"]
 	path = extlib/pthash-gpu
 	url = https://github.com/stefanfred/PTHash-GPU.git
+[submodule "extlib/fch"]
+	path = extlib/fch
+	url = https://github.com/roberto-trani/mphf_benchmark.git

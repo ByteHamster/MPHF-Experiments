@@ -11,6 +11,7 @@ add_library(PerfectHashingCompetitors INTERFACE)
 target_compile_features(PerfectHashingCompetitors INTERFACE cxx_std_20)
 target_include_directories(PerfectHashingCompetitors SYSTEM INTERFACE extlib/pthash/include)
 target_include_directories(PerfectHashingCompetitors SYSTEM INTERFACE extlib/BBHash)
+target_include_directories(PerfectHashingCompetitors SYSTEM INTERFACE extlib/fch/include)
 
 add_subdirectory(extlib/tlx)
 target_link_libraries(PerfectHashingCompetitors INTERFACE tlx)

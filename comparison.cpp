@@ -13,6 +13,7 @@
 #include "benchmark/RustFmphGoContender.h"
 #include "benchmark/BipartiteShockHashContender.h"
 #include "benchmark/GpuPtHashContender.h"
+#include "benchmark/FchContender.h"
 
 int main(int argc, char** argv) {
     double loadFactor = 0.8;
@@ -30,7 +31,8 @@ int main(int argc, char** argv) {
     bool bdz = false;
     bool bmz = false;
     bool chm = false;
-    bool fch = false;
+    bool fchCmph = false;
+    bool fchPtHash = false;
     bool rustFmphContender = false;
     bool rustFmphGoContender = false;
     bool sichashOnlyPartial = false;
@@ -61,7 +63,8 @@ int main(int argc, char** argv) {
     cmd.add_flag("bdz", bdz, "Execute bdz benchmark");
     cmd.add_flag("bmz", bmz, "Execute bmz benchmark");
     cmd.add_flag("chm", chm, "Execute chm benchmark");
-    cmd.add_flag("fch", fch, "Execute fch benchmark");
+    cmd.add_flag("fchCmph", fchCmph, "Execute fch (cmph) benchmark");
+    cmd.add_flag("fchPtHash", fchPtHash, "Execute fch (PTHash reimplementation) benchmark");
     cmd.add_flag("rustFmph", rustFmphContender, "Execute rust fmph benchmark");
     cmd.add_flag("rustFmphGo", rustFmphGoContender, "Execute rust fmph-go benchmark");
     cmd.add_flag("gpuPtHash", gpuPtHash, "Execute PTHash on the GPU benchmark");
@@ -100,8 +103,11 @@ int main(int argc, char** argv) {
     if (chm) {
         chmContenderRunner(N, loadFactor);
     }
-    if (fch) {
-        fchContenderRunner(N, loadFactor);
+    if (fchCmph) {
+        fchCmphContenderRunner(N, loadFactor);
+    }
+    if (fchPtHash) {
+        fchPtHashContenderRunner(N, loadFactor);
     }
     if (sichash) {
         sicHashContenderRunner<64>(N, loadFactor, minimalOnly);
