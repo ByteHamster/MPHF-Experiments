@@ -22,3 +22,6 @@
 [submodule "extlib/ShockHash"]
 	path = extlib/ShockHash
 	url = https://github.com/ByteHamster/ShockHash.git
+[submodule "extlib/fch"]
+	path = extlib/fch
+	url = https://github.com/roberto-trani/mphf_benchmark.git

@@ -11,6 +11,7 @@ add_library(PerfectHashingCompetitors INTERFACE)
 target_compile_features(PerfectHashingCompetitors INTERFACE cxx_std_20)
 target_include_directories(PerfectHashingCompetitors SYSTEM INTERFACE extlib/pthash/include)
 target_include_directories(PerfectHashingCompetitors SYSTEM INTERFACE extlib/BBHash)
+target_include_directories(PerfectHashingCompetitors SYSTEM INTERFACE extlib/fch/include)
 
 file(GLOB cmphSources extlib/cmph/src/**.c)
 list(FILTER cmphSources EXCLUDE REGEX ".*cmph/src/(bdz_gen_lookup_table|bm_numbers|sdbm_hash|fnv_hash|djb2_hash|hashtree|buffer_manage|main).c$")
