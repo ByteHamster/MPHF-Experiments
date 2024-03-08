@@ -9,8 +9,9 @@ class GpuPtHashContender : public Contender {
         size_t partitionSize;
         float tradeoff;
         gpupthash::MPHFbuilder builder;
-        gpupthash::MPHF<gpupthash::ortho_encoder_dual<gpupthash::golomb, pthash::compact>,
-                gpupthash::diff_partition_encoder<gpupthash::compact>, gpupthash::murmurhash2> f;
+        using PilotEncoder = gpupthash::ortho_encoder_dual<gpupthash::golomb, pthash::compact>;
+        using PartitionEncoder = gpupthash::diff_partition_encoder<gpupthash::compact>;
+        gpupthash::MPHF<PilotEncoder, PartitionEncoder, gpupthash::murmurhash2> f;
 
         GpuPtHashContender(size_t N, float averageBucketSize, size_t partitionSize, float tradeoff)
                 : Contender(N, 1.0), averageBucketSize(averageBucketSize), partitionSize(partitionSize),
@@ -22,9 +23,11 @@ class GpuPtHashContender : public Contender {
 
         std::string name() override {
             return std::string("GpuPtHashContender")
-                  + " p=" + std::to_string(partitionSize)
+                  + " partitionSize=" + std::to_string(partitionSize)
                   + " A=" + std::to_string(averageBucketSize)
-                  + " tradeoff=" + std::to_string(tradeoff);
+                  + " tradeoff=" + std::to_string(tradeoff)
+                  + " pilotEncoder=" + typeid(PilotEncoder).name()
+                  + " pilotEncoder=" + typeid(PartitionEncoder).name();
         }
 
         void beforeConstruction(const std::vector<std::string> &keys) override {
