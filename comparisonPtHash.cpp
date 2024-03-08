@@ -36,19 +36,20 @@ int main(int argc, char** argv) {
     {FchContender(N, 1.0, 4).run();}
     {FchContender(N, 1.0, 6).run();}
 
-    {PTHashContender<true, pthash::compact_compact>(N, 0.99, 7.0).run();}
-    {PTHashContender<true, pthash::dictionary_dictionary>(N, 0.88, 5.0).run();}
-    {PTHashContender<true, pthash::elias_fano >(N, 0.99, 10.0).run();}
+    {PTHashContender<true, pthash::compact_compact>(N, 0.99, 4.0).run();}
+    {PTHashContender<true, pthash::dictionary_dictionary>(N, 0.88, 3.0).run();}
+    {PTHashContender<true, pthash::elias_fano >(N, 0.99, 5.0).run();}
 
-    {PartitionedPTHashContender<true, pthash::compact_compact>(N, 0.99, 7.0).run();}
-    {PartitionedPTHashContender<true, pthash::dictionary_dictionary>(N, 0.88, 5.0).run();}
-    {PartitionedPTHashContender<true, pthash::elias_fano >(N, 0.99, 10.0).run();}
+    {PartitionedPTHashContender<true, pthash::compact_compact>(N, 0.99, 4.0).run();}
+    {PartitionedPTHashContender<true, pthash::dictionary_dictionary>(N, 0.88, 3.0).run();}
+    {PartitionedPTHashContender<true, pthash::elias_fano >(N, 0.99, 5.0).run();}
 
-    {DensePartitionedPTHashContender<true, pthash::multi_interleaved<pthash::compact>, pthash::opt1_bucketer>(N, 0.99, 5.0).run();}
-    {DensePartitionedPTHashContender<true, pthash::multi_interleaved<pthash::rice>, pthash::opt1_bucketer>(N, 0.99, 7.0).run();}
-    {DensePartitionedPTHashContender<true, pthash::multi_interleaved<pthash::compact>, pthash::opt1_bucketer>(N, 0.99, 7.0).run();}
-    {DensePartitionedPTHashContender<true, pthash::multi_interleaved<pthash::rice>, pthash::opt1_bucketer>(N, 0.99, 10.0).run();}
-    {DensePartitionedPTHashContender<true, pthash::multi_interleaved<pthash::rice>, pthash::opt1_bucketer>(N, 0.99, 12.0).run();}
+    {DensePartitionedPTHashContender<true, pthash::multi_interleaved<pthash::compact>, pthash::opt1_bucketer>(N, 1.0, 2.0).run();}
+    {DensePartitionedPTHashContender<true, pthash::multi_interleaved<pthash::rice>, pthash::opt1_bucketer>(N, 1.0, 2.0).run();}
+    {DensePartitionedPTHashContender<true, pthash::multi_interleaved<pthash::compact>, pthash::opt1_bucketer>(N, 1.0, 3.0).run();}
+    {DensePartitionedPTHashContender<true, pthash::multi_interleaved<pthash::rice>, pthash::opt1_bucketer>(N, 1.0, 3.0).run();}
+    {DensePartitionedPTHashContender<true, pthash::multi_interleaved<pthash::compact>, pthash::opt1_bucketer>(N, 1.0, 4.0).run();}
+    {DensePartitionedPTHashContender<true, pthash::multi_interleaved<pthash::rice>, pthash::opt1_bucketer>(N, 1.0, 4.0).run();}
 
     {GpuPtHashContender(N, 5, 2048, 0.0).run();}
     {GpuPtHashContender(N, 7, 2048, 1.0).run();}

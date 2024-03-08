@@ -10,7 +10,7 @@ class DensePartitionedPTHashContender : public Contender {
     public:
         double lambda;
         double internalLoadFactor;
-        size_t partitionSize = 2048;
+        size_t partitionSize = 1500;
         pthash::dense_partitioned_phf<pthash::murmurhash2_64, bucketer, encoder, minimal> pthashFunction;
 
         DensePartitionedPTHashContender(size_t N, double loadFactor, double lambda)
