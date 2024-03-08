@@ -26,8 +26,8 @@ int main(int argc, char** argv) {
     {SIMDRecSplitContender<8>(N, 100).run();}
     {SIMDRecSplitContender<14>(N, 2000).run();}
 
+    {BipartiteShockHashContender<42>(N, 2000).run();}
     {BipartiteShockHashContender<64>(N, 2000).run();}
-    {BipartiteShockHashContender<64>(N, 64).run();}
 
     {RustFmphContender(N, 1.0).run();}
     {RustFmphContender(N, 2.0).run();}
