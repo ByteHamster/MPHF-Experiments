@@ -43,8 +43,11 @@ int main(int argc, char** argv) {
     {PartitionedPTHashContender<true, pthash::dictionary_dictionary>(N, 0.88, 11.0).run();}
     {PartitionedPTHashContender<true, pthash::elias_fano >(N, 0.99, 6.0).run();}
 
-    {GpuPtHashContender(N, 5, 1024, 0.5).run();}
-    {GpuPtHashContender(N, 10, 1024, 0.5).run();}
-    {GpuPtHashContender(N, 15, 1024, 0.5).run();}
+    {GpuPtHashContender(N, 5, 2048, 0.0).run();}
+    {GpuPtHashContender(N, 7, 2048, 1.0).run();}
+    {GpuPtHashContender(N, 7, 2048, 0.0).run();}
+    {GpuPtHashContender(N, 10, 2048, 1.0).run();}
+    {GpuPtHashContender(N, 12, 2048, 1.0).run();}
+
     return 0;
 }
