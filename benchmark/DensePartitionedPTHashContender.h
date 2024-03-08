@@ -38,6 +38,8 @@ class DensePartitionedPTHashContender : public Contender {
             config.num_partitions = N / partitionSize;
             config.minimal_output = minimal;
             config.verbose_output = false;
+            config.dense_partitioning = true;
+            config.secondary_sort = true;
             pthashFunction.build_in_internal_memory(keys.begin(), keys.size(), config);
         }
 
