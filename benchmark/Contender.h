@@ -18,8 +18,8 @@ class Contender {
         static size_t numQueries;
         static size_t numThreads;
         static bool skipTests;
-        long constructionTime = 0;
-        long queryTime = 0;
+        long constructionTimeMicroseconds = 0;
+        long queryTimeMilliseconds = 0;
 
         Contender(size_t N, double loadFactor)
                 : N(N), loadFactor(loadFactor), mByN(1.0 / loadFactor), M(N * mByN) {
@@ -56,14 +56,14 @@ class Contender {
                 return;
             }
             std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
-            constructionTime = std::chrono::duration_cast<std::chrono::milliseconds>(end - begin).count();
+            constructionTimeMicroseconds = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
 
             if (!skipTests) {
                 std::cout<<"Testing"<<std::endl;
                 performTest(keys);
             }
 
-            queryTime = 0;
+            queryTimeMilliseconds = 0;
             if (numQueries > 0) {
                 std::cout<<"Preparing query plan"<<std::endl;
                 std::vector<std::string> queryPlan;
@@ -78,7 +78,7 @@ class Contender {
                 begin = std::chrono::steady_clock::now();
                 performQueries(queryPlan);
                 end = std::chrono::steady_clock::now();
-                queryTime = std::chrono::duration_cast<std::chrono::milliseconds>(end - begin).count();
+                queryTimeMilliseconds = std::chrono::duration_cast<std::chrono::milliseconds>(end - begin).count();
             }
             if (shouldPrintResult) {
                 printResult();
@@ -91,8 +91,10 @@ class Contender {
             std::cout << "RESULT"
                       << " name=" << name()
                       << " bitsPerElement=" << bitsPerElement
-                      << " constructionTimeMilliseconds=" << constructionTime
-                      << " queryTimeMilliseconds=" << queryTime
+                      << " constructionTimeMilliseconds=" << (constructionTimeMicroseconds < 10000
+                                            ? std::to_string(0.001 * constructionTimeMicroseconds)
+                                            : std::to_string(constructionTimeMicroseconds / 1000))
+                      << " queryTimeMilliseconds=" << queryTimeMilliseconds
                       << " numQueries=" << numQueries
                       << " N=" << N
                       << " loadFactor=" << loadFactor

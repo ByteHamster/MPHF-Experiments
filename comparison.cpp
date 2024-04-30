@@ -12,6 +12,11 @@
 #include "benchmark/RustFmphContender.h"
 #include "benchmark/RustFmphGoContender.h"
 #include "benchmark/BipartiteShockHashContender.h"
+#include "benchmark/FchContender.h"
+#include "benchmark/DensePartitionedPTHashContender.h"
+#ifdef HAS_VULKAN
+#include "benchmark/GpuPhobicContender.h"
+#endif
 
 int main(int argc, char** argv) {
     double loadFactor = 0.8;
@@ -29,11 +34,14 @@ int main(int argc, char** argv) {
     bool bdz = false;
     bool bmz = false;
     bool chm = false;
-    bool fch = false;
+    bool fchCmph = false;
+    bool fchPtHash = false;
     bool rustFmphContender = false;
     bool rustFmphGoContender = false;
     bool sichashOnlyPartial = false;
     bool bipartiteShockHash = false;
+    bool gpuPhobic = false;
+    bool densePartitionedPtHash = false;
     bool minimalOnly = false;
 
     tlx::CmdlineParser cmd;
@@ -55,13 +63,16 @@ int main(int argc, char** argv) {
     cmd.add_flag("sichashOnlyPartial", sichashOnlyPartial, "Ignore fast ribbon retrieval configurations and test fewer thresholds");
     cmd.add_flag("pthash", pthash, "Execute pthash benchmark");
     cmd.add_flag("partitionedPthash", partitionedPthash, "Execute partitioned pthash benchmark");
+    cmd.add_flag("densePartitionedPtHash", densePartitionedPtHash, "Execute dense partitioend PTHash benchmark");
     cmd.add_flag("chd", chd, "Execute chd benchmark");
     cmd.add_flag("bdz", bdz, "Execute bdz benchmark");
     cmd.add_flag("bmz", bmz, "Execute bmz benchmark");
     cmd.add_flag("chm", chm, "Execute chm benchmark");
-    cmd.add_flag("fch", fch, "Execute fch benchmark");
+    cmd.add_flag("fchCmph", fchCmph, "Execute fch (cmph) benchmark");
+    cmd.add_flag("fchPtHash", fchPtHash, "Execute fch (PTHash reimplementation) benchmark");
     cmd.add_flag("rustFmph", rustFmphContender, "Execute rust fmph benchmark");
     cmd.add_flag("rustFmphGo", rustFmphGoContender, "Execute rust fmph-go benchmark");
+    cmd.add_flag("gpuPhobic", gpuPhobic, "Execute Phobic on the GPU benchmark");
 
     if (!cmd.process(argc, argv)) {
         return 1;
@@ -97,8 +108,11 @@ int main(int argc, char** argv) {
     if (chm) {
         chmContenderRunner(N, loadFactor);
     }
-    if (fch) {
-        fchContenderRunner(N, loadFactor);
+    if (fchCmph) {
+        fchCmphContenderRunner(N, loadFactor);
+    }
+    if (fchPtHash) {
+        fchPtHashContenderRunner(N, loadFactor);
     }
     if (sichash) {
         sicHashContenderRunner<64>(N, loadFactor, minimalOnly);
@@ -117,6 +131,16 @@ int main(int argc, char** argv) {
     }
     if (partitionedPthash) {
         partitionedPtHashContenderRunner(N, loadFactor, minimalOnly);
+    }
+    if (densePartitionedPtHash) {
+        densePartitionedPtHashContenderRunner(N);
+    }
+    if (gpuPhobic) {
+        #ifdef HAS_VULKAN
+            gpuPhobicContenderRunner(N);
+        #else
+            std::cerr<<"Vulkan competitor requested but not compiled into this binary"<<std::endl;
+        #endif
     }
     if (mphfWbpm) {
         mphfWbpmContenderRunner(N);

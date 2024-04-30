@@ -1,11 +1,11 @@
 #!/bin/bash
 hostname
-strings ComparisonThreads | grep fPIC
+strings ComparisonScaling | grep fPIC
 
 for i in $(seq 1 1 16); do
   threads=$i
   if [[ $threads == 0 ]]; then
     threads=1
   fi
-  ./ComparisonThreads --numKeys "$((10*threads))M" --numThreads "$threads" --iterations 2 --numQueries 0 --skipTests
+  ./ComparisonScaling --numKeys "$((10*threads))M" --numThreads "$threads" --iterations 2 --numQueries 0 --skipTests
 done

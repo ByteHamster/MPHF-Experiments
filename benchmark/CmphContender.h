@@ -31,7 +31,7 @@ class CmphContender : public Contender {
 
         std::string name() override {
             return std::string("cmph-" + nameP)
-                    + " lf=" + std::to_string(c)
+                    + " c=" + std::to_string(c)
                     + " b=" + std::to_string(b);
         }
 
@@ -101,7 +101,9 @@ void chmContenderRunner(size_t N, double loadFactor) {
     {CmphContender(N, loadFactor, "CHM", CMPH_CHM, loadFactor, 0, true).run();} // b ignored
 }
 
-void fchContenderRunner(size_t N, double loadFactor) {
-    {CmphContender(N, loadFactor, "FCH", CMPH_FCH, loadFactor, 0, true).run();} // b ignored // Hangs
+void fchCmphContenderRunner(size_t N, double loadFactor) {
+    for (int c = 3; c < 8; c++) {
+        { CmphContender(N, loadFactor, "FCH", CMPH_FCH, c, 0, true).run(); } // b ignored // Hangs
+    }
 }
 

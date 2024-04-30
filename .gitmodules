@@ -22,3 +22,15 @@
 [submodule "extlib/ShockHash"]
 	path = extlib/ShockHash
 	url = https://github.com/ByteHamster/ShockHash.git
+[submodule "extlib/util"]
+	path = extlib/util
+	url = https://github.com/ByteHamster/Util.git
+[submodule "extlib/tlx"]
+	path = extlib/tlx
+	url = https://github.com/tlx/tlx.git
+[submodule "extlib/phobic-gpu"]
+	path = extlib/phobic-gpu
+	url = https://github.com/stefanfred/PHOBIC-GPU.git
+[submodule "extlib/fch"]
+	path = extlib/fch
+	url = https://github.com/roberto-trani/mphf_benchmark.git

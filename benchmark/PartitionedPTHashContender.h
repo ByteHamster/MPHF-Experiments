@@ -4,21 +4,21 @@
 #undef MAX_BUCKET_SIZE
 #include "Contender.h"
 
-template <bool minimal, typename encoder>
+template <bool minimal, typename encoder, typename bucketer = pthash::skew_bucketer>
 class PartitionedPTHashContender : public Contender {
     public:
-        double c;
+        double lambda;
         double internalLoadFactor;
-        pthash::partitioned_phf<pthash::murmurhash2_64, encoder, minimal> pthashFunction;
+        pthash::partitioned_phf<pthash::murmurhash2_64, bucketer, encoder, minimal, pthash::xor_displacement> pthashFunction;
 
-        PartitionedPTHashContender(size_t N, double loadFactor, double c)
-                : Contender(N, minimal ? 1.0 : loadFactor), c(c), internalLoadFactor(loadFactor) {
+        PartitionedPTHashContender(size_t N, double loadFactor, double lambda)
+                : Contender(N, minimal ? 1.0 : loadFactor), lambda(lambda), internalLoadFactor(loadFactor) {
         }
 
         std::string name() override {
             return std::string("PartitionedPTHash")
                     + " minimal=" + std::to_string(minimal)
-                    + " c=" + std::to_string(c)
+                    + " lambda=" + std::to_string(lambda)
                     + " encoder=" + encoder::name()
                     + " lf=" + std::to_string(internalLoadFactor);
         }
@@ -29,12 +29,13 @@ class PartitionedPTHashContender : public Contender {
 
         void construct(const std::vector<std::string> &keys) override {
             pthash::build_configuration config;
-            config.c = c;
+            config.lambda = lambda;
             config.alpha = internalLoadFactor;
             config.num_threads = numThreads;
-            config.num_partitions = numThreads;
+            config.avg_partition_size = (N + numThreads) / numThreads;
             config.minimal_output = minimal;
             config.verbose_output = false;
+            config.search = pthash::xor_displacement;
             pthashFunction.build_in_internal_memory(keys.begin(), keys.size(), config);
         }
 
@@ -52,14 +53,14 @@ class PartitionedPTHashContender : public Contender {
 };
 
 void partitionedPtHashContenderRunner(size_t N, double loadFactor, bool minimalOnly) {
-    for (double c = 3.0; c < 12.0; c += 0.4) {
+    for (double lambda = 3.0; lambda < 10.0; lambda += 0.4) {
         if (!minimalOnly) {
-            PartitionedPTHashContender<false, pthash::elias_fano>(N, loadFactor, c).run();
-            PartitionedPTHashContender<false, pthash::dictionary_dictionary>(N, loadFactor, c).run();
-            PartitionedPTHashContender<false, pthash::dictionary_elias_fano>(N, loadFactor, c).run();
+            PartitionedPTHashContender<false, pthash::elias_fano>(N, loadFactor, lambda).run();
+            PartitionedPTHashContender<false, pthash::dictionary_dictionary>(N, loadFactor, lambda).run();
+            PartitionedPTHashContender<false, pthash::dictionary_elias_fano>(N, loadFactor, lambda).run();
         }
-        PartitionedPTHashContender<true, pthash::elias_fano>(N, loadFactor, c).run();
-        PartitionedPTHashContender<true, pthash::dictionary_dictionary>(N, loadFactor, c).run();
-        PartitionedPTHashContender<true, pthash::dictionary_elias_fano>(N, loadFactor, c).run();
+        PartitionedPTHashContender<true, pthash::elias_fano>(N, loadFactor, lambda).run();
+        PartitionedPTHashContender<true, pthash::dictionary_dictionary>(N, loadFactor, lambda).run();
+        PartitionedPTHashContender<true, pthash::dictionary_elias_fano>(N, loadFactor, lambda).run();
     }
 }

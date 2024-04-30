@@ -3,14 +3,21 @@ list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 project(MPHF-Experiments)
 
 if(CMAKE_BUILD_TYPE STREQUAL "Release" AND CMAKE_SOURCE_DIR STREQUAL CMAKE_CURRENT_SOURCE_DIR)
-    add_compile_options(-march=native)
+    add_compile_options($<$<COMPILE_LANGUAGE:CXX>:-march=native>)
 endif()
 
 ###################### Competitor setup ######################
 add_library(PerfectHashingCompetitors INTERFACE)
 target_compile_features(PerfectHashingCompetitors INTERFACE cxx_std_20)
-target_include_directories(PerfectHashingCompetitors SYSTEM INTERFACE extlib/pthash/include)
 target_include_directories(PerfectHashingCompetitors SYSTEM INTERFACE extlib/BBHash)
+target_include_directories(PerfectHashingCompetitors SYSTEM INTERFACE extlib/fch/include)
+target_link_libraries(PerfectHashingCompetitors INTERFACE dl)
+
+add_subdirectory(extlib/tlx)
+target_link_libraries(PerfectHashingCompetitors INTERFACE tlx)
+
+add_subdirectory(extlib/util)
+target_link_libraries(PerfectHashingCompetitors INTERFACE ByteHamsterUtil)
 
 file(GLOB cmphSources extlib/cmph/src/**.c)
 list(FILTER cmphSources EXCLUDE REGEX ".*cmph/src/(bdz_gen_lookup_table|bm_numbers|sdbm_hash|fnv_hash|djb2_hash|hashtree|buffer_manage|main).c$")
@@ -57,19 +64,43 @@ set_property(TARGET RustCompetitors PROPERTY IMPORTED_LOCATION "${CMAKE_CURRENT_
 add_dependencies(RustCompetitors func)
 target_link_libraries(PerfectHashingCompetitors INTERFACE RustCompetitors)
 
+find_package(Vulkan)
+if (Vulkan_FOUND AND Vulkan_glslc_FOUND)
+    add_subdirectory(extlib/phobic-gpu)
+    target_link_libraries(PerfectHashingCompetitors INTERFACE GpuPTHash)
+    target_compile_definitions(PerfectHashingCompetitors INTERFACE HAS_VULKAN)
+endif()
+
+add_subdirectory(extlib/pthash)
+target_link_libraries(PerfectHashingCompetitors INTERFACE PTHASH)
+
+#################### CUDA Competitor setup ####################
+if (CMAKE_CUDA_COMPILER)
+    enable_language(CUDA)
+    add_library(PerfectHashingCompetitorsCuda INTERFACE)
+    target_link_libraries(PerfectHashingCompetitorsCuda INTERFACE GPURecSplit ByteHamsterUtil)
+endif()
+
 ################### Benchmark build targets ###################
 add_executable(Comparison comparison.cpp)
 target_link_libraries(Comparison PRIVATE PerfectHashingCompetitors Sux)
 target_compile_features(Comparison PRIVATE cxx_std_20)
 
-add_executable(ComparisonN comparisonN.cpp)
-target_link_libraries(ComparisonN PRIVATE PerfectHashingCompetitors Sux)
-target_compile_features(ComparisonN PRIVATE cxx_std_20)
-
-add_executable(ComparisonThreads comparisonThreads.cpp)
-target_link_libraries(ComparisonThreads PRIVATE PerfectHashingCompetitors Sux)
-target_compile_features(ComparisonThreads PRIVATE cxx_std_20)
+add_executable(ComparisonScaling comparisonScaling.cpp)
+target_link_libraries(ComparisonScaling PRIVATE PerfectHashingCompetitors Sux)
+target_compile_features(ComparisonScaling PRIVATE cxx_std_20)
 
 add_executable(ComparisonQueries comparisonQueries.cpp)
 target_link_libraries(ComparisonQueries PRIVATE PerfectHashingCompetitors Sux)
 target_compile_features(ComparisonQueries PRIVATE cxx_std_20)
+
+add_executable(ComparisonPtHash comparisonPtHash.cpp)
+target_link_libraries(ComparisonPtHash PRIVATE PerfectHashingCompetitors Sux)
+target_compile_features(ComparisonPtHash PRIVATE cxx_std_20)
+
+if (CMAKE_CUDA_COMPILER)
+    add_executable(ComparisonCuda comparisonCuda.cu)
+    target_link_libraries(ComparisonCuda PRIVATE PerfectHashingCompetitorsCuda Sux)
+    set_target_properties(ComparisonCuda PROPERTIES CUDA_SEPERABLE_COMPILATION ON)
+    set_target_properties(ComparisonCuda PROPERTIES CUDA_ARCHITECTURES "50;61;72")
+endif()

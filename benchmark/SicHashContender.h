@@ -1,12 +1,12 @@
 #pragma once
 
-#include <SicHash.h>
+#include <PartitionedSicHash.h>
 #include "Contender.h"
 
 template<bool minimal, size_t ribbonWidth, int minimalFanoLowerBits = 3>
 class SicHashContender : public Contender {
     public:
-        sichash::SicHash<minimal, ribbonWidth, minimalFanoLowerBits> *perfectHashing = nullptr;
+        sichash::PartitionedSicHash<minimal, ribbonWidth, minimalFanoLowerBits> *perfectHashing = nullptr;
         sichash::SicHashConfig config;
 
         SicHashContender(size_t N, double loadFactor, sichash::SicHashConfig config)
@@ -31,7 +31,8 @@ class SicHashContender : public Contender {
         }
 
         void construct(const std::vector<std::string> &keys) override {
-            perfectHashing = new sichash::SicHash<minimal, ribbonWidth, minimalFanoLowerBits>(keys, config);
+            perfectHashing = new sichash::PartitionedSicHash
+                    <minimal, ribbonWidth, minimalFanoLowerBits>(keys, config, numThreads);
         }
 
         size_t sizeBits() override {
