@@ -9,6 +9,7 @@
 #include "benchmark/PartitionedPTHashContender.h"
 #include "benchmark/BipartiteShockHashContender.h"
 #include "benchmark/RustFmphGoContender.h"
+#include "benchmark/ShockHashContender.h"
 
 int main(int argc, char** argv) {
     size_t N = 5e6;
@@ -35,8 +36,10 @@ int main(int argc, char** argv) {
         {SicHashContender<true, 64>(N, 0.95, sichash::SicHashConfig().percentages(0.37, 0.44)).run();}
         Contender::numQueries = numQueries / 3;
         {RecSplitContender<14>(N, 2000).run();}
+        {ShockHashContender<40>(N, 2000).run();}
         {BipartiteShockHashContender<64>(N, 2000).run();}
         {RustFmphGoContender(N, 1.5).run();}
+        {RustFmphContender(N, 1.5).run();}
         {SIMDRecSplitContender<4>(N, 100).run();}
         {CmphContender(N, 0.95, "CHD", CMPH_CHD_PH, 0.95, 5, false).run();}
         {BBHashContender(N, 2.3, 0).run();}
