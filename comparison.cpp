@@ -17,6 +17,7 @@
 #ifdef HAS_VULKAN
 #include "benchmark/GpuPhobicContender.h"
 #endif
+#include "benchmark/BipartiteShockHashFlatContender.h"
 
 int main(int argc, char** argv) {
     double loadFactor = 0.8;
@@ -42,6 +43,7 @@ int main(int argc, char** argv) {
     bool bipartiteShockHash = false;
     bool gpuPhobic = false;
     bool densePartitionedPtHash = false;
+    bool bipartiteShockHashFlat = false;
     bool minimalOnly = false;
 
     tlx::CmdlineParser cmd;
@@ -60,6 +62,7 @@ int main(int argc, char** argv) {
     cmd.add_flag("sichash", sichash, "Execute sichash benchmark");
     cmd.add_flag("shockhash", shockhash, "Execute shockhash benchmark");
     cmd.add_flag("bipartiteShockHash", bipartiteShockHash, "Execute bipartite shockhash benchmark");
+    cmd.add_flag("bipartiteShockHashFlat", bipartiteShockHashFlat, "Execute bipartite shockhash flat benchmark");
     cmd.add_flag("sichashOnlyPartial", sichashOnlyPartial, "Ignore fast ribbon retrieval configurations and test fewer thresholds");
     cmd.add_flag("pthash", pthash, "Execute pthash benchmark");
     cmd.add_flag("partitionedPthash", partitionedPthash, "Execute partitioned pthash benchmark");
@@ -125,6 +128,9 @@ int main(int argc, char** argv) {
     }
     if (bipartiteShockHash) {
         bipartiteShockHashContenderRunner(N);
+    }
+    if (bipartiteShockHashFlat) {
+        bipartiteShockHashFlatContenderRunner(N);
     }
     if (pthash) {
         ptHashContenderRunner(N, loadFactor, minimalOnly);

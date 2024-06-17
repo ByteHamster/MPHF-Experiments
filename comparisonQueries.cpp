@@ -6,6 +6,8 @@
 #include "benchmark/SIMDRecSplitContender.h"
 #include "benchmark/BBHashContender.h"
 #include "benchmark/ShockHashContender.h"
+#include "benchmark/BipartiteShockHashContender.h"
+#include "benchmark/BipartiteShockHashFlatContender.h"
 
 int main(int argc, char** argv) {
     size_t N = 5e6;
@@ -21,6 +23,7 @@ int main(int argc, char** argv) {
     {SIMDRecSplitContender<5>(N, 5).run();}
     {SIMDRecSplitContender<8>(N, 100).run();}
     {SIMDRecSplitContender<14>(N, 2000).run();}
+    {SIMDRecSplitContender<16>(N, 2000).run();}
     {RecSplitContender<5>(N, 5).run();}
     {RecSplitContender<8>(N, 100).run();}
     {RecSplitContender<14>(N, 2000).run();}
@@ -36,6 +39,11 @@ int main(int argc, char** argv) {
     {ShockHashContender<30>(N, 100).run();}
     {ShockHashContender<30>(N, 2000).run();}
     {ShockHashContender<39>(N, 2000).run();}
+    {ShockHashContender<40>(N, 2000).run();}
     {ShockHashContender<58>(N, 2000).run();}
+    {BipartiteShockHashContender<64>(N, 2000).run();}
+    {BipartiteShockHashContender<100>(N, 2000).run();}
+    {BipartiteShockHashFlatContender<64>(N).run();}
+    {BipartiteShockHashFlatContender<100>(N).run();}
     return 0;
 }
