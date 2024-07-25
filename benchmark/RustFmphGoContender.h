@@ -6,7 +6,7 @@
 extern "C" {
 void *createFmphGoStruct(uint64_t len, const char **str);
 void constructFmphGo(void *rustStruct, uint16_t);
-uint64_t queryFmphGo(void *rustStruct, const char *key);
+uint64_t queryFmphGo(void *rustStruct, const char *key, const size_t length);
 size_t sizeFmphGo(void *rustStruct);
 void destroyFmphGoStruct(void *rustStruct);
 }
@@ -52,14 +52,14 @@ class RustFmphGoContender : public RustFmphContender {
 
         void performQueries(const std::vector<std::string> &keys) override {
             auto x = [&] (std::string &key) {
-                return queryFmphGo(rustStruct, key.c_str());
+                return queryFmphGo(rustStruct, key.c_str(), key.length());
             };
             doPerformQueries(keys, x);
         }
 
         void performTest(const std::vector<std::string> &keys) override {
             auto x = [&] (std::string &key) {
-                return queryFmphGo(rustStruct, key.c_str());
+                return queryFmphGo(rustStruct, key.c_str(), key.length());
             };
             doPerformTest(keys, x);
         }

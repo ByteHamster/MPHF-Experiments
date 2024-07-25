@@ -5,7 +5,7 @@
 extern "C" {
 void *createFmphStruct(uint64_t len, const char **str);
 void constructFmph(void *rustStruct, uint16_t);
-uint64_t queryFmph(void *rustStruct, const char *key);
+uint64_t queryFmph(void *rustStruct, const char *key, const size_t length);
 size_t sizeFmph(void *rustStruct);
 void destroyFmphStruct(void *rustStruct);
 static bool rayonThreadsInitialized = false;
@@ -60,14 +60,14 @@ class RustFmphContender : public Contender {
 
         void performQueries(const std::vector<std::string> &keys) override {
             auto x = [&] (std::string &key) {
-                return queryFmph(rustStruct, key.c_str());
+                return queryFmph(rustStruct, key.c_str(), key.length());
             };
             doPerformQueries(keys, x);
         }
 
         void performTest(const std::vector<std::string> &keys) override {
             auto x = [&] (std::string &key) {
-                return queryFmph(rustStruct, key.c_str());
+                return queryFmph(rustStruct, key.c_str(), key.length());
             };
             doPerformTest(keys, x);
         }

@@ -68,4 +68,9 @@ void shockHashContenderRunner(size_t N) {
     shockHashTestMulti<42>(N);
     shockHashTestMulti<44>(N);
     shockHashTestMulti<46>(N);
+    shockHashTestMulti<48>(N);
+    shockHashTestMulti<50>(N);
+    shockHashTestMulti<52>(N);
+    shockHashTestMulti<54>(N);
+    shockHashTestMulti<58>(N);
 }

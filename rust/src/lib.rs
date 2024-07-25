@@ -53,9 +53,9 @@ pub extern fn constructFmph(struct_ptr: *mut FmphWrapper, gamma : u16) {
 }
 
 #[no_mangle]
-pub extern fn queryFmph(struct_ptr: *mut FmphWrapper, key_c_s : *const c_char) -> u64 {
+pub extern fn queryFmph(struct_ptr: *mut FmphWrapper, key_c_s : *const c_char, length : usize) -> u64 {
     let struct_instance = unsafe { &mut *struct_ptr };
-    let key = unsafe { str::from_utf8_unchecked(slice::from_raw_parts(key_c_s as *const u8, strlen(key_c_s)+1)) };
+    let key = unsafe { str::from_utf8_unchecked(slice::from_raw_parts(key_c_s as *const u8, length+1)) };
     struct_instance.hash_func.get(key).unwrap()
 }
 
@@ -95,9 +95,9 @@ pub extern fn constructFmphGo(struct_ptr: *mut FmphGoWrapper, gamma : u16) {
 }
 
 #[no_mangle]
-pub extern fn queryFmphGo(struct_ptr: *mut FmphGoWrapper, key_c_s : *const c_char) -> u64 {
+pub extern fn queryFmphGo(struct_ptr: *mut FmphGoWrapper, key_c_s : *const c_char, length : usize) -> u64 {
     let struct_instance = unsafe { &mut *struct_ptr };
-    let key = unsafe { str::from_utf8_unchecked(slice::from_raw_parts(key_c_s as *const u8, strlen(key_c_s)+1)) };
+    let key = unsafe { str::from_utf8_unchecked(slice::from_raw_parts(key_c_s as *const u8, length+1)) };
     struct_instance.hash_func.get(key).unwrap()
 }
 
