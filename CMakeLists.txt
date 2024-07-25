@@ -47,6 +47,9 @@ target_link_libraries(PerfectHashingCompetitors INTERFACE SIMDRecSplit)
 add_subdirectory(extlib/sichash)
 target_link_libraries(PerfectHashingCompetitors INTERFACE SicHash)
 
+add_subdirectory(extlib/fips)
+target_link_libraries(PerfectHashingCompetitors INTERFACE FiPS)
+
 if(NOT TARGET Sux)
     add_library(Sux INTERFACE)
     target_include_directories(Sux SYSTEM INTERFACE extlib/sux)

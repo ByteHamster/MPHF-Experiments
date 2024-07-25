@@ -18,6 +18,7 @@
 #include "benchmark/GpuPhobicContender.h"
 #endif
 #include "benchmark/BipartiteShockHashFlatContender.h"
+#include "benchmark/FiPSContender.h"
 
 int main(int argc, char** argv) {
     double loadFactor = 0.8;
@@ -44,6 +45,7 @@ int main(int argc, char** argv) {
     bool gpuPhobic = false;
     bool densePartitionedPtHash = false;
     bool bipartiteShockHashFlat = false;
+    bool fiPS = false;
     bool minimalOnly = false;
 
     tlx::CmdlineParser cmd;
@@ -76,6 +78,7 @@ int main(int argc, char** argv) {
     cmd.add_flag("rustFmph", rustFmphContender, "Execute rust fmph benchmark");
     cmd.add_flag("rustFmphGo", rustFmphGoContender, "Execute rust fmph-go benchmark");
     cmd.add_flag("gpuPhobic", gpuPhobic, "Execute Phobic on the GPU benchmark");
+    cmd.add_flag("fiPS", fiPS, "Execute FiPS benchmark");
 
     if (!cmd.process(argc, argv)) {
         return 1;
@@ -150,6 +153,9 @@ int main(int argc, char** argv) {
     }
     if (mphfWbpm) {
         mphfWbpmContenderRunner(N);
+    }
+    if (fiPS) {
+        fiPSContenderRunner(N);
     }
     return 0;
 }

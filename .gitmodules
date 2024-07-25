@@ -34,3 +34,6 @@
 [submodule "extlib/fch"]
 	path = extlib/fch
 	url = https://github.com/roberto-trani/mphf_benchmark.git
+[submodule "extlib/fips"]
+	path = extlib/fips
+	url = https://github.com/ByteHamster/FiPS.git
