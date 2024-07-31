@@ -46,8 +46,8 @@ int main(int argc, char** argv) {
         {RustFmphContender(N, 1.5).run();}
         {CmphContender(N, 0.95, "CHD", CMPH_CHD_PH, 0.95, 5, false).run();}
         {CmphContender(N, 0.8, "BDZ", CMPH_BDZ, 1.0/0.8, 3, true).run();}
-        {BBHashContender(N, 2.3, 0).run();}
-        {FiPSContender(N, 2.0).run();}
+        {BBHashContender(N, 1.5, 0).run();}
+        {FiPSContender(N, 1.5).run();}
     }
     return 0;
 }
