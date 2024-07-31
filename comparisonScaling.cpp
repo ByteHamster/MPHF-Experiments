@@ -37,17 +37,19 @@ int main(int argc, char** argv) {
         {DensePartitionedPTHashContender<pthash::dense_interleaved<pthash::rice>, pthash::table_bucketer<pthash::opt_bucketer>>(N, 1.0, 6.5).run();}
         {SicHashContender<true, 64>(N, 0.95, sichash::SicHashConfig().percentages(0.37, 0.44)).run();}
         Contender::numQueries = numQueries / 3;
-        {RecSplitContender<14>(N, 2000).run();}
         {SIMDRecSplitContender<14>(N, 2000).run();}
-        {ShockHashContender<40>(N, 2000).run();}
-        {BipartiteShockHashContender<64>(N, 2000).run();}
-        {BipartiteShockHashFlatContender<64>(N).run();}
         {RustFmphGoContender(N, 1.5).run();}
         {RustFmphContender(N, 1.5).run();}
-        {CmphContender(N, 0.95, "CHD", CMPH_CHD_PH, 0.95, 5, false).run();}
-        {CmphContender(N, 0.8, "BDZ", CMPH_BDZ, 1.0/0.8, 3, true).run();}
         {BBHashContender(N, 1.5, 0).run();}
-        {FiPSContender(N, 1.5).run();}
+        if (Contender::numThreads == 1) {
+            {RecSplitContender<14>(N, 2000).run();}
+            {ShockHashContender<40>(N, 2000).run();}
+            {BipartiteShockHashContender<64>(N, 2000).run();}
+            {BipartiteShockHashFlatContender<64>(N).run();}
+            {CmphContender(N, 0.95, "CHD", CMPH_CHD_PH, 0.95, 5, false).run();}
+            {CmphContender(N, 0.8, "BDZ", CMPH_BDZ, 1.0/0.8, 3, true).run();}
+            {FiPSContender(N, 1.5).run();}
+        }
     }
     return 0;
 }
