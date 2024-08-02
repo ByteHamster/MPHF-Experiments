@@ -101,6 +101,10 @@ add_executable(ComparisonPtHash comparisonPtHash.cpp)
 target_link_libraries(ComparisonPtHash PRIVATE PerfectHashingCompetitors Sux)
 target_compile_features(ComparisonPtHash PRIVATE cxx_std_20)
 
+add_executable(ComparisonDiss comparisonDiss.cpp)
+target_link_libraries(ComparisonDiss PRIVATE PerfectHashingCompetitors Sux)
+target_compile_features(ComparisonDiss PRIVATE cxx_std_20)
+
 if (CMAKE_CUDA_COMPILER)
     add_executable(ComparisonCuda comparisonCuda.cu)
     target_link_libraries(ComparisonCuda PRIVATE PerfectHashingCompetitorsCuda Sux)
