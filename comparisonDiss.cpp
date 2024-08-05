@@ -30,12 +30,12 @@ int main(int argc, char** argv) {
     {SicHashContender<true, 64>(N, 0.97, sichash::SicHashConfig().percentages(0.45, 0.31)).run();}
 
     {SIMDRecSplitContender<8>(N, 100).run();}
-    {SIMDRecSplitContender<14>(N, 2000).run();}
+    {SIMDRecSplitContender<16>(N, 2000).run();}
 
-    {ShockHashContender<30>(N, 100).run();}
+    {ShockHashContender<55>(N, 2000).run();}
     {ShockHashContender<40>(N, 2000).run();}
 
-    {BipartiteShockHashContender<42>(N, 2000).run();}
+    {BipartiteShockHashContender<128>(N, 2000).run();}
     {BipartiteShockHashContender<64>(N, 2000).run();}
 
     {BipartiteShockHashFlatContender<64>(N).run();}
@@ -57,7 +57,7 @@ int main(int argc, char** argv) {
     {CmphContender(N, 1.0, "CHD", CMPH_CHD, 1.0, 5, true).run();}
 
     {CmphContender(N, 0.8, "BDZ", CMPH_BDZ, 1.0/0.8, 3, true).run();}
-    {CmphContender(N, 0.6, "BDZ", CMPH_BDZ, 1.0/0.6, 3, true).run();}
+    {CmphContender(N, 0.6, "BDZ", CMPH_BDZ, 1.0/0.8, 6, true).run();}
 
     {PTHashContender<true, pthash::elias_fano>(N, 0.95, 4.0).run();}
     {PTHashContender<true, pthash::compact_compact>(N, 0.99, 4.0).run();}
