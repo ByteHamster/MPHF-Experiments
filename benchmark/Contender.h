@@ -5,6 +5,7 @@
 #include <chrono>
 #include <XorShift64.h>
 #include <unistd.h>
+#include <thread>
 #include "BenchmarkData.h"
 
 #define DO_NOT_OPTIMIZE(value) asm volatile ("" : : "r,m"(value) : "memory")
@@ -13,6 +14,7 @@ class Contender {
     public:
         static size_t numQueries;
         static size_t numThreads;
+        static size_t numQueryThreads;
         static bool skipTests;
 
         const size_t N;
@@ -68,18 +70,35 @@ class Contender {
             if (numQueries > 0) {
                 std::cout<<"Preparing query plan"<<std::endl;
                 std::vector<std::string> queryPlan;
-                queryPlan.reserve(numQueries);
+                queryPlan.reserve(numQueries * numQueryThreads);
                 util::XorShift64 prng(time(nullptr));
-                for (size_t i = 0; i < numQueries; i++) {
+                for (size_t i = 0; i < numQueries * numQueryThreads; i++) {
                     queryPlan.push_back(keys[prng(N)]);
                 }
                 std::cout << "Cooldown" << std::endl;
                 usleep(1000*1000);
                 std::cout<<"Querying"<<std::endl;
-                begin = std::chrono::steady_clock::now();
-                performQueries(queryPlan);
-                end = std::chrono::steady_clock::now();
-                queryTimeMilliseconds = std::chrono::duration_cast<std::chrono::milliseconds>(end - begin).count();
+                if (numQueryThreads == 1) {
+                    begin = std::chrono::steady_clock::now();
+                    performQueries(queryPlan);
+                    end = std::chrono::steady_clock::now();
+                    queryTimeMilliseconds = std::chrono::duration_cast<std::chrono::milliseconds>(end - begin).count();
+                } else {
+                    std::vector<std::thread> threads;
+                    begin = std::chrono::steady_clock::now();
+                    for (size_t i = 0; i < numQueryThreads; i++) {
+                        std::span<std::string> querySpan(queryPlan.begin() + i * numQueries,
+                                                         queryPlan.begin() + (i + 1) * numQueries);
+                        threads.emplace_back([&querySpan, this] {
+                            performQueries(querySpan);
+                        });
+                    }
+                    for (size_t i = 0; i < numQueryThreads; i++) {
+                        threads.at(i).join();
+                    }
+                    end = std::chrono::steady_clock::now();
+                    queryTimeMilliseconds = std::chrono::duration_cast<std::chrono::milliseconds>(end - begin).count();
+                }
             }
             if (shouldPrintResult) {
                 printResult();
@@ -97,9 +116,11 @@ class Contender {
                                             : std::to_string(constructionTimeMicroseconds / 1000))
                       << " queryTimeMilliseconds=" << queryTimeMilliseconds
                       << " numQueries=" << numQueries
+                      << " numQueriesTotal=" << (numQueries * numQueryThreads)
                       << " N=" << N
                       << " loadFactor=" << loadFactor
                       << " threads=" << numThreads
+                      << " queryThreads=" << numQueryThreads
                       << additional
                       << std::endl;
         }
@@ -135,6 +156,8 @@ class Contender {
             }
         }
 };
+
 size_t Contender::numQueries = 5e7;
 size_t Contender::numThreads = 1;
+size_t Contender::numQueryThreads = 1;
 bool Contender::skipTests = false;
