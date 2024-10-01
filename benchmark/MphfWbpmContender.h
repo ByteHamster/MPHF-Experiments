@@ -41,14 +41,14 @@ class MphfWbpmContender : public Contender {
             return MPHFSize(mphfq);
         }
 
-        void performQueries(const std::vector<std::string> &keys) override {
+        void performQueries(const std::span<std::string> keys) override {
             auto x = [&] (std::string &key) {
                 return MPHFQuery(mphfq, key.data(), key.length());
             };
             doPerformQueries(keys, x);
         }
 
-        void performTest(const std::vector<std::string> &keys) override {
+        void performTest(const std::span<std::string> keys) override {
             auto x = [&] (std::string &key) {
                 return MPHFQuery(mphfq, key.data(), key.length());
             };

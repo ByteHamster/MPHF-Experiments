@@ -31,7 +31,7 @@ class RustFmphGoContender : public RustFmphContender {
         void beforeConstruction(const std::vector<std::string> &keys) override {
             std::cout << "Converting input" << std::endl;
             for (size_t i = 0; i < N; i++) {
-                data[i] = keys.at(i).c_str();
+                data[i] = keys[i].c_str();
             }
             std::cout << "Sending to Rust" << std::endl;
             if (!rayonThreadsInitialized) {
@@ -50,14 +50,14 @@ class RustFmphGoContender : public RustFmphContender {
             return sizeFmphGo(rustStruct) * 8;
         }
 
-        void performQueries(const std::vector<std::string> &keys) override {
+        void performQueries(const std::span<std::string> keys) override {
             auto x = [&] (std::string &key) {
                 return queryFmphGo(rustStruct, key.c_str(), key.length());
             };
             doPerformQueries(keys, x);
         }
 
-        void performTest(const std::vector<std::string> &keys) override {
+        void performTest(const std::span<std::string> keys) override {
             auto x = [&] (std::string &key) {
                 return queryFmphGo(rustStruct, key.c_str(), key.length());
             };

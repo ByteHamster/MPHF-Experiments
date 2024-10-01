@@ -11,13 +11,14 @@
 
 class Contender {
     public:
+        static size_t numQueries;
+        static size_t numThreads;
+        static bool skipTests;
+
         const size_t N;
         const double loadFactor;
         const double mByN;
         const size_t M;
-        static size_t numQueries;
-        static size_t numThreads;
-        static bool skipTests;
         long constructionTimeMicroseconds = 0;
         long queryTimeMilliseconds = 0;
 
@@ -35,8 +36,8 @@ class Contender {
             (void) keys;
         }
 
-        virtual void performQueries(const std::vector<std::string> &keys) = 0;
-        virtual void performTest(const std::vector<std::string> &keys) = 0;
+        virtual void performQueries(const std::span<std::string> keys) = 0;
+        virtual void performTest(const std::span<std::string> keys) = 0;
 
         void run(bool shouldPrintResult = true) {
             std::cout << std::endl;
@@ -105,7 +106,7 @@ class Contender {
 
     protected:
         template<typename F>
-        void doPerformQueries(const std::vector<std::string> &keys, F &hashFunction) {
+        void doPerformQueries(const std::span<std::string> keys, F &hashFunction) {
             for (const std::string &key : keys) {
                 size_t retrieved = hashFunction(const_cast<std::string &>(key));
                 // Some contenders expect non-const keys but actually use them as const.
@@ -114,7 +115,7 @@ class Contender {
         }
 
         template<typename F>
-        void doPerformTest(const std::vector<std::string> &keys, F &hashFunction) {
+        void doPerformTest(const std::span<std::string> keys, F &hashFunction) {
             double eps = 1.0001; // Rounding with load factor variables
             std::vector<bool> taken(M * eps);
             for (size_t i = 0; i < keys.size(); i++) {

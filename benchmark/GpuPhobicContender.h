@@ -42,11 +42,11 @@ class GpuPhobicContender : public Contender {
             return f.getBitsPerKey() * N;
         }
 
-        void performQueries(const std::vector<std::string> &keys) override {
+        void performQueries(const std::span<std::string> keys) override {
             doPerformQueries(keys, f);
         }
 
-        void performTest(const std::vector<std::string> &keys) override {
+        void performTest(const std::span<std::string> keys) override {
             doPerformTest(keys, f);
         }
 };

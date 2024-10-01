@@ -35,11 +35,11 @@ class PartitionedSIMDRecSplitContender : public Contender {
             return recSplit->getBits();
         }
 
-        void performQueries(const std::vector<std::string> &keys) override {
+        void performQueries(const std::span<std::string> keys) override {
             doPerformQueries(keys, *recSplit);
         }
 
-        void performTest(const std::vector<std::string> &keys) override {
+        void performTest(const std::span<std::string> keys) override {
             doPerformTest(keys, *recSplit);
         }
 };

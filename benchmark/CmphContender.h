@@ -38,7 +38,7 @@ class CmphContender : public Contender {
         void beforeConstruction(const std::vector<std::string> &keys) override {
             std::cout << "Converting input" << std::endl;
             for (size_t i = 0; i < N; i++) {
-                data[i] = keys.at(i).c_str();
+                data[i] = keys[i].c_str();
             }
             source = cmph_io_vector_adapter((char **)data, N); // They even do the const cast in their readme file
         }
@@ -64,14 +64,14 @@ class CmphContender : public Contender {
             return 8 * cmph_packed_size(mphf);
         }
 
-        void performQueries(const std::vector<std::string> &keys) override {
+        void performQueries(const std::span<std::string> keys) override {
             auto x = [&] (std::string &key) {
                 return cmph_search(mphf, key.c_str(), key.length());
             };
             doPerformQueries(keys, x);
         }
 
-        void performTest(const std::vector<std::string> &keys) override {
+        void performTest(const std::span<std::string> keys) override {
             auto x = [&] (std::string &key) {
                 return cmph_search(mphf, key.c_str(), key.length());
             };

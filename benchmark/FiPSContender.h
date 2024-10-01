@@ -5,7 +5,7 @@
 
 class FiPSContender : public Contender {
     public:
-        fips::FiPS *fips = nullptr;
+        fips::FiPS<> *fips = nullptr;
         double gamma;
 
         FiPSContender(size_t N, double gamma)
@@ -23,18 +23,18 @@ class FiPSContender : public Contender {
 
         void construct(const std::vector<std::string> &keys) override {
             (void) keys;
-            fips = new fips::FiPS(keys, gamma);
+            fips = new fips::FiPS<>(keys, gamma);
         }
 
         size_t sizeBits() override {
             return fips->getBits();
         }
 
-        void performQueries(const std::vector<std::string> &keys) override {
+        void performQueries(const std::span<std::string> keys) override {
             doPerformQueries(keys, *fips);
         }
 
-        void performTest(const std::vector<std::string> &keys) override {
+        void performTest(const std::span<std::string> keys) override {
             doPerformTest(keys, *fips);
         }
 };

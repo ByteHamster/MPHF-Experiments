@@ -48,14 +48,14 @@ class BBHashContender : public Contender {
             return bbhash->totalBitSize();
         }
 
-        void performQueries(const std::vector<std::string> &keys) override {
+        void performQueries(const std::span<std::string> keys) override {
             auto x = [&] (std::string &key) {
                 return bbhash->lookup(util::MurmurHash64(key));
             };
             doPerformQueries(keys, x);
         }
 
-        void performTest(const std::vector<std::string> &keys) override {
+        void performTest(const std::span<std::string> keys) override {
             auto x = [&] (std::string &key) {
                 return bbhash->lookup(util::MurmurHash64(key));
             };
