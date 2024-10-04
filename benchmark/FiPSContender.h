@@ -3,9 +3,10 @@
 #include "Contender.h"
 #include <Fips.h>
 
+template <size_t _lineSize = 256, typename _offsetType = uint16_t, bool _useUpperRank = true>
 class FiPSContender : public Contender {
     public:
-        fips::FiPS<> *fips = nullptr;
+        fips::FiPS<_lineSize, _offsetType, _useUpperRank> *fips = nullptr;
         double gamma;
 
         FiPSContender(size_t N, double gamma)
@@ -18,12 +19,15 @@ class FiPSContender : public Contender {
 
         std::string name() override {
             return std::string("FiPS")
-                + " gamma=" + std::to_string(gamma);
+                + " gamma=" + std::to_string(gamma)
+                + " lineSize=" + std::to_string(_lineSize)
+                + " offsetSize=" + std::to_string(8 * sizeof(_offsetType))
+                + " upperRank=" + std::to_string(_useUpperRank);
         }
 
         void construct(const std::vector<std::string> &keys) override {
             (void) keys;
-            fips = new fips::FiPS<>(keys, gamma);
+            fips = new fips::FiPS<_lineSize, _offsetType, _useUpperRank>(keys, gamma);
         }
 
         size_t sizeBits() override {
@@ -41,6 +45,6 @@ class FiPSContender : public Contender {
 
 void fiPSContenderRunner(size_t N) {
     for (double gamma = 1.0; gamma <= 2.5; gamma += 0.15) {
-        FiPSContender(N, gamma).run();
+        FiPSContender<>(N, gamma).run();
     }
 }

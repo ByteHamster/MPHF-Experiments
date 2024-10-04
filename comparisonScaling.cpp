@@ -48,7 +48,7 @@ int main(int argc, char** argv) {
             {BipartiteShockHashFlatContender<64>(N).run();}
             {CmphContender(N, 0.95, "CHD", CMPH_CHD_PH, 0.95, 5, false).run();}
             {CmphContender(N, 0.8, "BDZ", CMPH_BDZ, 1.0/0.8, 3, true).run();}
-            {FiPSContender(N, 1.5).run();}
+            {FiPSContender<>(N, 1.5).run();}
         }
     }
     return 0;
