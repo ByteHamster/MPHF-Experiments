@@ -6,6 +6,7 @@
 #include <XorShift64.h>
 #include <unistd.h>
 #include <thread>
+#include <span>
 #include "BenchmarkData.h"
 
 #define DO_NOT_OPTIMIZE(value) asm volatile ("" : : "r,m"(value) : "memory")
