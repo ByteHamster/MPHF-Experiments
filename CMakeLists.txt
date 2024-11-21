@@ -1,8 +1,12 @@
-cmake_minimum_required(VERSION 3.16)
+cmake_minimum_required(VERSION 3.25)
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 project(MPHF-Experiments)
 
-if(CMAKE_BUILD_TYPE STREQUAL "Release" AND CMAKE_SOURCE_DIR STREQUAL CMAKE_CURRENT_SOURCE_DIR)
+if (NOT CMAKE_BUILD_TYPE)
+    set(CMAKE_BUILD_TYPE "Release")
+endif ()
+
+if(CMAKE_BUILD_TYPE STREQUAL "Release")
     add_compile_options($<$<COMPILE_LANGUAGE:CXX>:-march=native>)
 endif()
 
@@ -13,7 +17,7 @@ target_include_directories(PerfectHashingCompetitors SYSTEM INTERFACE extlib/BBH
 target_include_directories(PerfectHashingCompetitors SYSTEM INTERFACE extlib/fch/include)
 target_link_libraries(PerfectHashingCompetitors INTERFACE dl)
 
-add_subdirectory(extlib/tlx)
+add_subdirectory(extlib/tlx SYSTEM)
 target_link_libraries(PerfectHashingCompetitors INTERFACE tlx)
 
 add_subdirectory(extlib/util)

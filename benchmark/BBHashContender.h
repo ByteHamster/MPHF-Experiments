@@ -5,7 +5,7 @@
 #include <BooPHF.h>
 #pragma GCC diagnostic pop
 
-#include <MurmurHash64.h>
+#include <bytehamster/util/MurmurHash64.h>
 #include "Contender.h"
 
 class BBHashContender : public Contender {
@@ -33,7 +33,7 @@ class BBHashContender : public Contender {
 
         void beforeConstruction(const std::vector<std::string> &keys) override {
             for (const std::string &s : keys) {
-                mhcs.emplace_back(util::MurmurHash64(s));
+                mhcs.emplace_back(bytehamster::util::MurmurHash64(s));
             }
         }
 
@@ -50,14 +50,14 @@ class BBHashContender : public Contender {
 
         void performQueries(const std::span<std::string> keys) override {
             auto x = [&] (std::string &key) {
-                return bbhash->lookup(util::MurmurHash64(key));
+                return bbhash->lookup(bytehamster::util::MurmurHash64(key));
             };
             doPerformQueries(keys, x);
         }
 
         void performTest(const std::span<std::string> keys) override {
             auto x = [&] (std::string &key) {
-                return bbhash->lookup(util::MurmurHash64(key));
+                return bbhash->lookup(bytehamster::util::MurmurHash64(key));
             };
             doPerformTest(keys, x);
         }

@@ -3,7 +3,7 @@
 #include <random>
 #include <iostream>
 #include <chrono>
-#include <XorShift64.h>
+#include <bytehamster/util/XorShift64.h>
 #include <unistd.h>
 #include <thread>
 #include <span>
@@ -72,7 +72,7 @@ class Contender {
                 std::cout<<"Preparing query plan"<<std::endl;
                 std::vector<std::string> queryPlan;
                 queryPlan.reserve(numQueries * numQueryThreads);
-                util::XorShift64 prng(time(nullptr));
+                bytehamster::util::XorShift64 prng(time(nullptr));
                 for (size_t i = 0; i < numQueries * numQueryThreads; i++) {
                     queryPlan.push_back(keys[prng(N)]);
                 }
