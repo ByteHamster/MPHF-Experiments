@@ -1,4 +1,4 @@
-FROM ubuntu:22.04
+FROM ubuntu:24.04
 
 RUN $(grep -qi 'avx2' /proc/cpuinfo) || (echo 'AVX2 not supported by this machine. Aborting docker build.'>&2; exit 1)
 
