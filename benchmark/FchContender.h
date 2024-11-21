@@ -1,8 +1,16 @@
 #pragma once
 
+#include "Contender.h"
+
+#ifdef __GNUC__
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wmaybe-uninitialized"
+#endif
 #include <hasher/hasher.hpp>
 #include <fch.hpp>
-#include "Contender.h"
+#ifdef __GNUC__
+#pragma GCC diagnostic pop
+#endif
 
 class FchContender : public Contender {
     public:

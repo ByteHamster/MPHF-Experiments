@@ -1,9 +1,13 @@
 #pragma once
 
+#ifdef __GNUC__
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wmaybe-uninitialized"
+#endif
 #include <BooPHF.h>
+#ifdef __GNUC__
 #pragma GCC diagnostic pop
+#endif
 
 #include <bytehamster/util/MurmurHash64.h>
 #include "Contender.h"
