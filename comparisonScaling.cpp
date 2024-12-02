@@ -8,6 +8,7 @@
 #include "benchmark/DensePartitionedPTHashContender.h"
 #include "benchmark/PartitionedPTHashContender.h"
 #include "benchmark/BipartiteShockHashContender.h"
+#include "benchmark/RustFmphContender.h"
 #include "benchmark/RustFmphGoContender.h"
 #include "benchmark/ShockHashContender.h"
 #include "benchmark/BipartiteShockHashFlatContender.h"
