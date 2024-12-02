@@ -1,6 +1,7 @@
 extern crate libc;
 extern crate ph;
 extern crate rayon;
+extern crate srs;
 
 use std::os::raw::c_char;
 use libc::strlen;
@@ -109,5 +110,46 @@ pub extern fn sizeFmphGo(struct_ptr: *mut FmphGoWrapper) -> usize {
 
 #[no_mangle]
 pub extern fn destroyFmphGoStruct(struct_instance: *mut FmphGoWrapper) {
+    unsafe { let _ = Box::from_raw(struct_instance); }
+}
+
+////////////////////////////////////////// FmphGO //////////////////////////////////////////
+pub struct SrsWrapper {
+    vector: Vec<String>,
+    hash_func: crate::srs::mphf::SrsMphf<String>
+}
+
+#[no_mangle]
+pub extern fn createSrsStruct(len: usize, my_strings: *const *const c_char) -> *mut SrsWrapper {
+    let dummy : [String; 2] = ["dummy".to_string(), "dummy2".to_string()];
+    let struct_instance = SrsWrapper {
+        vector: c_strings_to_vec(len, my_strings),
+        hash_func: crate::srs::mphf::SrsMphf::new(&dummy, 10.0) };
+    let boxx = Box::new(struct_instance);
+    Box::into_raw(boxx)
+}
+
+#[no_mangle]
+pub extern fn constructSrs(struct_ptr: *mut SrsWrapper, overhead : f64) {
+    let struct_instance = unsafe { &mut *struct_ptr };
+    struct_instance.hash_func = crate::srs::mphf::SrsMphf::new(&struct_instance.vector[..], overhead);
+}
+
+#[no_mangle]
+pub extern fn querySrs(struct_ptr: *mut SrsWrapper, key_c_s : *const c_char, length : usize) -> u64 {
+    let struct_instance = unsafe { &mut *struct_ptr };
+    let key = unsafe { str::from_utf8_unchecked(slice::from_raw_parts(key_c_s as *const u8, length+1)) };
+    let key_string = key.to_string();
+    struct_instance.hash_func.hash(&key_string) as u64
+}
+
+#[no_mangle]
+pub extern fn sizeSrsBits(struct_ptr: *mut SrsWrapper) -> usize {
+    let struct_instance = unsafe { &mut *struct_ptr };
+    struct_instance.hash_func.bit_size()
+}
+
+#[no_mangle]
+pub extern fn destroySrsStruct(struct_instance: *mut SrsWrapper) {
     unsafe { let _ = Box::from_raw(struct_instance); }
 }

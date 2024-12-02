@@ -14,6 +14,7 @@
 #include "benchmark/BipartiteShockHashContender.h"
 #include "benchmark/FchContender.h"
 #include "benchmark/DensePartitionedPTHashContender.h"
+#include "benchmark/RustSrsContender.h"
 #ifdef HAS_VULKAN
 #include "benchmark/GpuPhobicContender.h"
 #endif
@@ -40,6 +41,7 @@ int main(int argc, char** argv) {
     bool fchPtHash = false;
     bool rustFmphContender = false;
     bool rustFmphGoContender = false;
+    bool rustSrsContender = false;
     bool sichashOnlyPartial = false;
     bool bipartiteShockHash = false;
     bool gpuPhobic = false;
@@ -78,6 +80,7 @@ int main(int argc, char** argv) {
     cmd.add_flag("fchPtHash", fchPtHash, "Execute fch (PTHash reimplementation) benchmark");
     cmd.add_flag("rustFmph", rustFmphContender, "Execute rust fmph benchmark");
     cmd.add_flag("rustFmphGo", rustFmphGoContender, "Execute rust fmph-go benchmark");
+    cmd.add_flag("rustSrs", rustSrsContender, "Execute rust SRS benchmark");
     cmd.add_flag("gpuPhobic", gpuPhobic, "Execute Phobic on the GPU benchmark");
     cmd.add_flag("fiPS", fiPS, "Execute FiPS benchmark");
 
@@ -157,6 +160,9 @@ int main(int argc, char** argv) {
     }
     if (fiPS) {
         fiPSContenderRunner(N);
+    }
+    if (rustSrsContender) {
+        rustSrsContenderRunner(N);
     }
     return 0;
 }

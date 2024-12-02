@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Contender.h"
+#include "RustContender.h"
 
 extern "C" {
 void *createFmphStruct(uint64_t len, const char **str);
@@ -8,27 +8,23 @@ void constructFmph(void *rustStruct, uint16_t);
 uint64_t queryFmph(void *rustStruct, const char *key, const size_t length);
 size_t sizeFmph(void *rustStruct);
 void destroyFmphStruct(void *rustStruct);
-static bool rayonThreadsInitialized = false;
-void initializeRayonThreadPool(uint64_t threads);
 }
 
-class RustFmphContender : public Contender {
+class RustFmphContender : public RustContender {
     protected:
         void *rustStruct = nullptr;
-        const char **data;
         double gamma;
     public:
 
         RustFmphContender(size_t N, double gamma)
-            : Contender(N, 1.0), gamma(gamma) {
-            data = static_cast<const char **>(malloc(std::max(N, Contender::numQueries) * sizeof(char*)));
+            : RustContender(N), gamma(gamma) {
         }
 
         ~RustFmphContender() override {
             if (rustStruct != nullptr) {
                 destroyFmphStruct(rustStruct);
+                rustStruct = nullptr;
             }
-            free(data);
         }
 
         std::string name() override {
@@ -37,15 +33,7 @@ class RustFmphContender : public Contender {
         }
 
         void beforeConstruction(const std::vector<std::string> &keys) override {
-            std::cout << "Converting input" << std::endl;
-            for (size_t i = 0; i < N; i++) {
-                data[i] = keys[i].c_str();
-            }
-            std::cout << "Sending to Rust" << std::endl;
-            if (!rayonThreadsInitialized) {
-                rayonThreadsInitialized = true;
-                initializeRayonThreadPool(numThreads);
-            }
+            RustContender::beforeConstruction(keys);
             rustStruct = createFmphStruct(N, data);
         }
 
