@@ -33,8 +33,8 @@ class PTHashContender : public Contender {
             config.lambda = lambda;
             config.alpha = internalLoadFactor;
             config.num_threads = numThreads;
-            config.minimal_output = minimal;
-            config.verbose_output = false;
+            config.minimal = minimal;
+            config.verbose = false;
             config.search = pthash::xor_displacement;
             pthashFunction.build_in_internal_memory(keys.begin(), keys.size(), config);
         }
