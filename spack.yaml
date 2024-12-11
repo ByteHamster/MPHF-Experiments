@@ -1,0 +1,13 @@
+# This is a Spack Environment file.
+#
+# It describes a set of packages to be installed, along with
+# configuration settings.
+spack:
+  # add package specs to the `specs` list
+  specs:
+  - gcc@11.2.0
+  - cmake@3.30.2
+  - intel-oneapi-tbb
+  view: true
+  concretizer:
+    unify: true
