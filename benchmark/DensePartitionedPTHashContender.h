@@ -1,7 +1,7 @@
 #pragma once
 
 #include <dense_partitioned_phf.hpp>
-#include <encoders/encoders.hpp>
+#include <utils/encoders.hpp>
 #undef MAX_BUCKET_SIZE
 #include "Contender.h"
 
@@ -36,8 +36,8 @@ class DensePartitionedPTHashContender : public Contender {
             config.alpha = internalLoadFactor;
             config.num_threads = numThreads;
             config.avg_partition_size = partitionSize;
-            config.minimal_output = true;
-            config.verbose_output = false;
+            config.minimal = true;
+            config.verbose = false;
             config.dense_partitioning = true;
             config.secondary_sort = true;
             config.search = pthash::add_displacement;

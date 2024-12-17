@@ -125,7 +125,7 @@ int main(int argc, char** argv) {
         fchCmphContenderRunner(N, loadFactor);
     }
     if (fchPtHash) {
-        fchPtHashContenderRunner(N, loadFactor);
+        fchPtHashContenderRunner(N);
     }
     if (sichash) {
         sicHashContenderRunner<64>(N, loadFactor, minimalOnly);

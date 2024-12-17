@@ -18,8 +18,8 @@ class FchContender : public Contender {
         mphf::FCH<mphf::hasher::Hasher<>> fchFunction;
         mphf::FCH<mphf::hasher::Hasher<>>::Builder builder;
 
-        FchContender(size_t N, double loadFactor, double c)
-                : Contender(N, loadFactor), c(c), builder(c) {
+        FchContender(size_t N, double c)
+                : Contender(N, 1.0), c(c), builder(c) {
         }
 
         std::string name() override {
@@ -48,8 +48,8 @@ class FchContender : public Contender {
         }
 };
 
-void fchPtHashContenderRunner(size_t N, double loadFactor) {
-    for (double c = 3.0; c < 12.0; c += 0.4) {
-        FchContender(N, loadFactor, c).run();
+void fchPtHashContenderRunner(size_t N) {
+    for (double c = 4.0; c >= 2.0; c -= 0.1) {
+        FchContender(N, c).run();
     }
 }
