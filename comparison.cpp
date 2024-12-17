@@ -15,6 +15,7 @@
 #include "benchmark/FchContender.h"
 #include "benchmark/DensePartitionedPTHashContender.h"
 #include "benchmark/RustSrsContender.h"
+#include "benchmark/ConsensusContender.h"
 #ifdef HAS_VULKAN
 #include "benchmark/GpuPhobicContender.h"
 #endif
@@ -48,6 +49,7 @@ int main(int argc, char** argv) {
     bool densePartitionedPtHash = false;
     bool bipartiteShockHashFlat = false;
     bool fiPS = false;
+    bool consensus = false;
     bool minimalOnly = false;
 
     tlx::CmdlineParser cmd;
@@ -83,6 +85,7 @@ int main(int argc, char** argv) {
     cmd.add_flag("rustSrs", rustSrsContender, "Execute rust SRS benchmark");
     cmd.add_flag("gpuPhobic", gpuPhobic, "Execute Phobic on the GPU benchmark");
     cmd.add_flag("fiPS", fiPS, "Execute FiPS benchmark");
+    cmd.add_flag("consensus", consensus, "Execute Consensus benchmark");
 
     if (!cmd.process(argc, argv)) {
         return 1;
@@ -163,6 +166,9 @@ int main(int argc, char** argv) {
     }
     if (rustSrsContender) {
         rustSrsContenderRunner(N);
+    }
+    if (consensus) {
+        consensusContenderRunner(N);
     }
     return 0;
 }

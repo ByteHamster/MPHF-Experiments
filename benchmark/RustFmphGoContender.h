@@ -16,7 +16,8 @@ class RustFmphGoContender : public RustContender {
         double gamma;
     public:
 
-        RustFmphGoContender(size_t N, double gamma) : RustContender(N) {
+        RustFmphGoContender(size_t N, double gamma)
+            : RustContender(N), gamma(gamma) {
         }
 
         ~RustFmphGoContender() override {

@@ -81,6 +81,9 @@ endif()
 add_subdirectory(extlib/pthash)
 target_link_libraries(PerfectHashingCompetitors INTERFACE PTHASH)
 
+add_subdirectory(extlib/consensus)
+target_link_libraries(PerfectHashingCompetitors INTERFACE ConsensusRecSplit)
+
 #################### CUDA Competitor setup ####################
 if (CMAKE_CUDA_COMPILER)
     enable_language(CUDA)
