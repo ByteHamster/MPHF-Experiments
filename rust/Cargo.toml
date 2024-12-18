@@ -10,4 +10,3 @@ crate-type = ["staticlib"]
 libc = "0.2"
 ph = "0.7.3"
 rayon = "1.7.0"
-srs = { git = "ssh://github.com/worldofjoni/RecSplit.git", version = "0.1.0" }

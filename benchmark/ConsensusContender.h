@@ -41,14 +41,20 @@ class ConsensusContender : public Contender {
 
 void consensusContenderRunner(size_t N) {
     ConsensusContender<512, 0.1>(N).run();
+    ConsensusContender<512, 0.06>(N).run();
+    ConsensusContender<512, 0.03>(N).run();
     ConsensusContender<512, 0.01>(N).run();
-    ConsensusContender<512, 0.001>(N).run();
-
-    ConsensusContender<4096, 0.1>(N).run();
+    ConsensusContender<2048, 0.01>(N).run();
     ConsensusContender<4096, 0.01>(N).run();
-    ConsensusContender<4096, 0.01>(N).run();
-
-    ConsensusContender<32768, 0.001>(N).run();
     ConsensusContender<32768, 0.01>(N).run();
+    ConsensusContender<32768, 0.006>(N).run();
+    ConsensusContender<32768, 0.003>(N).run();
     ConsensusContender<32768, 0.001>(N).run();
+    ConsensusContender<32768, 0.0005>(N).run();
+    ConsensusContender<65536, 0.001>(N).run();
+    ConsensusContender<65536, 0.0003>(N).run();
+    ConsensusContender<65536, 0.0001>(N).run();
+    ConsensusContender<131072, 0.001>(N).run();
+    ConsensusContender<131072, 0.0003>(N).run();
+    ConsensusContender<131072, 0.0001>(N).run();
 }

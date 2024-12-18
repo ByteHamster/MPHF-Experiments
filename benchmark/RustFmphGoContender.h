@@ -22,7 +22,7 @@ class RustFmphGoContender : public RustContender {
 
         ~RustFmphGoContender() override {
             if (rustStruct != nullptr) {
-                destroyFmphStruct(rustStruct);
+                destroyFmphGoStruct(rustStruct);
                 rustStruct = nullptr;
             }
         }
