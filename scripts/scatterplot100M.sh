@@ -29,6 +29,7 @@ jobs=(
     "$params --rustFmphGo"
     "$params --shockhash"
     "$params --bipartiteShockHash"
+    "$params --consensus"
 )
 
 if [[ "$1" == "--jobs" ]]; then
