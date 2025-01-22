@@ -12,6 +12,8 @@
 #include "benchmark/ShockHashContender.h"
 #include "benchmark/BipartiteShockHashFlatContender.h"
 #include "benchmark/FiPSContender.h"
+#include "benchmark/MorphisHashContender.h"
+#include "benchmark/MorphisHashFlatContender.h"
 
 int main(int argc, char** argv) {
     size_t N = 5e6;
@@ -41,10 +43,13 @@ int main(int argc, char** argv) {
         {RustFmphGoContender(N, 1.5).run();}
         {RustFmphContender(N, 1.5).run();}
         {BBHashContender(N, 1.5, 0).run();}
+        {MorphisHashContender<64,5>(N, 2000).run();}
         {BipartiteShockHashContender<64>(N, 2000).run();}
         if (Contender::numThreads == 1) {
             {RecSplitContender<14>(N, 2000).run();}
+            {MorphisHashContender<40,5>(N, 2000).run();}
             {ShockHashContender<40>(N, 2000).run();}
+            {MorphisHashFlatContender<40,5>(N).run();}
             {BipartiteShockHashFlatContender<64>(N).run();}
             {CmphContender(N, 0.95, "CHD", CMPH_CHD_PH, 0.95, 5, false).run();}
             {CmphContender(N, 0.8, "BDZ", CMPH_BDZ, 1.0/0.8, 3, true).run();}

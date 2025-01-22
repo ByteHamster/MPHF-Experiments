@@ -20,6 +20,7 @@ jobs=(
     "$loadfactor097 --partitionedPthash"
     "$params --rustSrs"
     "$params --bipartiteShockHashFlat"
+    "$params --morphisHashFlat"
     "$params --densePartitionedPtHash"
     "$params --fiPS"
     "$params --recsplit"
@@ -29,6 +30,7 @@ jobs=(
     "$params --rustFmphGo"
     "$params --shockhash"
     "$params --bipartiteShockHash"
+    "$params --morphisHash"
 )
 
 if [[ "$1" == "--jobs" ]]; then
