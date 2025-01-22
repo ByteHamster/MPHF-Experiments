@@ -1,19 +1,19 @@
 #pragma once
 
 #include "Contender.h"
-#include <MorphisHash2Flat.h>
+#include <MorphisHashFlat.h>
 
 template<int l, int ws>
 class MorphisHashFlatContender : public Contender {
     public:
-        morphishash::MorphisHash2Flat<l, false, ws> *shockHash = nullptr;
+        morphishash::MorphisHashFlat<l, ws> *morphisHashFlat = nullptr;
 
         MorphisHashFlatContender(size_t N)
                 : Contender(N, 1.0) {
         }
 
         ~MorphisHashFlatContender() override {
-            delete shockHash;
+            delete morphisHashFlat;
         }
 
         std::string name() override {
@@ -27,19 +27,19 @@ class MorphisHashFlatContender : public Contender {
         }
 
         void construct(const std::vector<std::string> &keys) override {
-            shockHash = new morphishash::MorphisHash2Flat<l, false, ws>(keys);
+            morphisHashFlat = new morphishash::MorphisHashFlat<l, ws>(keys);
         }
 
         size_t sizeBits() override {
-            return shockHash->getBits();
+            return morphisHashFlat->getBits();
         }
 
         void performQueries(const std::span<std::string> keys) override {
-            doPerformQueries(keys, *shockHash);
+            doPerformQueries(keys, *morphisHashFlat);
         }
 
         void performTest(const std::span<std::string> keys) override {
-            doPerformTest(keys, *shockHash);
+            doPerformTest(keys, *morphisHashFlat);
         }
 };
 

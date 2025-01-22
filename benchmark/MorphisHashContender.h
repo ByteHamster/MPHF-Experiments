@@ -1,20 +1,20 @@
 #pragma once
 
 #include "Contender.h"
-#include <MorphisHash2.h>
+#include <MorphisHash.h>
 
 template<int l, int ws>
 class MorphisHashContender : public Contender {
     public:
         size_t bucketSize;
-        morphishash::MorphisHash2<l, false, ws> *shockHash = nullptr;
+        morphishash::MorphisHash<l, ws> *morphisHash = nullptr;
 
         MorphisHashContender(size_t N, size_t bucketSize)
                 : Contender(N, 1.0), bucketSize(bucketSize) {
         }
 
         ~MorphisHashContender() override {
-            delete shockHash;
+            delete morphisHash;
         }
 
         std::string name() override {
@@ -29,19 +29,19 @@ class MorphisHashContender : public Contender {
         }
 
         void construct(const std::vector<std::string> &keys) override {
-            shockHash = new morphishash::MorphisHash2<l, false, ws>(keys, bucketSize, numThreads);
+            morphisHash = new morphishash::MorphisHash<l, ws>(keys, bucketSize, numThreads);
         }
 
         size_t sizeBits() override {
-            return shockHash->getBits();
+            return morphisHash->getBits();
         }
 
         void performQueries(const std::span<std::string> keys) override {
-            doPerformQueries(keys, *shockHash);
+            doPerformQueries(keys, *morphisHash);
         }
 
         void performTest(const std::span<std::string> keys) override {
-            doPerformTest(keys, *shockHash);
+            doPerformTest(keys, *morphisHash);
         }
 };
 

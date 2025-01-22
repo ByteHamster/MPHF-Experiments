@@ -37,6 +37,6 @@
 [submodule "extlib/fips"]
 	path = extlib/fips
 	url = https://github.com/ByteHamster/FiPS.git
-[submodule "extlib/MatrixShockHash"]
-	path = extlib/MatrixShockHash
-	url = git@github.com:stefanfred/MatrixShockHash.git
+[submodule "extlib/MorphisHash"]
+	path = extlib/MorphisHash
+	url = https://github.com/stefanfred/MorphisHash.git

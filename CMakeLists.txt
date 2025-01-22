@@ -45,8 +45,8 @@ target_link_libraries(PerfectHashingCompetitors INTERFACE MphfWbpm)
 add_subdirectory(extlib/ShockHash)
 target_link_libraries(PerfectHashingCompetitors INTERFACE ShockHash)
 
-add_subdirectory(extlib/MatrixShockHash)
-target_link_libraries(PerfectHashingCompetitors INTERFACE MatrixShockHash)
+add_subdirectory(extlib/MorphisHash)
+target_link_libraries(PerfectHashingCompetitors INTERFACE MorphisHash)
 
 add_subdirectory(extlib/gpurecsplit)
 target_link_libraries(PerfectHashingCompetitors INTERFACE SIMDRecSplit)
