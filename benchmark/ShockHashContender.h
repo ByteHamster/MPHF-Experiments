@@ -1,24 +1,24 @@
 #pragma once
 
 #include "Contender.h"
-#include <SIMDShockHash.hpp>
+#include <ShockHash.h>
 
 template<int l, bool rotationFitting = true>
 class ShockHashContender : public Contender {
     public:
         size_t bucketSize;
-        shockhash::SIMDShockHash<l, rotationFitting> *recSplit = nullptr;
+        shockhash::ShockHash<l, rotationFitting> *shockHash = nullptr;
 
         ShockHashContender(size_t N, size_t bucketSize)
                 : Contender(N, 1.0), bucketSize(bucketSize) {
         }
 
         ~ShockHashContender() override {
-            delete recSplit;
+            delete shockHash;
         }
 
         std::string name() override {
-            return std::string("ShockHashSIMD")
+            return std::string("ShockHash")
                   + " rotationFitting=" + std::to_string(rotationFitting)
                   + " l=" + std::to_string(l)
                   + " b=" + std::to_string(bucketSize);
@@ -29,19 +29,19 @@ class ShockHashContender : public Contender {
         }
 
         void construct(const std::vector<std::string> &keys) override {
-            recSplit = new shockhash::SIMDShockHash<l, rotationFitting>(keys, bucketSize);
+            shockHash = new shockhash::ShockHash<l, rotationFitting>(keys, bucketSize);
         }
 
         size_t sizeBits() override {
-            return recSplit->getBits();
+            return shockHash->getBits();
         }
 
         void performQueries(const std::span<std::string> keys) override {
-            doPerformQueries(keys, *recSplit);
+            doPerformQueries(keys, *shockHash);
         }
 
         void performTest(const std::span<std::string> keys) override {
-            doPerformTest(keys, *recSplit);
+            doPerformTest(keys, *shockHash);
         }
 };
 

@@ -44,8 +44,12 @@ target_link_libraries(PerfectHashingCompetitors INTERFACE MphfWbpm)
 
 add_subdirectory(extlib/ShockHash)
 target_link_libraries(PerfectHashingCompetitors INTERFACE ShockHash)
+if(TARGET ShockHashSIMD)
+    target_link_libraries(PerfectHashingCompetitors INTERFACE ShockHashSIMD)
+endif()
 
 add_subdirectory(extlib/gpurecsplit)
+target_link_libraries(PerfectHashingCompetitors INTERFACE RecSplit)
 if(TARGET SIMDRecSplit)
     target_link_libraries(PerfectHashingCompetitors INTERFACE SIMDRecSplit)
 endif()

@@ -23,6 +23,7 @@
 
 #ifdef SIMD
 #include "benchmark/SIMDRecSplitContender.h"
+#include "benchmark/ShockHashSimdContender.h"
 #endif
 
 int main(int argc, char** argv) {
@@ -139,7 +140,11 @@ int main(int argc, char** argv) {
         }
     }
     if (shockhash) {
-        shockHashContenderRunner(N);
+        #ifdef SIMD
+            shockHashSimdContenderRunner(N);
+        #else
+            shockHashContenderRunner(N);
+        #endif
     }
     if (bipartiteShockHash) {
         bipartiteShockHashContenderRunner(N);
