@@ -59,6 +59,7 @@ if [[ -z "$SLURM_ARRAY_TASK_COUNT" ]]; then
 else
     echo "This is a slurm array job. Running only the requested task."
     echo "./Comparison ${jobs[$SLURM_ARRAY_TASK_ID]}"
+    sleep 5
     ./Comparison ${jobs[$SLURM_ARRAY_TASK_ID]}
 fi
 
