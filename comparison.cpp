@@ -4,7 +4,6 @@
 #include "benchmark/SicHashContender.h"
 #include "benchmark/PTHashContender.h"
 #include "benchmark/RecSplitContender.h"
-#include "benchmark/SIMDRecSplitContender.h"
 #include "benchmark/RecSplitRotateContender.h"
 #include "benchmark/MphfWbpmContender.h"
 #include "benchmark/ShockHashContender.h"
@@ -15,11 +14,16 @@
 #include "benchmark/FchContender.h"
 #include "benchmark/DensePartitionedPTHashContender.h"
 #include "benchmark/ConsensusContender.h"
+#include "benchmark/BipartiteShockHashFlatContender.h"
+#include "benchmark/FiPSContender.h"
+
 #ifdef HAS_VULKAN
 #include "benchmark/GpuPhobicContender.h"
 #endif
-#include "benchmark/BipartiteShockHashFlatContender.h"
-#include "benchmark/FiPSContender.h"
+
+#ifdef SIMD
+#include "benchmark/SIMDRecSplitContender.h"
+#endif
 
 int main(int argc, char** argv) {
     double loadFactor = 0.8;
@@ -98,7 +102,11 @@ int main(int argc, char** argv) {
         recSplitContenderRunner(N);
     }
     if (simdrecsplit) {
-        simdRecSplitContenderRunner(N);
+        #ifdef SIMD
+            simdRecSplitContenderRunner(N);
+        #else
+            std::cerr<<"SIMDRecSplit competitor requested but not compiled into this binary"<<std::endl;
+        #endif
     }
     if (recsplitRotate) {
         recSplitRotateContenderRunner(N);
