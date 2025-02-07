@@ -72,5 +72,4 @@ void shockHashSimdContenderRunner(size_t N) {
     shockHashSimdTestMulti<50>(N);
     shockHashSimdTestMulti<52>(N);
     shockHashSimdTestMulti<54>(N);
-    shockHashSimdTestMulti<58>(N);
 }
