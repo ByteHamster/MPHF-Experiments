@@ -33,7 +33,8 @@ jobs=(
     "$params --fchPtHash"
 )
 
-if [[ "$1" == "--jobs" ]]; then
+if [ "$#" -ne 0 ]; then
+    # Use "--list" or "--jobs" or actually anything
     # Print available jobs
     for i in "${!jobs[@]}"; do 
         echo -e "$i \t ${jobs[$i]}"
