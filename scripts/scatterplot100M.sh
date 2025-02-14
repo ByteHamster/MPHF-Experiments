@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH --array=0-24
+#SBATCH --array=0-23
 
 params="--numKeys 100M --numThreads 1 --numQueries 100M"
 loadfactor090="$params --minimalOnly --loadFactor 0.9"
@@ -18,7 +18,6 @@ jobs=(
     "$loadfactor097 --pthash"
     "$loadfactor097 --chd"
     "$loadfactor097 --partitionedPthash"
-    "$params --rustSrs"
     "$params --bipartiteShockHashFlat"
     "$params --densePartitionedPtHash"
     "$params --fiPS"
