@@ -1,3 +1,5 @@
+#![feature(isqrt)]
+
 extern crate libc;
 extern crate ph;
 extern crate rayon;
