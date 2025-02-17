@@ -40,3 +40,6 @@
 [submodule "extlib/consensus"]
 	path = extlib/consensus
 	url = https://github.com/ByteHamster/ConsensusRecSplit.git
+[submodule "extlib/ptrhash"]
+	path = extlib/ptrhash
+	url = https://github.com/RagnarGrootKoerkamp/PtrHash.git

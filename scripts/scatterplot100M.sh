@@ -30,6 +30,8 @@ jobs=(
     "$params --bipartiteShockHash"
     "$params --consensus"
     "$params --fchPtHash"
+    "$params --rustPtrHash"
+    "$params --bdz"
 )
 
 if [ "$#" -ne 0 ]; then

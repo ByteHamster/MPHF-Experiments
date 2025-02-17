@@ -10,6 +10,7 @@
 #include "benchmark/PartitionedPTHashContender.h"
 #include "benchmark/RustFmphContender.h"
 #include "benchmark/RustFmphGoContender.h"
+#include "benchmark/RustPtrHashContender.h"
 #include "benchmark/BipartiteShockHashContender.h"
 #include "benchmark/FchContender.h"
 #include "benchmark/DensePartitionedPTHashContender.h"
@@ -46,6 +47,7 @@ int main(int argc, char** argv) {
     bool fchPtHash = false;
     bool rustFmphContender = false;
     bool rustFmphGoContender = false;
+    bool rustPtrHashContender = false;
     bool sichashOnlyPartial = false;
     bool bipartiteShockHash = false;
     bool gpuPhobic = false;
@@ -85,6 +87,7 @@ int main(int argc, char** argv) {
     cmd.add_flag("fchPtHash", fchPtHash, "Execute fch (PTHash reimplementation) benchmark");
     cmd.add_flag("rustFmph", rustFmphContender, "Execute rust fmph benchmark");
     cmd.add_flag("rustFmphGo", rustFmphGoContender, "Execute rust fmph-go benchmark");
+    cmd.add_flag("rustPtrHash", rustPtrHashContender, "Execute rust ptrhash benchmark");
     cmd.add_flag("gpuPhobic", gpuPhobic, "Execute Phobic on the GPU benchmark");
     cmd.add_flag("fiPS", fiPS, "Execute FiPS benchmark");
     cmd.add_flag("consensus", consensus, "Execute Consensus benchmark");
@@ -92,12 +95,14 @@ int main(int argc, char** argv) {
     if (!cmd.process(argc, argv)) {
         return 1;
     }
-
     if (rustFmphContender) {
         rustFmphContenderRunner(N);
     }
     if (rustFmphGoContender) {
         rustFmphGoContenderRunner(N);
+    }
+    if (rustPtrHashContender) {
+        rustPtrHashContenderRunner(N);
     }
     if (recsplit) {
         recSplitContenderRunner(N);
