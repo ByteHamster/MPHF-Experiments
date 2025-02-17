@@ -1,6 +1,7 @@
 [package]
 name = "mphf_experiments"
 version = "0.1.0"
+edition = "2021"
 
 [lib]
 name = "mphf_experiments"

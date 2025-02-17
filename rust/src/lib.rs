@@ -24,7 +24,7 @@ fn c_strings_to_vec(len: usize, my_strings: *const *const c_char) -> Vec<String>
 }
 
 #[no_mangle]
-pub extern fn initializeRayonThreadPool(threads: usize) {
+pub extern "C" fn initializeRayonThreadPool(threads: usize) {
     rayon::ThreadPoolBuilder::new().num_threads(threads).build_global().unwrap();
 }
 
@@ -35,7 +35,7 @@ pub struct FmphWrapper {
 }
 
 #[no_mangle]
-pub extern fn createFmphStruct(len: usize, my_strings: *const *const c_char) -> *mut FmphWrapper {
+pub extern "C" fn createFmphStruct(len: usize, my_strings: *const *const c_char) -> *mut FmphWrapper {
     let struct_instance = FmphWrapper {
         vector: c_strings_to_vec(len, my_strings),
         hash_func: fmph::Function::from(&[] as &[String]) };
@@ -44,7 +44,7 @@ pub extern fn createFmphStruct(len: usize, my_strings: *const *const c_char) -> 
 }
 
 #[no_mangle]
-pub extern fn constructFmph(struct_ptr: *mut FmphWrapper, gamma : u16) {
+pub extern "C" fn constructFmph(struct_ptr: *mut FmphWrapper, gamma : u16) {
     let struct_instance = unsafe { &mut *struct_ptr };
     let mut build_config = BuildConf::default();
     build_config.use_multiple_threads = true;
@@ -53,20 +53,20 @@ pub extern fn constructFmph(struct_ptr: *mut FmphWrapper, gamma : u16) {
 }
 
 #[no_mangle]
-pub extern fn queryFmph(struct_ptr: *mut FmphWrapper, key_c_s : *const c_char, length : usize) -> u64 {
+pub extern "C" fn queryFmph(struct_ptr: *mut FmphWrapper, key_c_s : *const c_char, length : usize) -> u64 {
     let struct_instance = unsafe { &mut *struct_ptr };
     let key = unsafe { str::from_utf8_unchecked(slice::from_raw_parts(key_c_s as *const u8, length+1)) };
     struct_instance.hash_func.get(key).unwrap()
 }
 
 #[no_mangle]
-pub extern fn sizeFmph(struct_ptr: *mut FmphWrapper) -> usize {
+pub extern "C" fn sizeFmph(struct_ptr: *mut FmphWrapper) -> usize {
     let struct_instance = unsafe { &mut *struct_ptr };
     struct_instance.hash_func.size_bytes()
 }
 
 #[no_mangle]
-pub extern fn destroyFmphStruct(struct_instance: *mut FmphWrapper) {
+pub extern "C" fn destroyFmphStruct(struct_instance: *mut FmphWrapper) {
     unsafe { let _ = Box::from_raw(struct_instance); }
 }
 
@@ -77,7 +77,7 @@ pub struct FmphGoWrapper {
 }
 
 #[no_mangle]
-pub extern fn createFmphGoStruct(len: usize, my_strings: *const *const c_char) -> *mut FmphGoWrapper {
+pub extern "C" fn createFmphGoStruct(len: usize, my_strings: *const *const c_char) -> *mut FmphGoWrapper {
     let struct_instance = FmphGoWrapper {
         vector: c_strings_to_vec(len, my_strings),
         hash_func: fmph::GOFunction::from(&[] as &[String]) };
@@ -86,7 +86,7 @@ pub extern fn createFmphGoStruct(len: usize, my_strings: *const *const c_char) -
 }
 
 #[no_mangle]
-pub extern fn constructFmphGo(struct_ptr: *mut FmphGoWrapper, gamma : u16) {
+pub extern "C" fn constructFmphGo(struct_ptr: *mut FmphGoWrapper, gamma : u16) {
     let struct_instance = unsafe { &mut *struct_ptr };
     let mut build_config = GOBuildConf::default();
     build_config.use_multiple_threads = true;
@@ -95,19 +95,19 @@ pub extern fn constructFmphGo(struct_ptr: *mut FmphGoWrapper, gamma : u16) {
 }
 
 #[no_mangle]
-pub extern fn queryFmphGo(struct_ptr: *mut FmphGoWrapper, key_c_s : *const c_char, length : usize) -> u64 {
+pub extern "C" fn queryFmphGo(struct_ptr: *mut FmphGoWrapper, key_c_s : *const c_char, length : usize) -> u64 {
     let struct_instance = unsafe { &mut *struct_ptr };
     let key = unsafe { str::from_utf8_unchecked(slice::from_raw_parts(key_c_s as *const u8, length+1)) };
     struct_instance.hash_func.get(key).unwrap()
 }
 
 #[no_mangle]
-pub extern fn sizeFmphGo(struct_ptr: *mut FmphGoWrapper) -> usize {
+pub extern "C" fn sizeFmphGo(struct_ptr: *mut FmphGoWrapper) -> usize {
     let struct_instance = unsafe { &mut *struct_ptr };
     struct_instance.hash_func.size_bytes()
 }
 
 #[no_mangle]
-pub extern fn destroyFmphGoStruct(struct_instance: *mut FmphGoWrapper) {
+pub extern "C" fn destroyFmphGoStruct(struct_instance: *mut FmphGoWrapper) {
     unsafe { let _ = Box::from_raw(struct_instance); }
 }
