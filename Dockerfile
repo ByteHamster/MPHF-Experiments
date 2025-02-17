@@ -10,6 +10,7 @@ RUN apt-get install --assume-yes --no-install-recommends libtbb-dev libxxhash-de
 
 RUN curl https://sh.rustup.rs -sSf | bash -s -- -y
 ENV PATH="/root/.cargo/bin:${PATH}"
+RUN rustup update nightly && rustup default nightly
 
 # Build sqlplot-tools
 RUN git clone https://github.com/bingmann/sqlplot-tools.git /opt/sqlplot-tools
