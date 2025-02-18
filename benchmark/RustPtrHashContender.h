@@ -115,15 +115,17 @@ class RustPtrHashContender : public RustContender {
 };
 
 void rustPtrHashContenderRunner(size_t N) {
-    // Vector storage gets trouble with larger lambda values
-    for (size_t variant = 1; variant <= 3; variant++) {
-        for (double lambda = 2.6; lambda <= 3.41; lambda += 0.2) {
-            RustPtrHashContender(N, variant, lambda).run();
-        }
+    // Cubic bucket assignment
+    for (double lambda = 2.6; lambda <= 4.01; lambda += 0.2) {
+        RustPtrHashContender(N, 3, lambda).run();
+        RustPtrHashContender(N, 6, lambda).run();
     }
-    for (size_t variant = 4; variant <= 6; variant++) {
-        for (double lambda = 2.6; lambda <= 4.01; lambda += 0.2) {
-            RustPtrHashContender(N, variant, lambda).run();
-        }
+    for (double lambda = 2.6; lambda <= 3.41; lambda += 0.2) {
+        // Linear bucket assignment
+        RustPtrHashContender(N, 1, lambda).run();
+        RustPtrHashContender(N, 4, lambda).run();
+        // Quadratic bucket assignment
+        RustPtrHashContender(N, 2, lambda).run();
+        RustPtrHashContender(N, 5, lambda).run();
     }
 }
