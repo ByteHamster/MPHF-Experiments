@@ -115,8 +115,14 @@ class RustPtrHashContender : public RustContender {
 };
 
 void rustPtrHashContenderRunner(size_t N) {
-    for (double lambda = 3.0; lambda <= 4.0; lambda += 0.2) {
-        for (size_t variant = 1; variant <= 6; variant++) {
+    // Vector storage gets trouble with larger lambda values
+    for (size_t variant = 1; variant <= 3; variant++) {
+        for (double lambda = 2.6; lambda <= 3.41; lambda += 0.2) {
+            RustPtrHashContender(N, variant, lambda).run();
+        }
+    }
+    for (size_t variant = 4; variant <= 6; variant++) {
+        for (double lambda = 2.6; lambda <= 4.01; lambda += 0.2) {
             RustPtrHashContender(N, variant, lambda).run();
         }
     }
