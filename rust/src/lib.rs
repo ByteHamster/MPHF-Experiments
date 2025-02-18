@@ -11,7 +11,7 @@ use std::str;
 use ph::{fmph, GetSize};
 use ph::fmph::{BuildConf, GOBuildConf};
 use mem_dbg::SizeFlags;
-use ptr_hash::PtrHashParams;
+use ptr_hash::{PtrHashParams, Sharding};
 
 ////////////////////////////////////////// General methods //////////////////////////////////////////
 fn c_strings_to_vec(len: usize, my_strings: *const *const c_char) -> Vec<String> {
@@ -130,59 +130,139 @@ pub extern "C" fn destroyFmphGoStruct(struct_instance: *mut FmphGoWrapper) {
 }
 
 //////////////////////////////////////////// PtrHash ///////////////////////////////////////////
-type PtrHashFast = ptr_hash::PtrHash<&'static [u8], ptr_hash::bucket_fn::Linear, Vec<u32>, ptr_hash::hash::Xx64, Vec<u8>>;
-type PtrHashCompact = ptr_hash::PtrHash<&'static [u8], ptr_hash::bucket_fn::CubicEps,
+type PtrHashLinearVec = ptr_hash::PtrHash<&'static [u8], ptr_hash::bucket_fn::Linear,
+    Vec<u32>, ptr_hash::hash::Xx64, Vec<u8>>; // Fast
+type PtrHashSquareVec = ptr_hash::PtrHash<&'static [u8], ptr_hash::bucket_fn::SquareEps,
+    Vec<u32>, ptr_hash::hash::Xx64, Vec<u8>>;
+type PtrHashCubicVec = ptr_hash::PtrHash<&'static [u8], ptr_hash::bucket_fn::CubicEps,
+    Vec<u32>, ptr_hash::hash::Xx64, Vec<u8>>;
+type PtrHashLinearEF = ptr_hash::PtrHash<&'static [u8], ptr_hash::bucket_fn::Linear,
     ptr_hash::CachelineEfVec, ptr_hash::hash::Xx64, Vec<u8>>;
+type PtrHashSquareEF = ptr_hash::PtrHash<&'static [u8], ptr_hash::bucket_fn::SquareEps,
+    ptr_hash::CachelineEfVec, ptr_hash::hash::Xx64, Vec<u8>>;
+type PtrHashCubicEF = ptr_hash::PtrHash<&'static [u8], ptr_hash::bucket_fn::CubicEps,
+    ptr_hash::CachelineEfVec, ptr_hash::hash::Xx64, Vec<u8>>; // Compact
+
 pub struct PtrHashWrapper {
     vector: Vec<&'static [u8]>,
-    compact: bool,
-    ptr_hash_fast: PtrHashFast,
-    ptr_hash_compact: PtrHashCompact,
+    variant: u64,
+    ptrhash_linear_vec: PtrHashLinearVec,
+    ptrhash_square_vec: PtrHashSquareVec,
+    ptrhash_cubic_vec: PtrHashCubicVec,
+    ptrhash_linear_ef: PtrHashLinearEF,
+    ptrhash_square_ef: PtrHashSquareEF,
+    ptrhash_cubic_ef: PtrHashCubicEF,
 }
 
 #[no_mangle]
 pub extern "C" fn createPtrHashStruct(len: usize, my_strings: *const *const c_char) -> *mut PtrHashWrapper {
     let struct_instance = PtrHashWrapper {
         vector: c_strings_to_slices(len, my_strings),
-        compact: false,
-        ptr_hash_fast: PtrHashFast::default(),
-        ptr_hash_compact: PtrHashCompact::default() };
+        variant: 0,
+        ptrhash_linear_vec: PtrHashLinearVec::default(),
+        ptrhash_square_vec: PtrHashSquareVec::default(),
+        ptrhash_cubic_vec: PtrHashCubicVec::default(),
+        ptrhash_linear_ef: PtrHashLinearEF::default(),
+        ptrhash_square_ef: PtrHashSquareEF::default(),
+        ptrhash_cubic_ef: PtrHashCubicEF::default(),
+    };
     let boxx = Box::new(struct_instance);
     Box::into_raw(boxx)
 }
 
 #[no_mangle]
-pub extern "C" fn constructPtrHash(struct_ptr: *mut PtrHashWrapper, compact : bool) {
+pub extern "C" fn constructPtrHash(struct_ptr: *mut PtrHashWrapper, variant : u64, lambda : f64) {
     let struct_instance = unsafe { &mut *struct_ptr };
-    struct_instance.compact = compact;
-    if compact {
-        struct_instance.ptr_hash_compact =
-            PtrHashCompact::new(&struct_instance.vector[..], PtrHashParams::default());
-    } else {
-        struct_instance.ptr_hash_fast =
-            PtrHashFast::new(&struct_instance.vector[..], PtrHashParams::default());
+    struct_instance.variant = variant;
+    match variant {
+        1 => {
+            let mut params = PtrHashParams::default();
+            params.lambda = lambda;
+            struct_instance.ptrhash_linear_vec = PtrHashLinearVec::new(&struct_instance.vector[..], params);
+        },
+        2 => {
+            let mut params = PtrHashParams::default();
+            params.lambda = lambda;
+            struct_instance.ptrhash_square_vec = PtrHashSquareVec::new(&struct_instance.vector[..], params);
+        },
+        3 => {
+            let mut params = PtrHashParams::default();
+            params.lambda = lambda;
+            struct_instance.ptrhash_cubic_vec = PtrHashCubicVec::new(&struct_instance.vector[..], params);
+        },
+        4 => {
+            let mut params = PtrHashParams::default();
+            params.lambda = lambda;
+            struct_instance.ptrhash_linear_ef = PtrHashLinearEF::new(&struct_instance.vector[..], params);
+        },
+        5 => {
+            let mut params = PtrHashParams::default();
+            params.lambda = lambda;
+            struct_instance.ptrhash_square_ef = PtrHashSquareEF::new(&struct_instance.vector[..], params);
+        },
+        6 => {
+            let mut params = PtrHashParams::default();
+            params.lambda = lambda;
+            struct_instance.ptrhash_cubic_ef = PtrHashCubicEF::new(&struct_instance.vector[..], params);
+        },
+        _ => panic!("Invalid variant"),
     }
 }
 
 #[no_mangle]
-pub extern "C" fn queryPtrHash(struct_ptr: *mut PtrHashWrapper, key_c_s : *const c_char, length : usize) -> u64 {
+pub extern "C" fn queryPtrHash1(struct_ptr: *mut PtrHashWrapper, key_c_s : *const c_char, length : usize) -> u64 {
     let struct_instance = unsafe { &mut *struct_ptr };
     let key = unsafe { slice::from_raw_parts(key_c_s as *const u8, length + 1) };
-    if struct_instance.compact {
-        struct_instance.ptr_hash_compact.index_minimal(&key) as u64
-    } else {
-        struct_instance.ptr_hash_fast.index_minimal(&key) as u64
-    }
+    struct_instance.ptrhash_linear_vec.index_minimal(&key) as u64
+}
+
+#[no_mangle]
+pub extern "C" fn queryPtrHash2(struct_ptr: *mut PtrHashWrapper, key_c_s : *const c_char, length : usize) -> u64 {
+    let struct_instance = unsafe { &mut *struct_ptr };
+    let key = unsafe { slice::from_raw_parts(key_c_s as *const u8, length + 1) };
+    struct_instance.ptrhash_square_vec.index_minimal(&key) as u64
+}
+
+#[no_mangle]
+pub extern "C" fn queryPtrHash3(struct_ptr: *mut PtrHashWrapper, key_c_s : *const c_char, length : usize) -> u64 {
+    let struct_instance = unsafe { &mut *struct_ptr };
+    let key = unsafe { slice::from_raw_parts(key_c_s as *const u8, length + 1) };
+    struct_instance.ptrhash_cubic_vec.index_minimal(&key) as u64
+}
+
+#[no_mangle]
+pub extern "C" fn queryPtrHash4(struct_ptr: *mut PtrHashWrapper, key_c_s : *const c_char, length : usize) -> u64 {
+    let struct_instance = unsafe { &mut *struct_ptr };
+    let key = unsafe { slice::from_raw_parts(key_c_s as *const u8, length + 1) };
+    struct_instance.ptrhash_linear_ef.index_minimal(&key) as u64
+}
+
+#[no_mangle]
+pub extern "C" fn queryPtrHash5(struct_ptr: *mut PtrHashWrapper, key_c_s : *const c_char, length : usize) -> u64 {
+    let struct_instance = unsafe { &mut *struct_ptr };
+    let key = unsafe { slice::from_raw_parts(key_c_s as *const u8, length + 1) };
+    struct_instance.ptrhash_square_ef.index_minimal(&key) as u64
+}
+
+#[no_mangle]
+pub extern "C" fn queryPtrHash6(struct_ptr: *mut PtrHashWrapper, key_c_s : *const c_char, length : usize) -> u64 {
+    let struct_instance = unsafe { &mut *struct_ptr };
+    let key = unsafe { slice::from_raw_parts(key_c_s as *const u8, length + 1) };
+    struct_instance.ptrhash_cubic_ef.index_minimal(&key) as u64
 }
 
 #[no_mangle]
 pub extern "C" fn sizePtrHash(struct_ptr: *mut PtrHashWrapper) -> usize {
     let struct_instance = unsafe { &mut *struct_ptr };
     use mem_dbg::MemSize;
-    return if struct_instance.compact {
-        struct_instance.ptr_hash_compact.mem_size(SizeFlags::default())
-    } else {
-        struct_instance.ptr_hash_fast.mem_size(SizeFlags::default())
+    match struct_instance.variant {
+        1 => struct_instance.ptrhash_linear_vec.mem_size(SizeFlags::default()),
+        2 => struct_instance.ptrhash_square_vec.mem_size(SizeFlags::default()),
+        3 => struct_instance.ptrhash_cubic_vec.mem_size(SizeFlags::default()),
+        4 => struct_instance.ptrhash_linear_ef.mem_size(SizeFlags::default()),
+        5 => struct_instance.ptrhash_square_ef.mem_size(SizeFlags::default()),
+        6 => struct_instance.ptrhash_cubic_ef.mem_size(SizeFlags::default()),
+        _ => panic!("Invalid variant"),
     }
 }
 

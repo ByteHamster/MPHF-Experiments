@@ -3,21 +3,27 @@
 #include "RustContender.h"
 
 extern "C" {
-void *createPtrHashStruct(uint64_t len, const char **str);
-void constructPtrHash(void *rustStruct, bool compact);
-uint64_t queryPtrHash(void *rustStruct, const char *key, const size_t length);
-size_t sizePtrHash(void *rustStruct);
-void destroyPtrHashStruct(void *rustStruct);
+    void *createPtrHashStruct(uint64_t len, const char **str);
+    void constructPtrHash(void *rustStruct, uint64_t variant, double lambda);
+    uint64_t queryPtrHash1(void *rustStruct, const char *key, size_t length);
+    uint64_t queryPtrHash2(void *rustStruct, const char *key, size_t length);
+    uint64_t queryPtrHash3(void *rustStruct, const char *key, size_t length);
+    uint64_t queryPtrHash4(void *rustStruct, const char *key, size_t length);
+    uint64_t queryPtrHash5(void *rustStruct, const char *key, size_t length);
+    uint64_t queryPtrHash6(void *rustStruct, const char *key, size_t length);
+    size_t sizePtrHash(void *rustStruct);
+    void destroyPtrHashStruct(void *rustStruct);
 }
 
 class RustPtrHashContender : public RustContender {
     protected:
         void *rustStruct = nullptr;
-        bool compact;
+        uint64_t variant;
+        double lambda;
     public:
 
-        RustPtrHashContender(size_t N, bool compact)
-            : RustContender(N), compact(compact) {
+        RustPtrHashContender(size_t N, uint64_t variant, double lambda)
+            : RustContender(N), variant(variant), lambda(lambda) {
         }
 
         ~RustPtrHashContender() override {
@@ -29,7 +35,8 @@ class RustPtrHashContender : public RustContender {
 
         std::string name() override {
             return std::string("RustPtrHash")
-                + " compact=" + std::to_string(compact);
+                + " variant=" + std::to_string(variant)
+                + " lambda=" + std::to_string(lambda);
         }
 
         void beforeConstruction(const std::vector<std::string> &keys) override {
@@ -39,7 +46,7 @@ class RustPtrHashContender : public RustContender {
 
         void construct(const std::vector<std::string> &keys) override {
             (void) keys;
-            constructPtrHash(rustStruct, compact);
+            constructPtrHash(rustStruct, variant, lambda);
         }
 
         size_t sizeBits() override {
@@ -47,22 +54,70 @@ class RustPtrHashContender : public RustContender {
         }
 
         void performQueries(const std::span<std::string> keys) override {
-            auto x = [&] (std::string &key) {
-                return queryPtrHash(rustStruct, key.c_str(), key.length());
-            };
-            doPerformQueries(keys, x);
+            if (variant == 1) {
+                auto x = [&] (std::string &key) {
+                    return queryPtrHash1(rustStruct, key.c_str(), key.length()); };
+                doPerformQueries(keys, x);
+            } else if (variant == 2) {
+                auto x = [&] (std::string &key) {
+                    return queryPtrHash2(rustStruct, key.c_str(), key.length()); };
+                doPerformQueries(keys, x);
+            } else if (variant == 3) {
+                auto x = [&] (std::string &key) {
+                    return queryPtrHash3(rustStruct, key.c_str(), key.length()); };
+                doPerformQueries(keys, x);
+            } else if (variant == 4) {
+                auto x = [&] (std::string &key) {
+                    return queryPtrHash4(rustStruct, key.c_str(), key.length()); };
+                doPerformQueries(keys, x);
+            } else if (variant == 5) {
+                auto x = [&] (std::string &key) {
+                    return queryPtrHash5(rustStruct, key.c_str(), key.length()); };
+                doPerformQueries(keys, x);
+            } else if (variant == 6) {
+                auto x = [&] (std::string &key) {
+                    return queryPtrHash6(rustStruct, key.c_str(), key.length()); };
+                doPerformQueries(keys, x);
+            } else {
+                std::cerr << "Invalid variant" << std::endl;
+            }
         }
 
         void performTest(const std::span<std::string> keys) override {
-            auto x = [&] (std::string &key) {
-                return queryPtrHash(rustStruct, key.c_str(), key.length());
-            };
-            doPerformTest(keys, x);
+            if (variant == 1) {
+                auto x = [&] (std::string &key) {
+                    return queryPtrHash1(rustStruct, key.c_str(), key.length()); };
+                doPerformTest(keys, x);
+            } else if (variant == 2) {
+                auto x = [&] (std::string &key) {
+                    return queryPtrHash2(rustStruct, key.c_str(), key.length()); };
+                doPerformTest(keys, x);
+            } else if (variant == 3) {
+                auto x = [&] (std::string &key) {
+                    return queryPtrHash3(rustStruct, key.c_str(), key.length()); };
+                doPerformTest(keys, x);
+            } else if (variant == 4) {
+                auto x = [&] (std::string &key) {
+                    return queryPtrHash4(rustStruct, key.c_str(), key.length()); };
+                doPerformTest(keys, x);
+            } else if (variant == 5) {
+                auto x = [&] (std::string &key) {
+                    return queryPtrHash5(rustStruct, key.c_str(), key.length()); };
+                doPerformTest(keys, x);
+            } else if (variant == 6) {
+                auto x = [&] (std::string &key) {
+                    return queryPtrHash6(rustStruct, key.c_str(), key.length()); };
+                doPerformTest(keys, x);
+            } else {
+                std::cerr << "Invalid variant" << std::endl;
+            }
         }
-
 };
 
 void rustPtrHashContenderRunner(size_t N) {
-    { RustPtrHashContender(N, true).run(); }
-    { RustPtrHashContender(N, false).run(); }
+    for (double lambda = 3.0; lambda <= 4.0; lambda += 0.2) {
+        for (size_t variant = 1; variant <= 6; variant++) {
+            RustPtrHashContender(N, variant, lambda).run();
+        }
+    }
 }
