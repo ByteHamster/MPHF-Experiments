@@ -50,18 +50,18 @@ void morphisHashFlatContenderRunnerMultiWidth(size_t N) {
     {MorphisHashFlatContender<l, 3>(N).run();}
     {MorphisHashFlatContender<l, 4>(N).run();}
     {MorphisHashFlatContender<l, 5>(N).run();}
-    {MorphisHashFlatContender<l, 6>(N).run();}
-    {MorphisHashFlatContender<l, 7>(N).run();}
 }
 
 void morphisHashFlatContenderRunner(size_t N) {
-    morphisHashFlatContenderRunnerMultiWidth<34>(N);
-    morphisHashFlatContenderRunnerMultiWidth<42>(N);
-    morphisHashFlatContenderRunnerMultiWidth<50>(N);
-    morphisHashFlatContenderRunnerMultiWidth<58>(N);
+    morphisHashFlatContenderRunnerMultiWidth<44>(N);
+    morphisHashFlatContenderRunnerMultiWidth<48>(N);
+    morphisHashFlatContenderRunnerMultiWidth<52>(N);
+    morphisHashFlatContenderRunnerMultiWidth<56>(N);
+    morphisHashFlatContenderRunnerMultiWidth<60>(N);
     morphisHashFlatContenderRunnerMultiWidth<64>(N);
+    morphisHashFlatContenderRunnerMultiWidth<68>(N);
     morphisHashFlatContenderRunnerMultiWidth<72>(N);
+    morphisHashFlatContenderRunnerMultiWidth<76>(N);
     morphisHashFlatContenderRunnerMultiWidth<80>(N);
-    morphisHashFlatContenderRunnerMultiWidth<88>(N);
-    morphisHashFlatContenderRunnerMultiWidth<96>(N);
+    morphisHashFlatContenderRunnerMultiWidth<84>(N);
 }
