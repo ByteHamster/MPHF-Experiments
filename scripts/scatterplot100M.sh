@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH --array=0-22
+#SBATCH --array=0-23
 
 params="--numKeys 100M --numThreads 1 --numQueries 100M"
 loadfactor090="$params --minimalOnly --loadFactor 0.9"
@@ -18,7 +18,6 @@ jobs=(
     "$loadfactor097 --pthash"
     "$loadfactor097 --chd"
     "$loadfactor097 --partitionedPthash"
-    "$params --rustSrs"
     "$params --bipartiteShockHashFlat"
     "$params --morphisHashFlat"
     "$params --densePartitionedPtHash"
@@ -30,10 +29,15 @@ jobs=(
     "$params --rustFmphGo"
     "$params --shockhash"
     "$params --bipartiteShockHash"
+    "$params --consensus"
+    "$params --fchPtHash"
+    "$params --rustPtrHash"
+    "$params --bdz"
     "$params --morphisHash"
 )
 
-if [[ "$1" == "--jobs" ]]; then
+if [ "$#" -ne 0 ]; then
+    # Use "--list" or "--jobs" or actually anything
     # Print available jobs
     for i in "${!jobs[@]}"; do 
         echo -e "$i \t ${jobs[$i]}"
@@ -59,6 +63,7 @@ if [[ -z "$SLURM_ARRAY_TASK_COUNT" ]]; then
 else
     echo "This is a slurm array job. Running only the requested task."
     echo "./Comparison ${jobs[$SLURM_ARRAY_TASK_ID]}"
+    sleep 5
     ./Comparison ${jobs[$SLURM_ARRAY_TASK_ID]}
 fi
 

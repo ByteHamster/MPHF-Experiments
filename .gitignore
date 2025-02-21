@@ -4,3 +4,5 @@ build
 .Rhistory
 .clion.source.upload.marker
 rust/target
+.spack-env
+spack.lock

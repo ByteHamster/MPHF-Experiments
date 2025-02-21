@@ -40,3 +40,9 @@
 [submodule "extlib/MorphisHash"]
 	path = extlib/MorphisHash
 	url = https://github.com/stefanfred/MorphisHash.git
+[submodule "extlib/consensus"]
+	path = extlib/consensus
+	url = https://github.com/ByteHamster/ConsensusRecSplit.git
+[submodule "extlib/ptrhash"]
+	path = extlib/ptrhash
+	url = https://github.com/ByteHamster-etc/PtrHash.git

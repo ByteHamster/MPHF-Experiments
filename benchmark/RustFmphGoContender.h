@@ -1,7 +1,6 @@
 #pragma once
 
-#include "Contender.h"
-#include "RustFmphContender.h"
+#include "RustContender.h"
 
 extern "C" {
 void *createFmphGoStruct(uint64_t len, const char **str);
@@ -11,16 +10,21 @@ size_t sizeFmphGo(void *rustStruct);
 void destroyFmphGoStruct(void *rustStruct);
 }
 
-class RustFmphGoContender : public RustFmphContender {
+class RustFmphGoContender : public RustContender {
+    protected:
+        void *rustStruct = nullptr;
+        double gamma;
     public:
 
         RustFmphGoContender(size_t N, double gamma)
-            : RustFmphContender(N, gamma) {
+            : RustContender(N), gamma(gamma) {
         }
 
         ~RustFmphGoContender() override {
-            destroyFmphGoStruct(rustStruct);
-            rustStruct = nullptr;
+            if (rustStruct != nullptr) {
+                destroyFmphGoStruct(rustStruct);
+                rustStruct = nullptr;
+            }
         }
 
         std::string name() override {
@@ -29,15 +33,7 @@ class RustFmphGoContender : public RustFmphContender {
         }
 
         void beforeConstruction(const std::vector<std::string> &keys) override {
-            std::cout << "Converting input" << std::endl;
-            for (size_t i = 0; i < N; i++) {
-                data[i] = keys[i].c_str();
-            }
-            std::cout << "Sending to Rust" << std::endl;
-            if (!rayonThreadsInitialized) {
-                rayonThreadsInitialized = true;
-                initializeRayonThreadPool(numThreads);
-            }
+            RustContender::beforeConstruction(keys);
             rustStruct = createFmphGoStruct(N, data);
         }
 

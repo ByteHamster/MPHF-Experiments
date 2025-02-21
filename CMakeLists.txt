@@ -44,12 +44,18 @@ target_link_libraries(PerfectHashingCompetitors INTERFACE MphfWbpm)
 
 add_subdirectory(extlib/ShockHash)
 target_link_libraries(PerfectHashingCompetitors INTERFACE ShockHash)
+if(TARGET ShockHashSIMD)
+    target_link_libraries(PerfectHashingCompetitors INTERFACE ShockHashSIMD)
+endif()
 
 add_subdirectory(extlib/MorphisHash)
 target_link_libraries(PerfectHashingCompetitors INTERFACE MorphisHash)
 
 add_subdirectory(extlib/gpurecsplit)
-target_link_libraries(PerfectHashingCompetitors INTERFACE SIMDRecSplit)
+target_link_libraries(PerfectHashingCompetitors INTERFACE RecSplit)
+if(TARGET SIMDRecSplit)
+    target_link_libraries(PerfectHashingCompetitors INTERFACE SIMDRecSplit)
+endif()
 
 add_subdirectory(extlib/sichash)
 target_link_libraries(PerfectHashingCompetitors INTERFACE SicHash)
@@ -64,14 +70,14 @@ endif()
 target_link_libraries(PerfectHashingCompetitors INTERFACE Sux)
 
 add_custom_command(
-    OUTPUT ${CMAKE_CURRENT_SOURCE_DIR}/rust/target/release/libmphf_experiments.a
-    COMMAND bash -c "RUSTFLAGS='-C target-cpu=native' cargo build --release"
+    OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/target/release/libmphf_experiments.a
+    COMMAND bash -c "RUSTFLAGS='-C target-cpu=native -C linker=${CMAKE_C_COMPILER}' CARGO_TARGET_DIR='${CMAKE_CURRENT_BINARY_DIR}/target' cargo build --release"
     WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/rust
     DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/rust/src/lib.rs)
-add_custom_target(func DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/rust/target/release/libmphf_experiments.a")
+add_custom_target(RustCompilation DEPENDS "${CMAKE_CURRENT_BINARY_DIR}/target/release/libmphf_experiments.a")
 add_library(RustCompetitors STATIC IMPORTED)
-set_property(TARGET RustCompetitors PROPERTY IMPORTED_LOCATION "${CMAKE_CURRENT_SOURCE_DIR}/rust/target/release/libmphf_experiments.a")
-add_dependencies(RustCompetitors func)
+set_property(TARGET RustCompetitors PROPERTY IMPORTED_LOCATION "${CMAKE_CURRENT_BINARY_DIR}/target/release/libmphf_experiments.a")
+add_dependencies(RustCompetitors RustCompilation)
 target_link_libraries(PerfectHashingCompetitors INTERFACE RustCompetitors)
 
 find_package(Vulkan)
@@ -83,6 +89,9 @@ endif()
 
 add_subdirectory(extlib/pthash)
 target_link_libraries(PerfectHashingCompetitors INTERFACE PTHASH)
+
+add_subdirectory(extlib/consensus)
+target_link_libraries(PerfectHashingCompetitors INTERFACE ConsensusRecSplit)
 
 #################### CUDA Competitor setup ####################
 if (CMAKE_CUDA_COMPILER)

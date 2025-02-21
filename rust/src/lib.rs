@@ -1,3 +1,5 @@
+#![feature(isqrt)]
+
 extern crate libc;
 extern crate ph;
 extern crate rayon;
@@ -8,6 +10,8 @@ use std::slice;
 use std::str;
 use ph::{fmph, GetSize};
 use ph::fmph::{BuildConf, GOBuildConf};
+use mem_dbg::SizeFlags;
+use ptr_hash::{PtrHashParams, Sharding};
 
 ////////////////////////////////////////// General methods //////////////////////////////////////////
 fn c_strings_to_vec(len: usize, my_strings: *const *const c_char) -> Vec<String> {
@@ -23,8 +27,21 @@ fn c_strings_to_vec(len: usize, my_strings: *const *const c_char) -> Vec<String>
     return vector;
 }
 
+fn c_strings_to_slices(len: usize, my_strings: *const *const c_char) -> Vec<&'static [u8]> {
+    let mut vector = Vec::new();
+    let sl = unsafe { std::slice::from_raw_parts(my_strings, len) };
+    let mut index = 0;
+    while index < sl.len() {
+        let c_s = sl[index];
+        let s = unsafe { slice::from_raw_parts(c_s as *const u8, strlen(c_s) + 1) };
+        vector.push(s);
+        index += 1;
+    }
+    return vector;
+}
+
 #[no_mangle]
-pub extern fn initializeRayonThreadPool(threads: usize) {
+pub extern "C" fn initializeRayonThreadPool(threads: usize) {
     rayon::ThreadPoolBuilder::new().num_threads(threads).build_global().unwrap();
 }
 
@@ -35,7 +52,7 @@ pub struct FmphWrapper {
 }
 
 #[no_mangle]
-pub extern fn createFmphStruct(len: usize, my_strings: *const *const c_char) -> *mut FmphWrapper {
+pub extern "C" fn createFmphStruct(len: usize, my_strings: *const *const c_char) -> *mut FmphWrapper {
     let struct_instance = FmphWrapper {
         vector: c_strings_to_vec(len, my_strings),
         hash_func: fmph::Function::from(&[] as &[String]) };
@@ -44,7 +61,7 @@ pub extern fn createFmphStruct(len: usize, my_strings: *const *const c_char) -> 
 }
 
 #[no_mangle]
-pub extern fn constructFmph(struct_ptr: *mut FmphWrapper, gamma : u16) {
+pub extern "C" fn constructFmph(struct_ptr: *mut FmphWrapper, gamma : u16) {
     let struct_instance = unsafe { &mut *struct_ptr };
     let mut build_config = BuildConf::default();
     build_config.use_multiple_threads = true;
@@ -53,20 +70,20 @@ pub extern fn constructFmph(struct_ptr: *mut FmphWrapper, gamma : u16) {
 }
 
 #[no_mangle]
-pub extern fn queryFmph(struct_ptr: *mut FmphWrapper, key_c_s : *const c_char, length : usize) -> u64 {
+pub extern "C" fn queryFmph(struct_ptr: *mut FmphWrapper, key_c_s : *const c_char, length : usize) -> u64 {
     let struct_instance = unsafe { &mut *struct_ptr };
     let key = unsafe { str::from_utf8_unchecked(slice::from_raw_parts(key_c_s as *const u8, length+1)) };
     struct_instance.hash_func.get(key).unwrap()
 }
 
 #[no_mangle]
-pub extern fn sizeFmph(struct_ptr: *mut FmphWrapper) -> usize {
+pub extern "C" fn sizeFmph(struct_ptr: *mut FmphWrapper) -> usize {
     let struct_instance = unsafe { &mut *struct_ptr };
     struct_instance.hash_func.size_bytes()
 }
 
 #[no_mangle]
-pub extern fn destroyFmphStruct(struct_instance: *mut FmphWrapper) {
+pub extern "C" fn destroyFmphStruct(struct_instance: *mut FmphWrapper) {
     unsafe { let _ = Box::from_raw(struct_instance); }
 }
 
@@ -77,7 +94,7 @@ pub struct FmphGoWrapper {
 }
 
 #[no_mangle]
-pub extern fn createFmphGoStruct(len: usize, my_strings: *const *const c_char) -> *mut FmphGoWrapper {
+pub extern "C" fn createFmphGoStruct(len: usize, my_strings: *const *const c_char) -> *mut FmphGoWrapper {
     let struct_instance = FmphGoWrapper {
         vector: c_strings_to_vec(len, my_strings),
         hash_func: fmph::GOFunction::from(&[] as &[String]) };
@@ -86,7 +103,7 @@ pub extern fn createFmphGoStruct(len: usize, my_strings: *const *const c_char) -
 }
 
 #[no_mangle]
-pub extern fn constructFmphGo(struct_ptr: *mut FmphGoWrapper, gamma : u16) {
+pub extern "C" fn constructFmphGo(struct_ptr: *mut FmphGoWrapper, gamma : u16) {
     let struct_instance = unsafe { &mut *struct_ptr };
     let mut build_config = GOBuildConf::default();
     build_config.use_multiple_threads = true;
@@ -95,19 +112,161 @@ pub extern fn constructFmphGo(struct_ptr: *mut FmphGoWrapper, gamma : u16) {
 }
 
 #[no_mangle]
-pub extern fn queryFmphGo(struct_ptr: *mut FmphGoWrapper, key_c_s : *const c_char, length : usize) -> u64 {
+pub extern "C" fn queryFmphGo(struct_ptr: *mut FmphGoWrapper, key_c_s : *const c_char, length : usize) -> u64 {
     let struct_instance = unsafe { &mut *struct_ptr };
     let key = unsafe { str::from_utf8_unchecked(slice::from_raw_parts(key_c_s as *const u8, length+1)) };
     struct_instance.hash_func.get(key).unwrap()
 }
 
 #[no_mangle]
-pub extern fn sizeFmphGo(struct_ptr: *mut FmphGoWrapper) -> usize {
+pub extern "C" fn sizeFmphGo(struct_ptr: *mut FmphGoWrapper) -> usize {
     let struct_instance = unsafe { &mut *struct_ptr };
     struct_instance.hash_func.size_bytes()
 }
 
 #[no_mangle]
-pub extern fn destroyFmphGoStruct(struct_instance: *mut FmphGoWrapper) {
+pub extern "C" fn destroyFmphGoStruct(struct_instance: *mut FmphGoWrapper) {
+    unsafe { let _ = Box::from_raw(struct_instance); }
+}
+
+//////////////////////////////////////////// PtrHash ///////////////////////////////////////////
+type PtrHashLinearVec = ptr_hash::PtrHash<&'static [u8], ptr_hash::bucket_fn::Linear,
+    Vec<u32>, ptr_hash::hash::Xx64, Vec<u8>>; // Fast
+type PtrHashSquareVec = ptr_hash::PtrHash<&'static [u8], ptr_hash::bucket_fn::SquareEps,
+    Vec<u32>, ptr_hash::hash::Xx64, Vec<u8>>;
+type PtrHashCubicVec = ptr_hash::PtrHash<&'static [u8], ptr_hash::bucket_fn::CubicEps,
+    Vec<u32>, ptr_hash::hash::Xx64, Vec<u8>>;
+type PtrHashLinearEF = ptr_hash::PtrHash<&'static [u8], ptr_hash::bucket_fn::Linear,
+    ptr_hash::CachelineEfVec, ptr_hash::hash::Xx64, Vec<u8>>;
+type PtrHashSquareEF = ptr_hash::PtrHash<&'static [u8], ptr_hash::bucket_fn::SquareEps,
+    ptr_hash::CachelineEfVec, ptr_hash::hash::Xx64, Vec<u8>>;
+type PtrHashCubicEF = ptr_hash::PtrHash<&'static [u8], ptr_hash::bucket_fn::CubicEps,
+    ptr_hash::CachelineEfVec, ptr_hash::hash::Xx64, Vec<u8>>; // Compact
+
+pub struct PtrHashWrapper {
+    vector: Vec<&'static [u8]>,
+    variant: u64,
+    ptrhash_linear_vec: PtrHashLinearVec,
+    ptrhash_square_vec: PtrHashSquareVec,
+    ptrhash_cubic_vec: PtrHashCubicVec,
+    ptrhash_linear_ef: PtrHashLinearEF,
+    ptrhash_square_ef: PtrHashSquareEF,
+    ptrhash_cubic_ef: PtrHashCubicEF,
+}
+
+#[no_mangle]
+pub extern "C" fn createPtrHashStruct(len: usize, my_strings: *const *const c_char) -> *mut PtrHashWrapper {
+    let struct_instance = PtrHashWrapper {
+        vector: c_strings_to_slices(len, my_strings),
+        variant: 0,
+        ptrhash_linear_vec: PtrHashLinearVec::default(),
+        ptrhash_square_vec: PtrHashSquareVec::default(),
+        ptrhash_cubic_vec: PtrHashCubicVec::default(),
+        ptrhash_linear_ef: PtrHashLinearEF::default(),
+        ptrhash_square_ef: PtrHashSquareEF::default(),
+        ptrhash_cubic_ef: PtrHashCubicEF::default(),
+    };
+    let boxx = Box::new(struct_instance);
+    Box::into_raw(boxx)
+}
+
+#[no_mangle]
+pub extern "C" fn constructPtrHash(struct_ptr: *mut PtrHashWrapper, variant : u64, lambda : f64) {
+    let struct_instance = unsafe { &mut *struct_ptr };
+    struct_instance.variant = variant;
+    match variant {
+        1 => {
+            let mut params = PtrHashParams::default();
+            params.lambda = lambda;
+            struct_instance.ptrhash_linear_vec = PtrHashLinearVec::new(&struct_instance.vector[..], params);
+        },
+        2 => {
+            let mut params = PtrHashParams::default();
+            params.lambda = lambda;
+            struct_instance.ptrhash_square_vec = PtrHashSquareVec::new(&struct_instance.vector[..], params);
+        },
+        3 => {
+            let mut params = PtrHashParams::default();
+            params.lambda = lambda;
+            struct_instance.ptrhash_cubic_vec = PtrHashCubicVec::new(&struct_instance.vector[..], params);
+        },
+        4 => {
+            let mut params = PtrHashParams::default();
+            params.lambda = lambda;
+            struct_instance.ptrhash_linear_ef = PtrHashLinearEF::new(&struct_instance.vector[..], params);
+        },
+        5 => {
+            let mut params = PtrHashParams::default();
+            params.lambda = lambda;
+            struct_instance.ptrhash_square_ef = PtrHashSquareEF::new(&struct_instance.vector[..], params);
+        },
+        6 => {
+            let mut params = PtrHashParams::default();
+            params.lambda = lambda;
+            struct_instance.ptrhash_cubic_ef = PtrHashCubicEF::new(&struct_instance.vector[..], params);
+        },
+        _ => panic!("Invalid variant"),
+    }
+}
+
+#[no_mangle]
+pub extern "C" fn queryPtrHash1(struct_ptr: *mut PtrHashWrapper, key_c_s : *const c_char, length : usize) -> u64 {
+    let struct_instance = unsafe { &mut *struct_ptr };
+    let key = unsafe { slice::from_raw_parts(key_c_s as *const u8, length + 1) };
+    struct_instance.ptrhash_linear_vec.index_minimal(&key) as u64
+}
+
+#[no_mangle]
+pub extern "C" fn queryPtrHash2(struct_ptr: *mut PtrHashWrapper, key_c_s : *const c_char, length : usize) -> u64 {
+    let struct_instance = unsafe { &mut *struct_ptr };
+    let key = unsafe { slice::from_raw_parts(key_c_s as *const u8, length + 1) };
+    struct_instance.ptrhash_square_vec.index_minimal(&key) as u64
+}
+
+#[no_mangle]
+pub extern "C" fn queryPtrHash3(struct_ptr: *mut PtrHashWrapper, key_c_s : *const c_char, length : usize) -> u64 {
+    let struct_instance = unsafe { &mut *struct_ptr };
+    let key = unsafe { slice::from_raw_parts(key_c_s as *const u8, length + 1) };
+    struct_instance.ptrhash_cubic_vec.index_minimal(&key) as u64
+}
+
+#[no_mangle]
+pub extern "C" fn queryPtrHash4(struct_ptr: *mut PtrHashWrapper, key_c_s : *const c_char, length : usize) -> u64 {
+    let struct_instance = unsafe { &mut *struct_ptr };
+    let key = unsafe { slice::from_raw_parts(key_c_s as *const u8, length + 1) };
+    struct_instance.ptrhash_linear_ef.index_minimal(&key) as u64
+}
+
+#[no_mangle]
+pub extern "C" fn queryPtrHash5(struct_ptr: *mut PtrHashWrapper, key_c_s : *const c_char, length : usize) -> u64 {
+    let struct_instance = unsafe { &mut *struct_ptr };
+    let key = unsafe { slice::from_raw_parts(key_c_s as *const u8, length + 1) };
+    struct_instance.ptrhash_square_ef.index_minimal(&key) as u64
+}
+
+#[no_mangle]
+pub extern "C" fn queryPtrHash6(struct_ptr: *mut PtrHashWrapper, key_c_s : *const c_char, length : usize) -> u64 {
+    let struct_instance = unsafe { &mut *struct_ptr };
+    let key = unsafe { slice::from_raw_parts(key_c_s as *const u8, length + 1) };
+    struct_instance.ptrhash_cubic_ef.index_minimal(&key) as u64
+}
+
+#[no_mangle]
+pub extern "C" fn sizePtrHash(struct_ptr: *mut PtrHashWrapper) -> usize {
+    let struct_instance = unsafe { &mut *struct_ptr };
+    use mem_dbg::MemSize;
+    match struct_instance.variant {
+        1 => struct_instance.ptrhash_linear_vec.mem_size(SizeFlags::default()),
+        2 => struct_instance.ptrhash_square_vec.mem_size(SizeFlags::default()),
+        3 => struct_instance.ptrhash_cubic_vec.mem_size(SizeFlags::default()),
+        4 => struct_instance.ptrhash_linear_ef.mem_size(SizeFlags::default()),
+        5 => struct_instance.ptrhash_square_ef.mem_size(SizeFlags::default()),
+        6 => struct_instance.ptrhash_cubic_ef.mem_size(SizeFlags::default()),
+        _ => panic!("Invalid variant"),
+    }
+}
+
+#[no_mangle]
+pub extern "C" fn destroyPtrHashStruct(struct_instance: *mut PtrHashWrapper) {
     unsafe { let _ = Box::from_raw(struct_instance); }
 }

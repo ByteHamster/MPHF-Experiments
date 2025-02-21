@@ -4,18 +4,27 @@
 #include "benchmark/SicHashContender.h"
 #include "benchmark/PTHashContender.h"
 #include "benchmark/RecSplitContender.h"
-#include "benchmark/SIMDRecSplitContender.h"
 #include "benchmark/RecSplitRotateContender.h"
 #include "benchmark/MphfWbpmContender.h"
 #include "benchmark/ShockHashContender.h"
 #include "benchmark/PartitionedPTHashContender.h"
 #include "benchmark/RustFmphContender.h"
 #include "benchmark/RustFmphGoContender.h"
+#include "benchmark/RustPtrHashContender.h"
 #include "benchmark/BipartiteShockHashContender.h"
 #include "benchmark/FchContender.h"
 #include "benchmark/DensePartitionedPTHashContender.h"
+#include "benchmark/ConsensusContender.h"
+#include "benchmark/BipartiteShockHashFlatContender.h"
+#include "benchmark/FiPSContender.h"
+
 #ifdef HAS_VULKAN
 #include "benchmark/GpuPhobicContender.h"
+#endif
+
+#ifdef SIMD
+#include "benchmark/SIMDRecSplitContender.h"
+#include "benchmark/ShockHashSimdContender.h"
 #endif
 #include "benchmark/BipartiteShockHashFlatContender.h"
 #include "benchmark/FiPSContender.h"
@@ -42,12 +51,14 @@ int main(int argc, char** argv) {
     bool fchPtHash = false;
     bool rustFmphContender = false;
     bool rustFmphGoContender = false;
+    bool rustPtrHashContender = false;
     bool sichashOnlyPartial = false;
     bool bipartiteShockHash = false;
     bool gpuPhobic = false;
     bool densePartitionedPtHash = false;
     bool bipartiteShockHashFlat = false;
     bool fiPS = false;
+    bool consensus = false;
     bool minimalOnly = false;
     bool morphisHash = false;
     bool morphisHashFlat = false;
@@ -84,24 +95,32 @@ int main(int argc, char** argv) {
     cmd.add_flag("fchPtHash", fchPtHash, "Execute fch (PTHash reimplementation) benchmark");
     cmd.add_flag("rustFmph", rustFmphContender, "Execute rust fmph benchmark");
     cmd.add_flag("rustFmphGo", rustFmphGoContender, "Execute rust fmph-go benchmark");
+    cmd.add_flag("rustPtrHash", rustPtrHashContender, "Execute rust ptrhash benchmark");
     cmd.add_flag("gpuPhobic", gpuPhobic, "Execute Phobic on the GPU benchmark");
     cmd.add_flag("fiPS", fiPS, "Execute FiPS benchmark");
+    cmd.add_flag("consensus", consensus, "Execute Consensus benchmark");
 
     if (!cmd.process(argc, argv)) {
         return 1;
     }
-
     if (rustFmphContender) {
         rustFmphContenderRunner(N);
     }
     if (rustFmphGoContender) {
         rustFmphGoContenderRunner(N);
     }
+    if (rustPtrHashContender) {
+        rustPtrHashContenderRunner(N);
+    }
     if (recsplit) {
         recSplitContenderRunner(N);
     }
     if (simdrecsplit) {
-        simdRecSplitContenderRunner(N);
+        #ifdef SIMD
+            simdRecSplitContenderRunner(N);
+        #else
+            std::cerr<<"SIMDRecSplit competitor requested but not compiled into this binary"<<std::endl;
+        #endif
     }
     if (recsplitRotate) {
         recSplitRotateContenderRunner(N);
@@ -140,7 +159,11 @@ int main(int argc, char** argv) {
         morphisHashFlatContenderRunner(N);
     }
     if (shockhash) {
-        shockHashContenderRunner(N);
+        #ifdef SIMD
+            shockHashSimdContenderRunner(N);
+        #else
+            shockHashContenderRunner(N);
+        #endif
     }
     if (bipartiteShockHash) {
         bipartiteShockHashContenderRunner(N);
@@ -169,6 +192,9 @@ int main(int argc, char** argv) {
     }
     if (fiPS) {
         fiPSContenderRunner(N);
+    }
+    if (consensus) {
+        consensusContenderRunner(N);
     }
     return 0;
 }
