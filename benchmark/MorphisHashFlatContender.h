@@ -18,7 +18,7 @@ class MorphisHashFlatContender : public Contender {
 
         std::string name() override {
             return std::string("MorphisHashFlat")
-                + " eb=" + std::to_string(ws)
+                + " eb=" + std::to_string(eb)
                 + " ws=" + std::to_string(ws)
                 + " l=" + std::to_string(l);
         }
@@ -51,6 +51,7 @@ void morphisHashFlatContenderRunnerMultiWidth(size_t N) {
     {MorphisHashFlatContender<l, e, 3>(N).run();}
     {MorphisHashFlatContender<l, e, 4>(N).run();}
     {MorphisHashFlatContender<l, e, 5>(N).run();}
+    {MorphisHashFlatContender<l, e, 6>(N).run();}
 }
 
 template <int l>
