@@ -46,19 +46,22 @@ class BipartiteShockHashContender : public Contender {
 
 template <int l>
 void bipartiteShockHashTestMulti(size_t N) {
+    {BipartiteShockHashContender<l>(N, 100).run();}
+    {BipartiteShockHashContender<l>(N, 500).run();}
     {BipartiteShockHashContender<l>(N, 2000).run();}
 }
 
 void bipartiteShockHashContenderRunner(size_t N) {
-    bipartiteShockHashTestMulti<44>(N);
-    bipartiteShockHashTestMulti<48>(N);
+    bipartiteShockHashTestMulti<28>(N);
+    bipartiteShockHashTestMulti<34>(N);
+    bipartiteShockHashTestMulti<40>(N);
+    bipartiteShockHashTestMulti<46>(N);
     bipartiteShockHashTestMulti<52>(N);
-    bipartiteShockHashTestMulti<56>(N);
-    bipartiteShockHashTestMulti<60>(N);
+    bipartiteShockHashTestMulti<58>(N);
     bipartiteShockHashTestMulti<64>(N);
-    bipartiteShockHashTestMulti<68>(N);
-    bipartiteShockHashTestMulti<72>(N);
+    bipartiteShockHashTestMulti<70>(N);
     bipartiteShockHashTestMulti<76>(N);
-    bipartiteShockHashTestMulti<80>(N);
-    bipartiteShockHashTestMulti<84>(N);
+    bipartiteShockHashTestMulti<82>(N);
+    bipartiteShockHashTestMulti<88>(N);
+    bipartiteShockHashTestMulti<94>(N);
 }

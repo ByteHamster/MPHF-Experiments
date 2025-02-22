@@ -43,15 +43,16 @@ class BipartiteShockHashFlatContender : public Contender {
 };
 
 void bipartiteShockHashFlatContenderRunner(size_t N) {
+    {BipartiteShockHashFlatContender<28>(N).run();}
+    {BipartiteShockHashFlatContender<34>(N).run();}
+    {BipartiteShockHashFlatContender<40>(N).run();}
     {BipartiteShockHashFlatContender<46>(N).run();}
-    {BipartiteShockHashFlatContender<50>(N).run();}
-    {BipartiteShockHashFlatContender<54>(N).run();}
+    {BipartiteShockHashFlatContender<52>(N).run();}
     {BipartiteShockHashFlatContender<58>(N).run();}
-    {BipartiteShockHashFlatContender<62>(N).run();}
-    {BipartiteShockHashFlatContender<66>(N).run();}
+    {BipartiteShockHashFlatContender<64>(N).run();}
     {BipartiteShockHashFlatContender<70>(N).run();}
-    {BipartiteShockHashFlatContender<74>(N).run();}
-    {BipartiteShockHashFlatContender<78>(N).run();}
+    {BipartiteShockHashFlatContender<76>(N).run();}
     {BipartiteShockHashFlatContender<82>(N).run();}
-    {BipartiteShockHashFlatContender<84>(N).run();}
+    {BipartiteShockHashFlatContender<88>(N).run();}
+    {BipartiteShockHashFlatContender<94>(N).run();}
 }

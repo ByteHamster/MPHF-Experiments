@@ -3,10 +3,10 @@
 #include "Contender.h"
 #include <MorphisHashFlat.h>
 
-template<int l, int ws>
+template<int l, int eb, int ws>
 class MorphisHashFlatContender : public Contender {
     public:
-        morphishash::MorphisHashFlat<l, ws> *morphisHashFlat = nullptr;
+        morphishash::MorphisHashFlat<l, ws, eb> *morphisHashFlat = nullptr;
 
         MorphisHashFlatContender(size_t N)
                 : Contender(N, 1.0) {
@@ -18,6 +18,7 @@ class MorphisHashFlatContender : public Contender {
 
         std::string name() override {
             return std::string("MorphisHashFlat")
+                + " eb=" + std::to_string(ws)
                 + " ws=" + std::to_string(ws)
                 + " l=" + std::to_string(l);
         }
@@ -27,7 +28,7 @@ class MorphisHashFlatContender : public Contender {
         }
 
         void construct(const std::vector<std::string> &keys) override {
-            morphisHashFlat = new morphishash::MorphisHashFlat<l, ws>(keys);
+            morphisHashFlat = new morphishash::MorphisHashFlat<l, ws, eb>(keys);
         }
 
         size_t sizeBits() override {
@@ -43,25 +44,32 @@ class MorphisHashFlatContender : public Contender {
         }
 };
 
-template <int l>
+template <int l, int e>
 void morphisHashFlatContenderRunnerMultiWidth(size_t N) {
-    {MorphisHashFlatContender<l, 1>(N).run();}
-    {MorphisHashFlatContender<l, 2>(N).run();}
-    {MorphisHashFlatContender<l, 3>(N).run();}
-    {MorphisHashFlatContender<l, 4>(N).run();}
-    {MorphisHashFlatContender<l, 5>(N).run();}
+    {MorphisHashFlatContender<l, e, 1>(N).run();}
+    {MorphisHashFlatContender<l, e, 2>(N).run();}
+    {MorphisHashFlatContender<l, e, 3>(N).run();}
+    {MorphisHashFlatContender<l, e, 4>(N).run();}
+    {MorphisHashFlatContender<l, e, 5>(N).run();}
+}
+
+template <int l>
+void morphisHashFlatContenderRunnerMultiExtraBit(size_t N) {
+    morphisHashFlatContenderRunnerMultiWidth<l, 2>(N);
+    morphisHashFlatContenderRunnerMultiWidth<l, 3>(N);
+    morphisHashFlatContenderRunnerMultiWidth<l, 4>(N);
+    morphisHashFlatContenderRunnerMultiWidth<l, 5>(N);
 }
 
 void morphisHashFlatContenderRunner(size_t N) {
-    morphisHashFlatContenderRunnerMultiWidth<44>(N);
-    morphisHashFlatContenderRunnerMultiWidth<48>(N);
-    morphisHashFlatContenderRunnerMultiWidth<52>(N);
-    morphisHashFlatContenderRunnerMultiWidth<56>(N);
-    morphisHashFlatContenderRunnerMultiWidth<60>(N);
-    morphisHashFlatContenderRunnerMultiWidth<64>(N);
-    morphisHashFlatContenderRunnerMultiWidth<68>(N);
-    morphisHashFlatContenderRunnerMultiWidth<72>(N);
-    morphisHashFlatContenderRunnerMultiWidth<76>(N);
-    morphisHashFlatContenderRunnerMultiWidth<80>(N);
-    morphisHashFlatContenderRunnerMultiWidth<84>(N);
+    morphisHashFlatContenderRunnerMultiExtraBit<28>(N);
+    morphisHashFlatContenderRunnerMultiExtraBit<34>(N);
+    morphisHashFlatContenderRunnerMultiExtraBit<40>(N);
+    morphisHashFlatContenderRunnerMultiExtraBit<46>(N);
+    morphisHashFlatContenderRunnerMultiExtraBit<52>(N);
+    morphisHashFlatContenderRunnerMultiExtraBit<58>(N);
+    morphisHashFlatContenderRunnerMultiExtraBit<64>(N);
+    morphisHashFlatContenderRunnerMultiExtraBit<70>(N);
+    morphisHashFlatContenderRunnerMultiExtraBit<76>(N);
+    morphisHashFlatContenderRunnerMultiExtraBit<82>(N);
 }
