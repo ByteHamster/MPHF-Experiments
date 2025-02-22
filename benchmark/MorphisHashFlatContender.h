@@ -72,4 +72,5 @@ void morphisHashFlatContenderRunner(size_t N) {
     morphisHashFlatContenderRunnerMultiExtraBit<70>(N);
     morphisHashFlatContenderRunnerMultiExtraBit<76>(N);
     morphisHashFlatContenderRunnerMultiExtraBit<82>(N);
+    morphisHashFlatContenderRunnerMultiExtraBit<88>(N);
 }

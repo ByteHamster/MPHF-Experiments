@@ -55,4 +55,5 @@ void bipartiteShockHashFlatContenderRunner(size_t N) {
     {BipartiteShockHashFlatContender<82>(N).run();}
     {BipartiteShockHashFlatContender<88>(N).run();}
     {BipartiteShockHashFlatContender<94>(N).run();}
+    {BipartiteShockHashFlatContender<100>(N).run();}
 }
