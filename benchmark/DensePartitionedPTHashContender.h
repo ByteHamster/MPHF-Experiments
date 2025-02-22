@@ -62,7 +62,7 @@ class DensePartitionedPTHashContender : public Contender {
 };
 
 void densePartitionedPtHashContenderRunner(size_t N) {
-    for (double lambda = 2.0; lambda < 9.0; lambda += 0.5) {
+    for (double lambda = 2.0; lambda < 9.6; lambda += 0.5) {
         { DensePartitionedPTHashContender<pthash::dense_dual<pthash::inter_C, pthash::inter_R,   0, 100>, pthash::table_bucketer<pthash::opt_bucketer>>(N, 1.0, lambda).run(); }
         { DensePartitionedPTHashContender<pthash::dense_dual<pthash::inter_C, pthash::inter_R,  20, 100>, pthash::table_bucketer<pthash::opt_bucketer>>(N, 1.0, lambda).run(); }
         { DensePartitionedPTHashContender<pthash::dense_dual<pthash::inter_C, pthash::inter_R,  40, 100>, pthash::table_bucketer<pthash::opt_bucketer>>(N, 1.0, lambda).run(); }
