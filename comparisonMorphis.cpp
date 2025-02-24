@@ -33,7 +33,7 @@ int main(int argc, char** argv) {
 
     {BipartiteShockHashContender<68>(N, 2000).run();}
 
-    {MorphisHashContender<64,4>(N).run();}
+    {MorphisHashContender<64,4>(N, 2000).run();}
 
 
     {BipartiteShockHashFlatContender<74>(N).run();}
