@@ -26,6 +26,10 @@
 #include "benchmark/SIMDRecSplitContender.h"
 #include "benchmark/ShockHashSimdContender.h"
 #endif
+#include "benchmark/BipartiteShockHashFlatContender.h"
+#include "benchmark/FiPSContender.h"
+#include "benchmark/MorphisHashContender.h"
+#include "benchmark/MorphisHashFlatContender.h"
 
 int main(int argc, char** argv) {
     double loadFactor = 0.8;
@@ -56,6 +60,8 @@ int main(int argc, char** argv) {
     bool fiPS = false;
     bool consensus = false;
     bool minimalOnly = false;
+    bool morphisHash = false;
+    bool morphisHashFlat = false;
 
     tlx::CmdlineParser cmd;
     cmd.add_double('l', "loadFactor", loadFactor, "Load Factor");
@@ -75,6 +81,8 @@ int main(int argc, char** argv) {
     cmd.add_flag("shockhash", shockhash, "Execute shockhash benchmark");
     cmd.add_flag("bipartiteShockHash", bipartiteShockHash, "Execute bipartite shockhash benchmark");
     cmd.add_flag("bipartiteShockHashFlat", bipartiteShockHashFlat, "Execute bipartite shockhash flat benchmark");
+    cmd.add_flag("morphisHash", morphisHash, "Execute bipartite morphisHash benchmark");
+    cmd.add_flag("morphisHashFlat", morphisHashFlat, "Execute bipartite morphisHash flat benchmark");
     cmd.add_flag("sichashOnlyPartial", sichashOnlyPartial, "Ignore fast ribbon retrieval configurations and test fewer thresholds");
     cmd.add_flag("pthash", pthash, "Execute pthash benchmark");
     cmd.add_flag("partitionedPthash", partitionedPthash, "Execute partitioned pthash benchmark");
@@ -143,6 +151,12 @@ int main(int argc, char** argv) {
         if (!sichashOnlyPartial) {
             sicHashContenderRunner<32>(N, loadFactor, minimalOnly);
         }
+    }
+    if(morphisHash) {
+        morphisHashContenderRunner(N);
+    }
+    if(morphisHashFlat) {
+        morphisHashFlatContenderRunner(N);
     }
     if (shockhash) {
         #ifdef SIMD

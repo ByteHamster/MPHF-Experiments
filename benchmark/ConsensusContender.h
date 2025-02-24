@@ -52,5 +52,4 @@ void consensusContenderRunner(size_t N) {
     ConsensusContender<32768, 0.006>(N).run();
     ConsensusContender<32768, 0.003>(N).run();
     ConsensusContender<32768, 0.001>(N).run();
-    ConsensusContender<32768, 0.0005>(N).run();
 }

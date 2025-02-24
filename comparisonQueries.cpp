@@ -8,6 +8,8 @@
 #include "benchmark/ShockHashContender.h"
 #include "benchmark/BipartiteShockHashContender.h"
 #include "benchmark/BipartiteShockHashFlatContender.h"
+#include "benchmark/MorphisHashContender.h"
+#include "benchmark/MorphisHashFlatContender.h"
 
 int main(int argc, char** argv) {
     size_t N = 5e6;
@@ -41,8 +43,12 @@ int main(int argc, char** argv) {
     {ShockHashContender<39>(N, 2000).run();}
     {ShockHashContender<40>(N, 2000).run();}
     {ShockHashContender<58>(N, 2000).run();}
+    {MorphisHashContender<64,5>(N, 2000).run();}
+    {MorphisHashContender<100,5>(N, 2000).run();}
     {BipartiteShockHashContender<64>(N, 2000).run();}
     {BipartiteShockHashContender<100>(N, 2000).run();}
+    {MorphisHashFlatContender<64,5>(N).run();}
+    {MorphisHashFlatContender<100,5>(N).run();}
     {BipartiteShockHashFlatContender<64>(N).run();}
     {BipartiteShockHashFlatContender<100>(N).run();}
     return 0;

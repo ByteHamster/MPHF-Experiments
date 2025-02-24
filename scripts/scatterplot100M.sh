@@ -19,6 +19,7 @@ jobs=(
     "$loadfactor097 --chd"
     "$loadfactor097 --partitionedPthash"
     "$params --bipartiteShockHashFlat"
+    "$params --morphisHashFlat"
     "$params --densePartitionedPtHash"
     "$params --fiPS"
     "$params --recsplit"
@@ -32,6 +33,7 @@ jobs=(
     "$params --fchPtHash"
     "$params --rustPtrHash"
     "$params --bdz"
+    "$params --morphisHash"
 )
 
 if [ "$#" -ne 0 ]; then

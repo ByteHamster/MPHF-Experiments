@@ -48,6 +48,9 @@ if(TARGET ShockHashSIMD)
     target_link_libraries(PerfectHashingCompetitors INTERFACE ShockHashSIMD)
 endif()
 
+add_subdirectory(extlib/MorphisHash)
+target_link_libraries(PerfectHashingCompetitors INTERFACE MorphisHash)
+
 add_subdirectory(extlib/gpurecsplit)
 target_link_libraries(PerfectHashingCompetitors INTERFACE RecSplit)
 if(TARGET SIMDRecSplit)
@@ -113,6 +116,10 @@ target_compile_features(ComparisonQueries PRIVATE cxx_std_20)
 add_executable(ComparisonPtHash comparisonPtHash.cpp)
 target_link_libraries(ComparisonPtHash PRIVATE PerfectHashingCompetitors Sux)
 target_compile_features(ComparisonPtHash PRIVATE cxx_std_20)
+
+add_executable(ComparisonMorphis comparisonMorphis.cpp)
+target_link_libraries(ComparisonMorphis PRIVATE PerfectHashingCompetitors Sux)
+target_compile_features(ComparisonMorphis PRIVATE cxx_std_20)
 
 add_executable(ComparisonDiss comparisonDiss.cpp)
 target_link_libraries(ComparisonDiss PRIVATE PerfectHashingCompetitors Sux)

@@ -52,19 +52,16 @@ void bipartiteShockHashTestMulti(size_t N) {
 }
 
 void bipartiteShockHashContenderRunner(size_t N) {
-    bipartiteShockHashTestMulti<16>(N);
-    bipartiteShockHashTestMulti<24>(N);
-    bipartiteShockHashTestMulti<32>(N);
+    bipartiteShockHashTestMulti<28>(N);
+    bipartiteShockHashTestMulti<34>(N);
     bipartiteShockHashTestMulti<40>(N);
-    bipartiteShockHashTestMulti<48>(N);
-    bipartiteShockHashTestMulti<56>(N);
+    bipartiteShockHashTestMulti<46>(N);
+    bipartiteShockHashTestMulti<52>(N);
+    bipartiteShockHashTestMulti<58>(N);
     bipartiteShockHashTestMulti<64>(N);
-    bipartiteShockHashTestMulti<72>(N);
-    bipartiteShockHashTestMulti<80>(N);
+    bipartiteShockHashTestMulti<70>(N);
+    bipartiteShockHashTestMulti<76>(N);
+    bipartiteShockHashTestMulti<82>(N);
     bipartiteShockHashTestMulti<88>(N);
-    bipartiteShockHashTestMulti<96>(N);
-    bipartiteShockHashTestMulti<104>(N);
-    bipartiteShockHashTestMulti<112>(N);
-    bipartiteShockHashTestMulti<120>(N);
-    bipartiteShockHashTestMulti<128>(N);
+    bipartiteShockHashTestMulti<94>(N);
 }

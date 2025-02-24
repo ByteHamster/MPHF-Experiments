@@ -110,7 +110,7 @@
           %% SELECT
           %%    bitsPerElement as x,
           %%    0.001*N/constructionTimeMilliseconds as y,
-          %%    store_attr || IIF(name LIKE "%PTHash" OR name LIKE "%SicHash" OR name LIKE "ShockHash%", ",mark repeat*=4", "") as attr,
+          %%    store_attr || IIF(name LIKE "%PTHash" OR name LIKE "%SicHash" OR name LIKE "ShockHash% OR name LIKE "MorphisHash%", ",mark repeat*=4", "") as attr,
           %%    store_name as ptitle,
           %%    MULTIPLOT
           %% FROM pareto scatterplot
