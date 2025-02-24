@@ -15,6 +15,7 @@
 #include "benchmark/FiPSContender.h"
 #include "benchmark/MorphisHashContender.h"
 #include "benchmark/MorphisHashFlatContender.h"
+#include "benchmark/ConsensusContender.h"
 
 int main(int argc, char** argv) {
     size_t N = 1e7;
@@ -29,13 +30,18 @@ int main(int argc, char** argv) {
         return 1;
     }
 
-    {BipartiteShockHashContender<128>(N, 2000).run();}
+    {ConsensusContender<32768, 0.003>(N).run();}
 
-    {BipartiteShockHashFlatContender<64>(N).run();}
 
-    {MorphisHashFlatContender<0,0,0>(N).run();}
+    {BipartiteShockHashContender<68>(N, 2000).run();}
 
-    {MorphisHashContender<0,0>(N).run();}
+    {MorphisHashContender<64,4>(N).run();}
+
+
+    {BipartiteShockHashFlatContender<74>(N).run();}
+
+    {MorphisHashFlatContender<70,2,3>(N).run();}
+
 
     {DensePartitionedPTHashContender<pthash::dense_interleaved<pthash::rice>, pthash::table_bucketer<pthash::opt_bucketer>>(N, 1.0, 6.5).run();}
     return 0;

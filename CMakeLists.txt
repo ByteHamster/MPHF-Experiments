@@ -117,6 +117,10 @@ add_executable(ComparisonPtHash comparisonPtHash.cpp)
 target_link_libraries(ComparisonPtHash PRIVATE PerfectHashingCompetitors Sux)
 target_compile_features(ComparisonPtHash PRIVATE cxx_std_20)
 
+add_executable(ComparisonMorphis comparisonMorphis.cpp)
+target_link_libraries(ComparisonMorphis PRIVATE PerfectHashingCompetitors Sux)
+target_compile_features(ComparisonMorphis PRIVATE cxx_std_20)
+
 add_executable(ComparisonDiss comparisonDiss.cpp)
 target_link_libraries(ComparisonDiss PRIVATE PerfectHashingCompetitors Sux)
 target_compile_features(ComparisonDiss PRIVATE cxx_std_20)
