@@ -31,16 +31,14 @@ int main(int argc, char** argv) {
     {ConsensusContender<32768, 0.003>(N).run();}
 
 
-    {BipartiteShockHashContender<68>(N, 2000).run();}
+    {BipartiteShockHashContender<56>(N, 2000).run();}
 
-    {MorphisHashContender<64,4>(N, 2000).run();}
+    {MorphisHashContender<46,4>(N, 2000).run();}
 
+    {BipartiteShockHashFlatContender<94>(N).run();}
 
-    {BipartiteShockHashFlatContender<74>(N).run();}
+    {MorphisHashFlatContender<86,3,2>(N).run();}
 
-    {MorphisHashFlatContender<70,2,3>(N).run();}
-
-
-    {DensePartitionedPTHashContender<pthash::dense_interleaved<pthash::rice>, pthash::table_bucketer<pthash::opt_bucketer>>(N, 1.0, 6.5).run();}
+    {DensePartitionedPTHashContender<pthash::dense_interleaved<pthash::rice>, pthash::table_bucketer<pthash::opt_bucketer>>(N, 1.0, 8.8).run();}
     return 0;
 }
