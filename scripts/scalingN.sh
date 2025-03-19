@@ -1,6 +1,6 @@
 #!/bin/bash
 hostname
-strings ComparisonN | grep fPIC
+strings ComparisonScaling | grep fPIC
 
 ./ComparisonScaling --numKeys 1M    --iterations 4
 ./ComparisonScaling --numKeys 2M    --iterations 3

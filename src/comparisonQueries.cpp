@@ -1,13 +1,13 @@
 #include <tlx/cmdline_parser.hpp>
-#include "benchmark/SicHashContender.h"
-#include "benchmark/PTHashContender.h"
-#include "benchmark/RustFmphGoContender.h"
-#include "benchmark/RecSplitContender.h"
-#include "benchmark/SIMDRecSplitContender.h"
-#include "benchmark/BBHashContender.h"
-#include "benchmark/ShockHashContender.h"
-#include "benchmark/BipartiteShockHashContender.h"
-#include "benchmark/BipartiteShockHashFlatContender.h"
+#include "SicHashContender.h"
+#include "PTHashContender.h"
+#include "RustFmphGoContender.h"
+#include "RecSplitContender.h"
+#include "SIMDRecSplitContender.h"
+#include "BBHashContender.h"
+#include "ShockHashContender.h"
+#include "BipartiteShockHashContender.h"
+#include "BipartiteShockHashFlatContender.h"
 
 int main(int argc, char** argv) {
     size_t N = 5e6;

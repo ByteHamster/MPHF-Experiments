@@ -1,30 +1,30 @@
 #include <tlx/cmdline_parser.hpp>
-#include "benchmark/BBHashContender.h"
-#include "benchmark/CmphContender.h"
-#include "benchmark/SicHashContender.h"
-#include "benchmark/PTHashContender.h"
-#include "benchmark/RecSplitContender.h"
-#include "benchmark/RecSplitRotateContender.h"
-#include "benchmark/MphfWbpmContender.h"
-#include "benchmark/ShockHashContender.h"
-#include "benchmark/PartitionedPTHashContender.h"
-#include "benchmark/RustFmphContender.h"
-#include "benchmark/RustFmphGoContender.h"
-#include "benchmark/RustPtrHashContender.h"
-#include "benchmark/BipartiteShockHashContender.h"
-#include "benchmark/FchContender.h"
-#include "benchmark/DensePartitionedPTHashContender.h"
-#include "benchmark/ConsensusContender.h"
-#include "benchmark/BipartiteShockHashFlatContender.h"
-#include "benchmark/FiPSContender.h"
+#include "BBHashContender.h"
+#include "CmphContender.h"
+#include "SicHashContender.h"
+#include "PTHashContender.h"
+#include "RecSplitContender.h"
+#include "RecSplitRotateContender.h"
+#include "MphfWbpmContender.h"
+#include "ShockHashContender.h"
+#include "PartitionedPTHashContender.h"
+#include "RustFmphContender.h"
+#include "RustFmphGoContender.h"
+#include "RustPtrHashContender.h"
+#include "BipartiteShockHashContender.h"
+#include "FchContender.h"
+#include "DensePartitionedPTHashContender.h"
+#include "ConsensusContender.h"
+#include "BipartiteShockHashFlatContender.h"
+#include "FiPSContender.h"
 
 #ifdef HAS_VULKAN
-#include "benchmark/GpuPhobicContender.h"
+#include "GpuPhobicContender.h"
 #endif
 
 #ifdef SIMD
-#include "benchmark/SIMDRecSplitContender.h"
-#include "benchmark/ShockHashSimdContender.h"
+#include "SIMDRecSplitContender.h"
+#include "ShockHashSimdContender.h"
 #endif
 
 int main(int argc, char** argv) {

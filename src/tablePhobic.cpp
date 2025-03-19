@@ -1,16 +1,20 @@
 #include <tlx/cmdline_parser.hpp>
-#include "benchmark/SicHashContender.h"
-#include "benchmark/PTHashContender.h"
-#include "benchmark/PartitionedPTHashContender.h"
-#include "benchmark/RustFmphContender.h"
-#include "benchmark/SIMDRecSplitContender.h"
-#include "benchmark/BipartiteShockHashContender.h"
-#include "benchmark/DensePartitionedPTHashContender.h"
-#include "benchmark/CmphContender.h"
+#include "SicHashContender.h"
+#include "PTHashContender.h"
+#include "PartitionedPTHashContender.h"
+#include "RustFmphContender.h"
+#include "SIMDRecSplitContender.h"
+#include "BipartiteShockHashContender.h"
+#include "DensePartitionedPTHashContender.h"
+#include "CmphContender.h"
 #ifdef HAS_VULKAN
-#include "benchmark/GpuPhobicContender.h"
+#include "GpuPhobicContender.h"
 #endif
 
+/**
+* Comparison table used in "PHOBIC: Perfect Hashing with Optimized Bucket Sizes and Interleaved Coding".
+* https://arxiv.org/pdf/2404.18497
+*/
 int main(int argc, char** argv) {
     size_t N = 5e6;
     tlx::CmdlineParser cmd;

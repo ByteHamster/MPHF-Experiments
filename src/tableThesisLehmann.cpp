@@ -1,19 +1,23 @@
 #include <tlx/cmdline_parser.hpp>
-#include "benchmark/SicHashContender.h"
-#include "benchmark/PTHashContender.h"
-#include "benchmark/PartitionedPTHashContender.h"
-#include "benchmark/RustFmphContender.h"
-#include "benchmark/SIMDRecSplitContender.h"
-#include "benchmark/BipartiteShockHashContender.h"
-#include "benchmark/DensePartitionedPTHashContender.h"
-#include "benchmark/CmphContender.h"
-#include "benchmark/RustFmphGoContender.h"
-#include "benchmark/BBHashContender.h"
-#include "benchmark/RecSplitContender.h"
-#include "benchmark/ShockHashContender.h"
-#include "benchmark/BipartiteShockHashFlatContender.h"
-#include "benchmark/FiPSContender.h"
+#include "SicHashContender.h"
+#include "PTHashContender.h"
+#include "PartitionedPTHashContender.h"
+#include "RustFmphContender.h"
+#include "SIMDRecSplitContender.h"
+#include "BipartiteShockHashContender.h"
+#include "DensePartitionedPTHashContender.h"
+#include "CmphContender.h"
+#include "RustFmphGoContender.h"
+#include "BBHashContender.h"
+#include "RecSplitContender.h"
+#include "ShockHashContender.h"
+#include "BipartiteShockHashFlatContender.h"
+#include "FiPSContender.h"
 
+/**
+ * Comparison table used in "Fast and Space-Efficient Perfect Hashing".
+ * https://doi.org/10.5445/IR/1000176432
+ */
 int main(int argc, char** argv) {
     size_t N = 5e6;
     tlx::CmdlineParser cmd;

@@ -16,6 +16,7 @@ target_compile_features(PerfectHashingCompetitors INTERFACE cxx_std_20)
 target_include_directories(PerfectHashingCompetitors SYSTEM INTERFACE extlib/BBHash)
 target_include_directories(PerfectHashingCompetitors SYSTEM INTERFACE extlib/fch/include)
 target_link_libraries(PerfectHashingCompetitors INTERFACE dl)
+target_include_directories(PerfectHashingCompetitors INTERFACE benchmark)
 
 add_subdirectory(extlib/tlx SYSTEM)
 target_link_libraries(PerfectHashingCompetitors INTERFACE tlx)
@@ -95,32 +96,37 @@ if (CMAKE_CUDA_COMPILER)
     enable_language(CUDA)
     add_library(PerfectHashingCompetitorsCuda INTERFACE)
     target_link_libraries(PerfectHashingCompetitorsCuda INTERFACE GPURecSplit ByteHamsterUtil)
+    target_include_directories(PerfectHashingCompetitorsCuda INTERFACE benchmark)
 endif()
 
 ################### Benchmark build targets ###################
-add_executable(Comparison comparison.cpp)
+add_executable(Comparison src/comparison.cpp)
 target_link_libraries(Comparison PRIVATE PerfectHashingCompetitors Sux)
 target_compile_features(Comparison PRIVATE cxx_std_20)
 
-add_executable(ComparisonScaling comparisonScaling.cpp)
-target_link_libraries(ComparisonScaling PRIVATE PerfectHashingCompetitors Sux)
-target_compile_features(ComparisonScaling PRIVATE cxx_std_20)
-
-add_executable(ComparisonQueries comparisonQueries.cpp)
-target_link_libraries(ComparisonQueries PRIVATE PerfectHashingCompetitors Sux)
-target_compile_features(ComparisonQueries PRIVATE cxx_std_20)
-
-add_executable(ComparisonPtHash comparisonPtHash.cpp)
-target_link_libraries(ComparisonPtHash PRIVATE PerfectHashingCompetitors Sux)
-target_compile_features(ComparisonPtHash PRIVATE cxx_std_20)
-
-add_executable(ComparisonDiss comparisonDiss.cpp)
-target_link_libraries(ComparisonDiss PRIVATE PerfectHashingCompetitors Sux)
-target_compile_features(ComparisonDiss PRIVATE cxx_std_20)
-
 if (CMAKE_CUDA_COMPILER)
-    add_executable(ComparisonCuda comparisonCuda.cu)
+    add_executable(ComparisonCuda src/comparisonCuda.cu)
     target_link_libraries(ComparisonCuda PRIVATE PerfectHashingCompetitorsCuda Sux)
     set_target_properties(ComparisonCuda PROPERTIES CUDA_SEPERABLE_COMPILATION ON)
     set_target_properties(ComparisonCuda PROPERTIES CUDA_ARCHITECTURES "50;61;72")
 endif()
+
+add_executable(ComparisonScaling src/comparisonScaling.cpp)
+target_link_libraries(ComparisonScaling PRIVATE PerfectHashingCompetitors Sux)
+target_compile_features(ComparisonScaling PRIVATE cxx_std_20)
+
+add_executable(ComparisonQueries src/comparisonQueries.cpp)
+target_link_libraries(ComparisonQueries PRIVATE PerfectHashingCompetitors Sux)
+target_compile_features(ComparisonQueries PRIVATE cxx_std_20)
+
+add_executable(TablePhobic src/tablePhobic.cpp)
+target_link_libraries(TablePhobic PRIVATE PerfectHashingCompetitors Sux)
+target_compile_features(TablePhobic PRIVATE cxx_std_20)
+
+add_executable(TableThesisLehmann src/tableThesisLehmann.cpp)
+target_link_libraries(TableThesisLehmann PRIVATE PerfectHashingCompetitors Sux)
+target_compile_features(TableThesisLehmann PRIVATE cxx_std_20)
+
+add_executable(TableShockHash src/tableShockHash.cpp)
+target_link_libraries(TableShockHash PRIVATE PerfectHashingCompetitors Sux)
+target_compile_features(TableShockHash PRIVATE cxx_std_20)
