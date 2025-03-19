@@ -32,6 +32,8 @@ jobs=(
     "$params --fchPtHash"
     "$params --rustPtrHash"
     "$params --bdz"
+    "$params --morphisHash"
+    "$params --morphisHashFlat"
 )
 
 if [ "$#" -ne 0 ]; then
