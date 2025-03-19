@@ -38,7 +38,7 @@ int main(int argc, char** argv) {
 
     {BipartiteShockHashFlatContender<74>(N).run();}
 
-    {MorphisHashFlatContender<70,2,3>(N).run();}
+    {MorphisHashFlatContender<70,3,3>(N).run();}
 
 
     {DensePartitionedPTHashContender<pthash::dense_interleaved<pthash::rice>, pthash::table_bucketer<pthash::opt_bucketer>>(N, 1.0, 6.5).run();}
