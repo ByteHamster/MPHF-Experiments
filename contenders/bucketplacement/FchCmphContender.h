@@ -74,8 +74,4 @@ class FchCmphContender : public Contender {
         }
 };
 
-void fchCmphContenderRunner(size_t N, double loadFactor) {
-    for (int c = 3; c < 8; c++) {
-        { FchCmphContender(N, loadFactor, c, true).run(); } // Hangs
-    }
-}
+void fchCmphContenderRunner(size_t N, double loadFactor);

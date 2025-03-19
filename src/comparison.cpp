@@ -144,10 +144,7 @@ int main(int argc, char** argv) {
         fchPtHashContenderRunner(N);
     }
     if (sichash) {
-        sicHashContenderRunner<64>(N, loadFactor, minimalOnly);
-        if (!sichashOnlyPartial) {
-            sicHashContenderRunner<32>(N, loadFactor, minimalOnly);
-        }
+        sicHashContenderRunner(N, loadFactor, minimalOnly, sichashOnlyPartial);
     }
     if (shockhash) {
         #ifdef SIMD

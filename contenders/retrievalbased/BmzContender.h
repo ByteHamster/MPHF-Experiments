@@ -73,6 +73,4 @@ class BmzContender : public Contender {
         }
 };
 
-void bmzContenderRunner(size_t N, double loadFactor) {
-    {BmzContender(N, loadFactor, loadFactor, true).run();}
-}
+void bmzContenderRunner(size_t N, double loadFactor);
