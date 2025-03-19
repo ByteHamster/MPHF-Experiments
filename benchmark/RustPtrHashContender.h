@@ -121,17 +121,14 @@ class RustPtrHashContender : public RustContender {
 };
 
 void rustPtrHashContenderRunner(size_t N) {
-    // Cubic bucket assignment
-    for (double lambda = 2.6; lambda <= 4.01; lambda += 0.2) {
-        RustPtrHashContender(N, 3, lambda).run();
-        RustPtrHashContender(N, 6, lambda).run();
+    for (double lambda = 0.7; lambda <= 4.01; lambda += 0.2) {
+        RustPtrHashContender(N, RustPtrHashContender::VARIANT_CUBIC_VEC, lambda).run();
+        RustPtrHashContender(N, RustPtrHashContender::VARIANT_CUBIC_EF, lambda).run();
     }
-    for (double lambda = 2.6; lambda <= 3.41; lambda += 0.2) {
-        // Linear bucket assignment
-        RustPtrHashContender(N, 1, lambda).run();
-        RustPtrHashContender(N, 4, lambda).run();
-        // Quadratic bucket assignment
-        RustPtrHashContender(N, 2, lambda).run();
-        RustPtrHashContender(N, 5, lambda).run();
+    for (double lambda = 0.7; lambda <= 3.41; lambda += 0.2) {
+        RustPtrHashContender(N, RustPtrHashContender::VARIANT_LINEAR_VEC, lambda).run();
+        RustPtrHashContender(N, RustPtrHashContender::VARIANT_LINEAR_EF, lambda).run();
+        RustPtrHashContender(N, RustPtrHashContender::VARIANT_SQUARE_VEC, lambda).run();
+        RustPtrHashContender(N, RustPtrHashContender::VARIANT_SQUARE_EF, lambda).run();
     }
 }
