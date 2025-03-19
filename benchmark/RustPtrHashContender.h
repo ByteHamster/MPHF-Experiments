@@ -21,6 +21,12 @@ class RustPtrHashContender : public RustContender {
         uint64_t variant;
         double lambda;
     public:
+        static constexpr int VARIANT_LINEAR_VEC = 1;
+        static constexpr int VARIANT_SQUARE_VEC = 2;
+        static constexpr int VARIANT_CUBIC_VEC = 3;
+        static constexpr int VARIANT_LINEAR_EF = 4;
+        static constexpr int VARIANT_SQUARE_EF = 5;
+        static constexpr int VARIANT_CUBIC_EF = 6;
 
         RustPtrHashContender(size_t N, uint64_t variant, double lambda)
             : RustContender(N), variant(variant), lambda(lambda) {

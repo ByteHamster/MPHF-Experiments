@@ -10,3 +10,5 @@ This folder contains the actual comparisons.
   https://arxiv.org/abs/2310.14959
 - `tableThesisLehmann.cpp`: Comparison table used in "Fast and Space-Efficient Perfect Hashing".
   https://doi.org/10.5445/IR/1000176432
+- `tablePtrHash.cpp`: Comparison table used in "PtrHash: Minimal Perfect Hashing at RAM Throughput".
+  https://arxiv.org/abs/2502.15539
