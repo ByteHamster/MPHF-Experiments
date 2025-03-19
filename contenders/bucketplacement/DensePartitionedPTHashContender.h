@@ -1,5 +1,7 @@
 #pragma once
 
+#include <memory> // Otherwise PTHash misses an import
+#include <pthash.hpp>
 #include <dense_partitioned_phf.hpp>
 #include <utils/encoders.hpp>
 #undef MAX_BUCKET_SIZE

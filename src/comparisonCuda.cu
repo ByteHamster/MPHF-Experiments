@@ -1,5 +1,5 @@
 #include <tlx/cmdline_parser.hpp>
-#include "GpuRecSplitContender.h"
+#include "recsplit/GpuRecSplitContender.h"
 
 int main(int argc, char** argv) {
     double loadFactor = 0.8;

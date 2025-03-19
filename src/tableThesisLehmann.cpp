@@ -1,18 +1,20 @@
 #include <tlx/cmdline_parser.hpp>
-#include "SicHashContender.h"
-#include "PTHashContender.h"
-#include "PartitionedPTHashContender.h"
-#include "RustFmphContender.h"
-#include "SIMDRecSplitContender.h"
-#include "BipartiteShockHashContender.h"
-#include "DensePartitionedPTHashContender.h"
-#include "CmphContender.h"
-#include "RustFmphGoContender.h"
-#include "BBHashContender.h"
-#include "RecSplitContender.h"
-#include "ShockHashContender.h"
-#include "BipartiteShockHashFlatContender.h"
-#include "FiPSContender.h"
+
+#include "bucketplacement/DensePartitionedPTHashContender.h"
+#include "bucketplacement/PartitionedPTHashContender.h"
+#include "fingerprinting/FiPSContender.h"
+#include "fingerprinting/RustFmphContender.h"
+#include "retrievalbased/BdzContender.h"
+#include "bucketplacement/PTHashContender.h"
+#include "fingerprinting/BBHashContender.h"
+#include "fingerprinting/RustFmphGoContender.h"
+#include "recsplit/RecSplitContender.h"
+#include "recsplit/SIMDRecSplitContender.h"
+#include "retrievalbased/SicHashContender.h"
+#include "shockhash/BipartiteShockHashContender.h"
+#include "shockhash/BipartiteShockHashFlatContender.h"
+#include "shockhash/ShockHashContender.h"
+#include "bucketplacement/ChdContender.h"
 
 /**
  * Comparison table used in "Fast and Space-Efficient Perfect Hashing".
@@ -58,11 +60,11 @@ int main(int argc, char** argv) {
     {FiPSContender<>(N, 1.5).run();}
     {FiPSContender<>(N, 2.0).run();}
 
-    {CmphContender(N, 1.0, "CHD", CMPH_CHD, 1.0, 3, true).run();}
-    {CmphContender(N, 1.0, "CHD", CMPH_CHD, 1.0, 5, true).run();}
+    {ChdContender(N, 1.0, 1.0, 3, true).run();}
+    {ChdContender(N, 1.0, 1.0, 5, true).run();}
 
-    {CmphContender(N, 0.8, "BDZ", CMPH_BDZ, 1.0/0.8, 3, true).run();}
-    {CmphContender(N, 0.6, "BDZ", CMPH_BDZ, 1.0/0.8, 6, true).run();}
+    {BdzContender(N, 0.8, 1.0/0.8, 3, true).run();}
+    {BdzContender(N, 0.6, 1.0/0.8, 6, true).run();}
 
     {PTHashContender<true, pthash::elias_fano>(N, 0.95, 4.0).run();}
     {PTHashContender<true, pthash::compact_compact>(N, 0.99, 4.0).run();}

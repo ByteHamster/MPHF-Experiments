@@ -6,22 +6,21 @@
 #undef MAX_BUCKET_SIZE
 #include "Contender.h"
 
-class CmphContender : public Contender {
+class ChdContender : public Contender {
     public:
         cmph_t *mphf = nullptr;
         cmph_io_adapter_t *source = nullptr;
         const char **data;
-        CMPH_ALGO algo;
         double c;
-        int b;
-        std::string nameP;
+        int keysPerBucket;
+        bool minimal;
 
-        CmphContender(size_t N, double loadFactor, std::string name, CMPH_ALGO algo, double c, int b, bool minimal)
-                : Contender(N, minimal ? 1.0 : loadFactor), algo(algo), c(c), b(b), nameP(std::move(name)) {
+        ChdContender(size_t N, double loadFactor, double c, int keysPerBucket, bool minimal)
+                : Contender(N, minimal ? 1.0 : loadFactor), c(c), keysPerBucket(keysPerBucket), minimal(minimal) {
             data = static_cast<const char **>(malloc(N * sizeof(char*)));
         }
 
-        ~CmphContender() override {
+        ~ChdContender() override {
             if (mphf != nullptr) {
                 cmph_destroy(mphf);
             }
@@ -30,9 +29,8 @@ class CmphContender : public Contender {
         }
 
         std::string name() override {
-            return std::string("cmph-" + nameP)
-                    + " c=" + std::to_string(c)
-                    + " b=" + std::to_string(b);
+            return std::string("cmph-CHD")
+                    + " c=" + std::to_string(c);
         }
 
         void beforeConstruction(const std::vector<std::string> &keys) override {
@@ -47,11 +45,10 @@ class CmphContender : public Contender {
             (void) keys;
             //Create mphf
             cmph_config_t *config = cmph_config_new(source);
-            cmph_config_set_algo(config, algo);
+            cmph_config_set_algo(config, minimal ? CMPH_CHD : CMPH_CHD_PH);
             cmph_config_set_verbosity(config, 0);
             //cmph_config_set_keys_per_bin(config, 2); // k-perfect
             cmph_config_set_graphsize(config, c);
-            cmph_config_set_b(config, b);
             mphf = cmph_new(config);
 
             cmph_config_destroy(config);
@@ -80,30 +77,8 @@ class CmphContender : public Contender {
 };
 
 void chdContenderRunner(size_t N, double loadFactor) {
-    for (int b = 1; b < 8; b++) {
-        {CmphContender(N, loadFactor, "CHD", CMPH_CHD_PH, loadFactor, b, false).run();} // b=keys_per_bucket
-        {CmphContender(N, loadFactor, "CHD", CMPH_CHD, loadFactor, b, true).run();} // b=keys_per_bucket
+    for (int keysPerBucket = 1; keysPerBucket < 8; keysPerBucket++) {
+        {ChdContender(N, loadFactor, loadFactor, keysPerBucket, false).run();}
+        {ChdContender(N, loadFactor, loadFactor, keysPerBucket, true).run();}
     }
 }
-
-void bdzContenderRunner(size_t N, double loadFactor) {
-    for (int b = 1; b < 8; b++) {
-        if (loadFactor <= 0.8) {CmphContender(N, loadFactor, "BDZ", CMPH_BDZ, 1.0/loadFactor, b, true).run();} // b=number of bits of k
-    }
-    if (loadFactor <= 0.8) {CmphContender(N, loadFactor, "BDZ", CMPH_BDZ_PH, 1.0/loadFactor, 0, false).run();} // b ignored
-}
-
-void bmzContenderRunner(size_t N, double loadFactor) {
-    {CmphContender(N, loadFactor, "BMZ", CMPH_BMZ, loadFactor, 0, true).run();} // b ignored
-}
-
-void chmContenderRunner(size_t N, double loadFactor) {
-    {CmphContender(N, loadFactor, "CHM", CMPH_CHM, loadFactor, 0, true).run();} // b ignored
-}
-
-void fchCmphContenderRunner(size_t N, double loadFactor) {
-    for (int c = 3; c < 8; c++) {
-        { CmphContender(N, loadFactor, "FCH", CMPH_FCH, c, 0, true).run(); } // b ignored // Hangs
-    }
-}
-
