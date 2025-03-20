@@ -152,3 +152,7 @@ target_compile_features(TableShockHash PRIVATE cxx_std_20)
 add_executable(TablePtrHash src/tablePtrHash.cpp)
 target_link_libraries(TablePtrHash PRIVATE PerfectHashingCompetitors Sux)
 target_compile_features(TablePtrHash PRIVATE cxx_std_20)
+
+add_executable(TableSurvey src/tableSurvey.cpp)
+target_link_libraries(TableSurvey PRIVATE PerfectHashingCompetitors Sux)
+target_compile_features(TableSurvey PRIVATE cxx_std_20)
