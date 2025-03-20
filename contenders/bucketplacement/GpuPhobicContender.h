@@ -3,7 +3,7 @@
 #include <memory> // Otherwise PTHash misses an import
 #include <pthash.hpp>
 #undef MAX_BUCKET_SIZE
-#include <gpuptmphf.hpp>
+#include <phobic_gpu_mphf.hpp>
 #include "Contender.h"
 
 class GpuPhobicContender : public Contender {
@@ -11,15 +11,15 @@ class GpuPhobicContender : public Contender {
         float averageBucketSize;
         size_t partitionSize;
         float tradeoff;
-        gpupthash::MPHFbuilder builder;
-        using PilotEncoder = gpupthash::interleaved_encoder_dual<gpupthash::rice, pthash::compact>;
-        using PartitionEncoder = gpupthash::diff_partition_encoder<gpupthash::compact>;
-        gpupthash::MPHF<PilotEncoder, PartitionEncoder, gpupthash::xxhash> f;
+        phobicgpu::MPHFbuilder builder;
+        using PilotEncoder = phobicgpu::interleaved_encoder_dual<phobicgpu::rice, pthash::compact>;
+        using PartitionEncoder = phobicgpu::diff_partition_encoder<phobicgpu::compact>;
+        phobicgpu::MPHF<PilotEncoder, PartitionEncoder, phobicgpu::xxhash> f;
 
         GpuPhobicContender(size_t N, float averageBucketSize, size_t partitionSize, float tradeoff)
                 : Contender(N, 1.0), averageBucketSize(averageBucketSize), partitionSize(partitionSize),
                   tradeoff(tradeoff),
-                  builder(gpupthash::MPHFconfig(averageBucketSize, partitionSize)) {
+                  builder(phobicgpu::MPHFconfig(averageBucketSize, partitionSize)) {
             f.getPilotEncoder().setEncoderTradeoff(tradeoff);
             //App::getInstance().printDebugInfo();
         }
