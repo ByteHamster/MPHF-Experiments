@@ -22,6 +22,8 @@
 #include "retrievalbased/BmzContender.h"
 #include "retrievalbased/ChmContender.h"
 #include "bucketplacement/FchCmphContender.h"
+#include "shockhash/MorphisHashContender.h"
+#include "shockhash/MorphisHashFlatContender.h"
 
 #ifdef HAS_VULKAN
 #include "bucketplacement/GpuPhobicContender.h"
@@ -60,6 +62,8 @@ int main(int argc, char** argv) {
     bool bipartiteShockHashFlat = false;
     bool fiPS = false;
     bool consensus = false;
+    bool morphisHash = false;
+    bool morphisHashFlat = false;
     bool minimalOnly = false;
 
     tlx::CmdlineParser cmd;
@@ -80,6 +84,8 @@ int main(int argc, char** argv) {
     cmd.add_flag("shockhash", shockhash, "Execute shockhash benchmark");
     cmd.add_flag("bipartiteShockHash", bipartiteShockHash, "Execute bipartite shockhash benchmark");
     cmd.add_flag("bipartiteShockHashFlat", bipartiteShockHashFlat, "Execute bipartite shockhash flat benchmark");
+    cmd.add_flag("morphisHash", morphisHash, "Execute bipartite morphisHash benchmark");
+    cmd.add_flag("morphisHashFlat", morphisHashFlat, "Execute bipartite morphisHash flat benchmark");
     cmd.add_flag("sichashOnlyPartial", sichashOnlyPartial, "Ignore fast ribbon retrieval configurations and test fewer thresholds");
     cmd.add_flag("pthash", pthash, "Execute pthash benchmark");
     cmd.add_flag("partitionedPthash", partitionedPthash, "Execute partitioned pthash benchmark");
@@ -158,6 +164,12 @@ int main(int argc, char** argv) {
     }
     if (bipartiteShockHashFlat) {
         bipartiteShockHashFlatContenderRunner(N);
+    }
+    if (morphisHash) {
+        morphisHashContenderRunner(N);
+    }
+    if (morphisHashFlat) {
+        morphisHashFlatContenderRunner(N);
     }
     if (pthash) {
         ptHashContenderRunner(N, loadFactor, minimalOnly);

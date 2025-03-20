@@ -43,3 +43,6 @@
 [submodule "extlib/ptrhash"]
 	path = extlib/ptrhash
 	url = https://github.com/RagnarGrootKoerkamp/PtrHash.git
+[submodule "extlib/morphishash"]
+	path = extlib/morphishash
+	url = https://github.com/stefanfred/MorphisHash.git
