@@ -26,6 +26,7 @@ jobs=(
     "$params --bbhash"
     "$params --rustFmph"
     "$params --rustFmphGo"
+    "$params --rustPHast"
     "$params --shockhash"
     "$params --bipartiteShockHash"
     "$params --consensus"
