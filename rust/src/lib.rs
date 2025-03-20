@@ -1,5 +1,3 @@
-#![feature(isqrt)]
-
 extern crate libc;
 extern crate ph;
 extern crate rayon;
@@ -11,7 +9,7 @@ use std::str;
 use ph::{fmph, GetSize, phast};
 use ph::fmph::{BuildConf, GOBuildConf};
 use mem_dbg::SizeFlags;
-use ptr_hash::{PtrHashParams, Sharding};
+use ptr_hash::PtrHashParams;
 
 ////////////////////////////////////////// General methods //////////////////////////////////////////
 fn c_strings_to_vec(len: usize, my_strings: *const *const c_char) -> Vec<String> {
@@ -238,12 +236,12 @@ pub extern "C" fn createPtrHashStruct(len: usize, my_strings: *const *const c_ch
     let struct_instance = PtrHashWrapper {
         vector: c_strings_to_slices(len, my_strings),
         variant: 0,
-        ptrhash_linear_vec: PtrHashLinearVec::default(),
-        ptrhash_square_vec: PtrHashSquareVec::default(),
-        ptrhash_cubic_vec: PtrHashCubicVec::default(),
-        ptrhash_linear_ef: PtrHashLinearEF::default(),
-        ptrhash_square_ef: PtrHashSquareEF::default(),
-        ptrhash_cubic_ef: PtrHashCubicEF::default(),
+        ptrhash_linear_vec: ptr_hash::PtrHash::new(&[], PtrHashParams::default_fast()),
+        ptrhash_square_vec: ptr_hash::PtrHash::new(&[], PtrHashParams::default_square()),
+        ptrhash_cubic_vec: ptr_hash::PtrHash::new(&[], PtrHashParams::default_compact()),
+        ptrhash_linear_ef: ptr_hash::PtrHash::new(&[], PtrHashParams::default_fast()),
+        ptrhash_square_ef: ptr_hash::PtrHash::new(&[], PtrHashParams::default_square()),
+        ptrhash_cubic_ef: ptr_hash::PtrHash::new(&[], PtrHashParams::default_compact()),
     };
     let boxx = Box::new(struct_instance);
     Box::into_raw(boxx)
@@ -255,32 +253,32 @@ pub extern "C" fn constructPtrHash(struct_ptr: *mut PtrHashWrapper, variant : u6
     struct_instance.variant = variant;
     match variant {
         1 => {
-            let mut params = PtrHashParams::default();
+            let mut params = PtrHashParams::default_fast();
             params.lambda = lambda;
             struct_instance.ptrhash_linear_vec = PtrHashLinearVec::new(&struct_instance.vector[..], params);
         },
         2 => {
-            let mut params = PtrHashParams::default();
+            let mut params = PtrHashParams::default_square();
             params.lambda = lambda;
             struct_instance.ptrhash_square_vec = PtrHashSquareVec::new(&struct_instance.vector[..], params);
         },
         3 => {
-            let mut params = PtrHashParams::default();
+            let mut params = PtrHashParams::default_compact();
             params.lambda = lambda;
             struct_instance.ptrhash_cubic_vec = PtrHashCubicVec::new(&struct_instance.vector[..], params);
         },
         4 => {
-            let mut params = PtrHashParams::default();
+            let mut params = PtrHashParams::default_fast();
             params.lambda = lambda;
             struct_instance.ptrhash_linear_ef = PtrHashLinearEF::new(&struct_instance.vector[..], params);
         },
         5 => {
-            let mut params = PtrHashParams::default();
+            let mut params = PtrHashParams::default_square();
             params.lambda = lambda;
             struct_instance.ptrhash_square_ef = PtrHashSquareEF::new(&struct_instance.vector[..], params);
         },
         6 => {
-            let mut params = PtrHashParams::default();
+            let mut params = PtrHashParams::default_compact();
             params.lambda = lambda;
             struct_instance.ptrhash_cubic_ef = PtrHashCubicEF::new(&struct_instance.vector[..], params);
         },

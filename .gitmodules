@@ -42,4 +42,4 @@
 	url = https://github.com/ByteHamster/ConsensusRecSplit.git
 [submodule "extlib/ptrhash"]
 	path = extlib/ptrhash
-	url = https://github.com/ByteHamster-etc/PtrHash.git
+	url = https://github.com/RagnarGrootKoerkamp/PtrHash.git
