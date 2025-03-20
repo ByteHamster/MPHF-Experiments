@@ -1,18 +1,15 @@
 #include <tlx/cmdline_parser.hpp>
-#include "SicHashContender.h"
-#include "PTHashContender.h"
-#include "PartitionedPTHashContender.h"
-#include "RustFmphContender.h"
-#include "SIMDRecSplitContender.h"
-#include "BipartiteShockHashContender.h"
-#include "DensePartitionedPTHashContender.h"
-#include "CmphContender.h"
-#include "RustFmphGoContender.h"
-#include "BBHashContender.h"
-#include "RecSplitContender.h"
-#include "ShockHashContender.h"
-#include "BipartiteShockHashFlatContender.h"
-#include "FiPSContender.h"
+
+#include "bucketplacement/PartitionedPTHashContender.h"
+#include "fingerprinting/RustFmphContender.h"
+#include "bucketplacement/PTHashContender.h"
+#include "fingerprinting/RustFmphGoContender.h"
+#include "recsplit/RecSplitContender.h"
+#include "recsplit/SIMDRecSplitContender.h"
+#include "retrievalbased/SicHashContender.h"
+#include "shockhash/BipartiteShockHashContender.h"
+#include "shockhash/BipartiteShockHashFlatContender.h"
+#include "shockhash/ShockHashContender.h"
 
 /**
  * Comparison table used in "ShockHash: Near Optimal-Space Minimal Perfect Hashing Beyond Brute-Force".

@@ -1,14 +1,16 @@
+#include <bucketplacement/ChdContender.h>
 #include <tlx/cmdline_parser.hpp>
-#include "SicHashContender.h"
-#include "PTHashContender.h"
-#include "PartitionedPTHashContender.h"
-#include "RustFmphContender.h"
-#include "SIMDRecSplitContender.h"
-#include "BipartiteShockHashContender.h"
-#include "DensePartitionedPTHashContender.h"
-#include "CmphContender.h"
+
+#include "bucketplacement/DensePartitionedPTHashContender.h"
+#include "bucketplacement/PartitionedPTHashContender.h"
+#include "fingerprinting/RustFmphContender.h"
+#include "bucketplacement/PTHashContender.h"
+#include "recsplit/SIMDRecSplitContender.h"
+#include "retrievalbased/SicHashContender.h"
+#include "shockhash/BipartiteShockHashContender.h"
+
 #ifdef HAS_VULKAN
-#include "GpuPhobicContender.h"
+#include "bucketplacement/GpuPhobicContender.h"
 #endif
 
 /**
@@ -47,8 +49,8 @@ int main(int argc, char** argv) {
 
     {RustFmphContender(N, 1.0).run();}
     {RustFmphContender(N, 2.0).run();}
-    {CmphContender(N, 1.0, "CHD", CMPH_CHD, 1.0, 3, true).run();}
-    {CmphContender(N, 1.0, "CHD", CMPH_CHD, 1.0, 5, true).run();}
+    {ChdContender(N, 1.0, 1.0, 3, true).run();}
+    {ChdContender(N, 1.0, 1.0, 5, true).run();}
 
     {PTHashContender<true, pthash::compact_compact>(N, 0.99, 4.0).run();}
     {PTHashContender<true, pthash::elias_fano >(N, 0.99, 5.0).run();}

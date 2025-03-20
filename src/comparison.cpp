@@ -1,30 +1,35 @@
 #include <tlx/cmdline_parser.hpp>
-#include "BBHashContender.h"
-#include "CmphContender.h"
-#include "SicHashContender.h"
-#include "PTHashContender.h"
-#include "RecSplitContender.h"
-#include "RecSplitRotateContender.h"
-#include "MphfWbpmContender.h"
-#include "ShockHashContender.h"
-#include "PartitionedPTHashContender.h"
-#include "RustFmphContender.h"
-#include "RustFmphGoContender.h"
-#include "RustPtrHashContender.h"
-#include "BipartiteShockHashContender.h"
-#include "FchContender.h"
-#include "DensePartitionedPTHashContender.h"
-#include "ConsensusContender.h"
-#include "BipartiteShockHashFlatContender.h"
-#include "FiPSContender.h"
+
+#include "fingerprinting/BBHashContender.h"
+#include "retrievalbased/SicHashContender.h"
+#include "bucketplacement/PTHashContender.h"
+#include "recsplit/RecSplitContender.h"
+#include "recsplit/RecSplitRotateContender.h"
+#include "retrievalbased/MphfWbpmContender.h"
+#include "shockhash/ShockHashContender.h"
+#include "bucketplacement/PartitionedPTHashContender.h"
+#include "fingerprinting/RustFmphContender.h"
+#include "fingerprinting/RustFmphGoContender.h"
+#include "bucketplacement/RustPtrHashContender.h"
+#include "shockhash/BipartiteShockHashContender.h"
+#include "bucketplacement/FchContender.h"
+#include "bucketplacement/DensePartitionedPTHashContender.h"
+#include "consensus/ConsensusContender.h"
+#include "shockhash/BipartiteShockHashFlatContender.h"
+#include "fingerprinting/FiPSContender.h"
+#include "bucketplacement/ChdContender.h"
+#include "retrievalbased/BdzContender.h"
+#include "retrievalbased/BmzContender.h"
+#include "retrievalbased/ChmContender.h"
+#include "bucketplacement/FchCmphContender.h"
 
 #ifdef HAS_VULKAN
-#include "GpuPhobicContender.h"
+#include "bucketplacement/GpuPhobicContender.h"
 #endif
 
 #ifdef SIMD
-#include "SIMDRecSplitContender.h"
-#include "ShockHashSimdContender.h"
+#include "recsplit/SIMDRecSplitContender.h"
+#include "shockhash/ShockHashSimdContender.h"
 #endif
 
 int main(int argc, char** argv) {
@@ -139,10 +144,7 @@ int main(int argc, char** argv) {
         fchPtHashContenderRunner(N);
     }
     if (sichash) {
-        sicHashContenderRunner<64>(N, loadFactor, minimalOnly);
-        if (!sichashOnlyPartial) {
-            sicHashContenderRunner<32>(N, loadFactor, minimalOnly);
-        }
+        sicHashContenderRunner(N, loadFactor, minimalOnly, sichashOnlyPartial);
     }
     if (shockhash) {
         #ifdef SIMD
