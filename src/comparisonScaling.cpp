@@ -1,18 +1,20 @@
 #include <tlx/cmdline_parser.hpp>
-#include "CmphContender.h"
-#include "SicHashContender.h"
-#include "PTHashContender.h"
-#include "RecSplitContender.h"
-#include "BBHashContender.h"
-#include "SIMDRecSplitContender.h"
-#include "DensePartitionedPTHashContender.h"
-#include "PartitionedPTHashContender.h"
-#include "BipartiteShockHashContender.h"
-#include "RustFmphContender.h"
-#include "RustFmphGoContender.h"
-#include "ShockHashContender.h"
-#include "BipartiteShockHashFlatContender.h"
-#include "FiPSContender.h"
+
+#include "bucketplacement/ChdContender.h"
+#include "bucketplacement/DensePartitionedPTHashContender.h"
+#include "bucketplacement/PartitionedPTHashContender.h"
+#include "fingerprinting/FiPSContender.h"
+#include "fingerprinting/RustFmphContender.h"
+#include "retrievalbased/BdzContender.h"
+#include "bucketplacement/PTHashContender.h"
+#include "fingerprinting/BBHashContender.h"
+#include "fingerprinting/RustFmphGoContender.h"
+#include "recsplit/RecSplitContender.h"
+#include "recsplit/SIMDRecSplitContender.h"
+#include "retrievalbased/SicHashContender.h"
+#include "shockhash/BipartiteShockHashContender.h"
+#include "shockhash/BipartiteShockHashFlatContender.h"
+#include "shockhash/ShockHashContender.h"
 
 int main(int argc, char** argv) {
     size_t N = 5e6;
@@ -47,8 +49,8 @@ int main(int argc, char** argv) {
             {RecSplitContender<14>(N, 2000).run();}
             {ShockHashContender<40>(N, 2000).run();}
             {BipartiteShockHashFlatContender<64>(N).run();}
-            {CmphContender(N, 0.95, "CHD", CMPH_CHD_PH, 0.95, 5, false).run();}
-            {CmphContender(N, 0.8, "BDZ", CMPH_BDZ, 1.0/0.8, 3, true).run();}
+            {ChdContender(N, 0.95, 0.95, 5, false).run();}
+            {BdzContender(N, 0.8, 1.0/0.8, 3, true).run();}
             {FiPSContender<>(N, 1.5).run();}
         }
     }

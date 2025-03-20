@@ -1,15 +1,16 @@
 #include <tlx/cmdline_parser.hpp>
-#include "SicHashContender.h"
-#include "PTHashContender.h"
-#include "PartitionedPTHashContender.h"
-#include "RustFmphContender.h"
-#include "SIMDRecSplitContender.h"
-#include "DensePartitionedPTHashContender.h"
-#include "CmphContender.h"
-#include "ConsensusContender.h"
-#include "FiPSContender.h"
-#include "RustPtrHashContender.h"
-#include "BipartiteShockHashFlatContender.h"
+
+#include "bucketplacement/DensePartitionedPTHashContender.h"
+#include "bucketplacement/PartitionedPTHashContender.h"
+#include "fingerprinting/FiPSContender.h"
+#include "fingerprinting/RustFmphContender.h"
+#include "bucketplacement/PTHashContender.h"
+#include "recsplit/SIMDRecSplitContender.h"
+#include "retrievalbased/SicHashContender.h"
+#include "shockhash/BipartiteShockHashFlatContender.h"
+#include "bucketplacement/ChdContender.h"
+#include "bucketplacement/RustPtrHashContender.h"
+#include "consensus/ConsensusContender.h"
 
 /**
 * Comparison table used in "PtrHash: Minimal Perfect Hashing at RAM Throughput".
@@ -57,7 +58,7 @@ int main(int argc, char** argv) {
     {RustFmphContender(N, 1.0).run();}
     {RustFmphContender(N, 2.0).run();}
 
-    {CmphContender(N, 1.0, "CHD", CMPH_CHD, 1.0, 3, true).run();}
+    {ChdContender(N, 1.0, 1.0, 3, true).run();}
 
     {BipartiteShockHashFlatContender<64>(N).run();}
 
