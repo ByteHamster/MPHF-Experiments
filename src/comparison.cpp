@@ -10,6 +10,7 @@
 #include "bucketplacement/PartitionedPTHashContender.h"
 #include "fingerprinting/RustFmphContender.h"
 #include "fingerprinting/RustFmphGoContender.h"
+#include "bucketplacement/RustPhastContender.h"
 #include "bucketplacement/RustPtrHashContender.h"
 #include "shockhash/BipartiteShockHashContender.h"
 #include "bucketplacement/FchContender.h"
@@ -22,6 +23,8 @@
 #include "retrievalbased/BmzContender.h"
 #include "retrievalbased/ChmContender.h"
 #include "bucketplacement/FchCmphContender.h"
+#include "shockhash/MorphisHashContender.h"
+#include "shockhash/MorphisHashFlatContender.h"
 
 #ifdef HAS_VULKAN
 #include "bucketplacement/GpuPhobicContender.h"
@@ -52,6 +55,7 @@ int main(int argc, char** argv) {
     bool fchPtHash = false;
     bool rustFmphContender = false;
     bool rustFmphGoContender = false;
+    bool rustPhastContender = false;
     bool rustPtrHashContender = false;
     bool sichashOnlyPartial = false;
     bool bipartiteShockHash = false;
@@ -60,6 +64,8 @@ int main(int argc, char** argv) {
     bool bipartiteShockHashFlat = false;
     bool fiPS = false;
     bool consensus = false;
+    bool morphisHash = false;
+    bool morphisHashFlat = false;
     bool minimalOnly = false;
 
     tlx::CmdlineParser cmd;
@@ -80,6 +86,8 @@ int main(int argc, char** argv) {
     cmd.add_flag("shockhash", shockhash, "Execute shockhash benchmark");
     cmd.add_flag("bipartiteShockHash", bipartiteShockHash, "Execute bipartite shockhash benchmark");
     cmd.add_flag("bipartiteShockHashFlat", bipartiteShockHashFlat, "Execute bipartite shockhash flat benchmark");
+    cmd.add_flag("morphisHash", morphisHash, "Execute bipartite morphisHash benchmark");
+    cmd.add_flag("morphisHashFlat", morphisHashFlat, "Execute bipartite morphisHash flat benchmark");
     cmd.add_flag("sichashOnlyPartial", sichashOnlyPartial, "Ignore fast ribbon retrieval configurations and test fewer thresholds");
     cmd.add_flag("pthash", pthash, "Execute pthash benchmark");
     cmd.add_flag("partitionedPthash", partitionedPthash, "Execute partitioned pthash benchmark");
@@ -92,6 +100,7 @@ int main(int argc, char** argv) {
     cmd.add_flag("fchPtHash", fchPtHash, "Execute fch (PTHash reimplementation) benchmark");
     cmd.add_flag("rustFmph", rustFmphContender, "Execute rust fmph benchmark");
     cmd.add_flag("rustFmphGo", rustFmphGoContender, "Execute rust fmph-go benchmark");
+    cmd.add_flag("rustPHast", rustPhastContender, "Execute rust PHast benchmark");
     cmd.add_flag("rustPtrHash", rustPtrHashContender, "Execute rust ptrhash benchmark");
     cmd.add_flag("gpuPhobic", gpuPhobic, "Execute Phobic on the GPU benchmark");
     cmd.add_flag("fiPS", fiPS, "Execute FiPS benchmark");
@@ -105,6 +114,9 @@ int main(int argc, char** argv) {
     }
     if (rustFmphGoContender) {
         rustFmphGoContenderRunner(N);
+    }
+    if (rustPhastContender) {
+        rustPHastContenderRunner(N);
     }
     if (rustPtrHashContender) {
         rustPtrHashContenderRunner(N);
@@ -158,6 +170,12 @@ int main(int argc, char** argv) {
     }
     if (bipartiteShockHashFlat) {
         bipartiteShockHashFlatContenderRunner(N);
+    }
+    if (morphisHash) {
+        morphisHashContenderRunner(N);
+    }
+    if (morphisHashFlat) {
+        morphisHashFlatContenderRunner(N);
     }
     if (pthash) {
         ptHashContenderRunner(N, loadFactor, minimalOnly);

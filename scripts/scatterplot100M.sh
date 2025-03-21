@@ -26,12 +26,15 @@ jobs=(
     "$params --bbhash"
     "$params --rustFmph"
     "$params --rustFmphGo"
+    "$params --rustPHast"
     "$params --shockhash"
     "$params --bipartiteShockHash"
     "$params --consensus"
     "$params --fchPtHash"
     "$params --rustPtrHash"
     "$params --bdz"
+    "$params --morphisHash"
+    "$params --morphisHashFlat"
 )
 
 if [ "$#" -ne 0 ]; then
