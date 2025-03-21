@@ -49,6 +49,7 @@ class ChdContender : public Contender {
             cmph_config_set_verbosity(config, 0);
             //cmph_config_set_keys_per_bin(config, 2); // k-perfect
             cmph_config_set_graphsize(config, c);
+            cmph_config_set_b(config, keysPerBucket);
             mphf = cmph_new(config);
 
             cmph_config_destroy(config);
