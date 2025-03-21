@@ -18,6 +18,8 @@
 #include "bucketplacement/ChdContender.h"
 #include "consensus/ConsensusContender.h"
 #include "bucketplacement/FchContender.h"
+#include "shockhash/MorphisHashContender.h"
+#include "shockhash/MorphisHashFlatContender.h"
 
 /**
  * Comparison table used in "Modern Minimal Perfect Hashing".
@@ -89,6 +91,12 @@ int main(int argc, char** argv) {
     {FchContender(N, 3).run();}
     {FchContender(N, 5).run();}
 
-    // PHast, MorphisHash, Bip. MorphisHash, MorphisHash-Flat
+    {MorphisHashContender<40,4>(N, 2000).run();}
+    {MorphisHashContender<64,4>(N, 2000).run();}
+
+    {MorphisHashFlatContender<60,3,2>(N).run();}
+    {MorphisHashFlatContender<84,3,2>(N).run();}
+
+    // PHast
     return 0;
 }
