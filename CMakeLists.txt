@@ -159,3 +159,7 @@ target_compile_features(TablePtrHash PRIVATE cxx_std_20)
 add_executable(TableMorphisHash src/tableMorphisHash.cpp)
 target_link_libraries(TableMorphisHash PRIVATE PerfectHashingCompetitors Sux)
 target_compile_features(TableMorphisHash PRIVATE cxx_std_20)
+
+add_executable(TablePHast src/tablePHast.cpp)
+target_link_libraries(TablePHast PRIVATE PerfectHashingCompetitors Sux)
+target_compile_features(TablePHast PRIVATE cxx_std_20)

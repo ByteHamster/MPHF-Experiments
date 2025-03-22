@@ -144,7 +144,7 @@ pub extern "C" fn createPhastStruct(len: usize, my_strings: *const *const c_char
             &[] as &[&[u8]],
             ph::seeds::BitsFast(4),
             300,
-            std::thread::available_parallelism().map_or(1, |v| v.into()),
+            1,
             seedable_hash::BuildDefaultSeededHasher::default()
         ),
         bits_per_seed: 0
@@ -154,14 +154,14 @@ pub extern "C" fn createPhastStruct(len: usize, my_strings: *const *const c_char
 }
 
 #[no_mangle]
-pub extern "C" fn constructPhast(struct_ptr: *mut PhastWrapper, bits_per_seed: u8, bucket_size100: u16) {
+pub extern "C" fn constructPhast(struct_ptr: *mut PhastWrapper, bits_per_seed: u8, bucket_size100: u16, threads_num: usize) {
     let struct_instance = unsafe { &mut *struct_ptr };
     if bits_per_seed == 8 {
         struct_instance.hash_func8 = phast::Function::with_slice_bps_bs_threads_hash(
             &struct_instance.vector[..],
             ph::seeds::Bits8,
             bucket_size100,
-            std::thread::available_parallelism().map_or(1, |v| v.into()),
+            threads_num,
             seedable_hash::BuildDefaultSeededHasher::default()
         );
     } else {
@@ -169,7 +169,7 @@ pub extern "C" fn constructPhast(struct_ptr: *mut PhastWrapper, bits_per_seed: u
             &struct_instance.vector[..],
             ph::seeds::BitsFast(bits_per_seed),
             bucket_size100,
-            std::thread::available_parallelism().map_or(1, |v| v.into()),
+            threads_num,
             seedable_hash::BuildDefaultSeededHasher::default()
         );
     }
