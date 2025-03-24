@@ -9,12 +9,9 @@ void morphisHashTestMultiBucket(size_t N) {
 
 template <int l>
 void morphisHashTestMultiWidth(size_t N) {
-    morphisHashTestMultiBucket<l, 1>(N);
     morphisHashTestMultiBucket<l, 2>(N);
     morphisHashTestMultiBucket<l, 3>(N);
     morphisHashTestMultiBucket<l, 4>(N);
-    morphisHashTestMultiBucket<l, 5>(N);
-    morphisHashTestMultiBucket<l, 6>(N);
 }
 
 void morphisHashContenderRunner(size_t N) {
@@ -28,4 +25,6 @@ void morphisHashContenderRunner(size_t N) {
     morphisHashTestMultiWidth<70>(N);
     morphisHashTestMultiWidth<76>(N);
     morphisHashTestMultiWidth<82>(N);
+    morphisHashTestMultiWidth<88>(N);
+    morphisHashTestMultiWidth<94>(N);
 }
