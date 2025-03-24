@@ -64,20 +64,17 @@ int main(int argc, char** argv) {
     {FiPSContender<>(N, 1.5).run();}
     {FiPSContender<>(N, 3.5).run();}
 
-    {ChdContender(N, 1.0, 1.0, 3, true).run();}
-    {ChdContender(N, 1.0, 1.0, 5, true).run();}
-
-    {BdzContender(N, 0.8, 1.0/0.8, 3, true).run();}
-    {BdzContender(N, 0.6, 1.0/0.8, 6, true).run();}
+    {ChdContender(N, 1.0, 1.0, 4, true).run();}
+    {ChdContender(N, 1.0, 1.0, 6, true).run();}
 
     {PTHashContender<true, pthash::elias_fano>(N, 0.95, 4.0).run();}
-    {PTHashContender<true, pthash::compact_compact>(N, 0.99, 4.0).run();}
+    {PTHashContender<true, pthash::compact_compact>(N, 0.99, 6.5).run();}
 
     {PartitionedPTHashContender<true, pthash::elias_fano>(N, 0.95, 4.0).run();}
-    {PartitionedPTHashContender<true, pthash::compact_compact>(N, 0.99, 4.0).run();}
+    {PartitionedPTHashContender<true, pthash::compact_compact>(N, 0.99, 6.5).run();}
 
+    {DensePartitionedPTHashContender<pthash::dense_interleaved<pthash::compact>, pthash::table_bucketer<pthash::opt_bucketer>>(N, 1.0, 4.0).run();}
     {DensePartitionedPTHashContender<pthash::dense_interleaved<pthash::rice>, pthash::table_bucketer<pthash::opt_bucketer>>(N, 1.0, 6.5).run();}
-    {DensePartitionedPTHashContender<pthash::dense_interleaved<pthash::compact>, pthash::table_bucketer<pthash::opt_bucketer>>(N, 1.0, 6.5).run();}
 
     {RecSplitContender<8>(N, 100).run();}
     {RecSplitContender<14>(N, 2000).run();}
@@ -90,6 +87,9 @@ int main(int argc, char** argv) {
 
     {FchContender(N, 3).run();}
     {FchContender(N, 5).run();}
+
+    {BdzContender(N, 0.8, 1.0/0.8, 3, true).run();}
+    {BdzContender(N, 0.6, 1.0/0.8, 6, true).run();}
 
     {MorphisHashContender<40,4>(N, 2000).run();}
     {MorphisHashContender<64,4>(N, 2000).run();}
