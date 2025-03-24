@@ -233,15 +233,16 @@ pub struct PtrHashWrapper {
 
 #[no_mangle]
 pub extern "C" fn createPtrHashStruct(len: usize, my_strings: *const *const c_char) -> *mut PtrHashWrapper {
+    let dummy_data = &["a".as_ref(), "b".as_ref()];
     let struct_instance = PtrHashWrapper {
         vector: c_strings_to_slices(len, my_strings),
         variant: 0,
-        ptrhash_linear_vec: ptr_hash::PtrHash::new(&[], PtrHashParams::default_fast()),
-        ptrhash_square_vec: ptr_hash::PtrHash::new(&[], PtrHashParams::default_square()),
-        ptrhash_cubic_vec: ptr_hash::PtrHash::new(&[], PtrHashParams::default_compact()),
-        ptrhash_linear_ef: ptr_hash::PtrHash::new(&[], PtrHashParams::default_fast()),
-        ptrhash_square_ef: ptr_hash::PtrHash::new(&[], PtrHashParams::default_square()),
-        ptrhash_cubic_ef: ptr_hash::PtrHash::new(&[], PtrHashParams::default_compact()),
+        ptrhash_linear_vec: ptr_hash::PtrHash::new(dummy_data, PtrHashParams::default_fast()),
+        ptrhash_square_vec: ptr_hash::PtrHash::new(dummy_data, PtrHashParams::default_square()),
+        ptrhash_cubic_vec: ptr_hash::PtrHash::new(dummy_data, PtrHashParams::default_compact()),
+        ptrhash_linear_ef: ptr_hash::PtrHash::new(dummy_data, PtrHashParams::default_fast()),
+        ptrhash_square_ef: ptr_hash::PtrHash::new(dummy_data, PtrHashParams::default_square()),
+        ptrhash_cubic_ef: ptr_hash::PtrHash::new(dummy_data, PtrHashParams::default_compact()),
     };
     let boxx = Box::new(struct_instance);
     Box::into_raw(boxx)
