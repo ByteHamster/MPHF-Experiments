@@ -1,6 +1,45 @@
 # MPHF-Experiments
 
-Comparison of different minimal perfect hash functions (MPHFs).
+Comparison of a wide range different minimal perfect hash functions (MPHFs).
+The framework provides a unified interface to test basically all modern MPHF constructions that are currently available, including:
+
+- Bucket Placement
+  - CHD [Paper](https://doi.org/10.1007/978-3-642-04128-0_61) [Code](https://cmph.sourceforge.net/)
+  - PHOBIC [Paper](https://doi.org/10.4230/LIPIcs.ESA.2024.69) [Code](https://github.com/jermp/pthash)
+  - FCH [Paper](https://doi.org/10.1145/133160.133209) [Code](https://cmph.sourceforge.net/)
+  - FCH (Re-Implementation by Pibiri) [Code](https://github.com/roberto-trani/mphf_benchmark/blob/main/include/fch.hpp)
+  - PHOBIC-GPU [Paper](https://doi.org/10.4230/LIPIcs.ESA.2024.69) [Code](https://github.com/stefanfred/PHOBIC-GPU)
+  - PTHash [Paper](https://doi.org/10.1145/3404835.3462849) [Code](https://github.com/jermp/pthash)
+  - PTHash-HEM [Paper](https://doi.org/10.1109/TKDE.2023.3303341) [Code](https://github.com/jermp/pthash)
+  - PHast (Not published yet) [Code](https://github.com/beling/bsuccinct-rs/)
+  - PtrHash [Paper](https://doi.org/10.48550/ARXIV.2502.15539) [Code](https://github.com/RagnarGrootKoerkamp/PTRHash)
+- Consensus
+  - Consensus-RS [Paper](https://doi.org/10.48550/ARXIV.2502.05613) [Code](https://github.com/ByteHamster/ConsensusRecSplit/)
+- Fingerprinting
+  - BBHash [Paper](https://doi.org/10.4230/LIPICS.SEA.2017.25) [Code](https://github.com/rizkg/BBHash)
+  - FiPS [Paper](https://doi.org/10.5445/IR/1000176432) [Code](https://github.com/ByteHamster/FiPS)
+  - FMPH [Paper](https://doi.org/10.1145/3596453) [Code](https://github.com/beling/bsuccinct-rs/)
+  - FMPH-GO [Paper](https://doi.org/10.1145/3596453) [Code](https://github.com/beling/bsuccinct-rs/)
+- RecSplit
+  - RecSplit [Paper](https://doi.org/10.1137/1.9781611976007.14) [Code](https://github.com/vigna/sux/blob/master/sux/function/RecSplit.hpp)
+  - GpuRecSplit [Paper](https://doi.org/10.4230/LIPICS.ESA.2023.19) [Code](https://github.com/ByteHamster/GpuRecSplit)
+  - SIMDRecSplit, RecSplit with rotation fitting [Paper](https://doi.org/10.4230/LIPICS.ESA.2023.19) [Code](https://github.com/ByteHamster/GpuRecSplit)
+- Retrieval
+  - BDZ / BPZ [Paper](https://doi.org/10.1145/1321440.1321532) [Code](https://cmph.sourceforge.net/)
+  - BMZ [Paper](https://www.researchgate.net/publication/228715398_A_new_algorithm_for_constructing_minimal_perfect_hash_functions) [Code](https://cmph.sourceforge.net/)
+  - CHM [Paper](https://doi.org/10.1016/0020-0190\(92\)90220-P) [Code](https://cmph.sourceforge.net/)
+  - WBPM [Paper](https://doi.org/10.1609/AAAI.V34I02.5529) [Code](https://github.com/weaversa/MPHF-WBPM)
+  - SicHash [Paper](https://doi.org/10.1137/1.9781611977561.CH15) [Code](https://github.com/ByteHamster/SicHash)
+- ShockHash
+  - ShockHash (+ SIMD version) [Paper](https://doi.org/10.1137/1.9781611977929.15) [Code](https://github.com/ByteHamster/ShockHash)
+  - Bipartite ShockHash [Paper](https://doi.org/10.48550/ARXIV.2310.14959) [Code](https://github.com/ByteHamster/ShockHash)
+  - Bipartite ShockHash-Flat [Paper](https://doi.org/10.48550/ARXIV.2310.14959) [Code](https://github.com/ByteHamster/ShockHash)
+  - MorphisHash [Paper](https://doi.org/10.48550/ARXIV.2503.10161) [Code](https://github.com/stefanfred/MorphisHash)
+  - MorphisHash-Flat [Paper](https://doi.org/10.48550/ARXIV.2503.10161) [Code](https://github.com/stefanfred/MorphisHash1)
+
+From these, it can generate comprehensive plots like Pareto plots, and simple comparison tables used in several papers.
+
+<img src="img/preview-dominance-map.png" width="500"/>
 
 ### Cloning the Repository
 
@@ -11,52 +50,33 @@ To clone the repository including submodules, use the following command.
 git clone --recursive https://github.com/ByteHamster/MPHF-Experiments.git
 ```
 
-### Reproducing Experiments
+### Running the Experiments Directly
 
-This repository contains the source code and our reproducibility artifacts for our paper.
-Due to the plethora of dependencies required by our competitors, we provide an easy to use Docker image to quickly reproduce our results.
-Alternatively, you can look at the `Dockerfile` to see all libraries, tools, and commands necessary to compile the different competitors.
+Compiling works like with every cmake project.
 
-#### Building the Docker Image
+```
+cmake -B ./build -DCMAKE_BUILD_TYPE=Release
+cmake --build ./build -j
+```
 
-For easier reproducibility, we also provide a docker image to run the experiments.
+This might take about 5-15 minutes because of the large number of competitors.
+You can then run one of the benchmarks, for example `./build/TablePtrHash --help` or `./build/Comparison --help`.
+
+### Code Structure
+
+The main comparison code can be found in the [`src` directory](/src).
+This includes tabular comparisons like they are used in different papers, as well as the more general Pareto plot in [`src/Comparison.cpp`](/src/Comparison.cpp).
+To add a new competitor to the framework, have a look at the [`contenders` directory](/contenders).
+For each contender, there are two files. (1) A general wrapper header class that unifies the interface of the competitor, and (2) a cpp file that tests a wide range of configurations for the general Pareto plot.
+The cpp file should contain all meaningful configurations to cover all possible trade-offs.
+After adding a contender, make sure to re-run cmake.
+If you want to add a new comparison table, make sure to also adapt the [`CMakeLists.txt` file](/CMakeLists.txt) accordingly.
+
+### Running the Experiments with Docker
+
+For easier reproducibility and less setup overhead, we provide a docker image to run the experiments.
 However, for the measurements in the papers, we run the code directly and with more data points.
-Run the following command to build the Docker image.
-Building the image takes about 10 minutes, as some packages (including LaTeX for the plots) have to be installed.
-Note that your machine needs to support the AVX2 instruction set extension to successfully run the experiments.
-
-```bash
-docker build -t mphf_experiments --no-cache .
-```
-
-Some compiler warnings (red) are expected when building competitors and will not prevent building the image or running the experiments.
-Please ignore them!
-
-#### Running the Experiments
-Due to the long total running time of all experiments in our paper, we provide run scripts for a slightly simplified version of the experiments.
-They run fewer iterations and output fewer data points.
-
-You can modify the benchmarks scripts in `scripts/dockerVolume` if you want to change the number of runs or data points.
-This does not require the Docker image to recompile.
-Different experiments can be started by using the following command:
-
-```bash
-docker run --interactive --tty -v "$(pwd)/scripts/dockerVolume:/opt/dockerVolume" mphf_experiments /opt/dockerVolume/<script>.sh
-```
-
-`<script>` depends on the experiment you want to run.
-
-| Figure                                                                                                                                       | Launch command                      | Estimated runtime  |
-|:---------------------------------------------------------------------------------------------------------------------------------------------| :---------------------------------- | :----------------- |
-| [SicHash](https://doi.org/10.1137/1.9781611977561.ch15), Figure 6 <br /><img src="img/preview-sichash-figure-6.png" width="300"/>            | /opt/dockerVolume/comparison-N.sh   | 20 minutes         |
-| [SicHash](https://doi.org/10.1137/1.9781611977561.ch15), Figure 8 <br /><img src="img/preview-sichash-figure-8.png" width="300"/>            | /opt/dockerVolume/pareto.sh         | 45 minutes         |
-| [GpuRecSplit](https://arxiv.org/pdf/2212.09562.pdf), Figure 6 <br /><img src="img/preview-gpurecsplit-figure-6.png" width="300"/>            | /opt/dockerVolume/pareto-threads.sh | 45 minutes         |
-| [ShockHash](https://arxiv.org/pdf/2308.09561v1), Figure 5 <br /><img src="img/preview-shockhash-figure-5.png" width="300"/>                  | /opt/dockerVolume/pareto-zoomed.sh  | 60 minutes         |
-| [Dominance Maps](https://publikationen.bibliothek.kit.edu/1000176432), Figure 8 <br /><img src="img/preview-dominance-map.png" width="300"/> | /opt/dockerVolume/dominance-map.sh  | 4 hours |
-
-The resulting plots can be found in `scripts/dockerVolume` and have the file extension `.pdf`.
-Note again that the scripts in `scripts/dockerVolume` are simplified versions of the experiments.
-We give the full scripts in the `scripts` folder.
+We refer to [Docker.md](/Docker.md) for details on how to use this repository with Docker.
 
 ### License
 
