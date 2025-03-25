@@ -4,7 +4,7 @@
 
 extern "C" {
     void *createPhastStruct(uint64_t len, const char **str);
-    void constructPhast(void *rustStruct, uint8_t bits_per_seed, uint16_t bucket_size100);
+    void constructPhast(void *rustStruct, uint8_t bits_per_seed, uint16_t bucket_size100, size_t threads);
     uint64_t queryPhast(void *rustStruct, const char *key, size_t length);
     uint64_t queryPhast8(void *rustStruct, const char *key, size_t length);
     size_t sizePhast(void *rustStruct);
@@ -41,7 +41,7 @@ class RustPhastContender : public RustContender {
 
         void construct(const std::vector<std::string> &keys) override {
             (void) keys;
-            constructPhast(rustStruct, bits_per_seed, bucket_size100);
+            constructPhast(rustStruct, bits_per_seed, bucket_size100, numThreads);
         }
 
         size_t sizeBits() override {
