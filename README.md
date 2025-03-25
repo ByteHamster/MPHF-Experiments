@@ -1,45 +1,45 @@
 # MPHF-Experiments
 
 Comparison of a wide range different minimal perfect hash functions (MPHFs).
-The framework provides a unified interface to test basically all modern MPHF constructions that are currently available, including:
-
-- Bucket Placement
-  - CHD [Paper](https://doi.org/10.1007/978-3-642-04128-0_61) [Code](https://cmph.sourceforge.net/)
-  - PHOBIC [Paper](https://doi.org/10.4230/LIPIcs.ESA.2024.69) [Code](https://github.com/jermp/pthash)
-  - FCH [Paper](https://doi.org/10.1145/133160.133209) [Code](https://cmph.sourceforge.net/)
-  - FCH (Re-Implementation by Pibiri) [Code](https://github.com/roberto-trani/mphf_benchmark/blob/main/include/fch.hpp)
-  - PHOBIC-GPU [Paper](https://doi.org/10.4230/LIPIcs.ESA.2024.69) [Code](https://github.com/stefanfred/PHOBIC-GPU)
-  - PTHash [Paper](https://doi.org/10.1145/3404835.3462849) [Code](https://github.com/jermp/pthash)
-  - PTHash-HEM [Paper](https://doi.org/10.1109/TKDE.2023.3303341) [Code](https://github.com/jermp/pthash)
-  - PHast (Not published yet) [Code](https://github.com/beling/bsuccinct-rs/)
-  - PtrHash [Paper](https://doi.org/10.48550/ARXIV.2502.15539) [Code](https://github.com/RagnarGrootKoerkamp/PTRHash)
-- Consensus
-  - Consensus-RS [Paper](https://doi.org/10.48550/ARXIV.2502.05613) [Code](https://github.com/ByteHamster/ConsensusRecSplit/)
-- Fingerprinting
-  - BBHash [Paper](https://doi.org/10.4230/LIPICS.SEA.2017.25) [Code](https://github.com/rizkg/BBHash)
-  - FiPS [Paper](https://doi.org/10.5445/IR/1000176432) [Code](https://github.com/ByteHamster/FiPS)
-  - FMPH [Paper](https://doi.org/10.1145/3596453) [Code](https://github.com/beling/bsuccinct-rs/)
-  - FMPH-GO [Paper](https://doi.org/10.1145/3596453) [Code](https://github.com/beling/bsuccinct-rs/)
-- RecSplit
-  - RecSplit [Paper](https://doi.org/10.1137/1.9781611976007.14) [Code](https://github.com/vigna/sux/blob/master/sux/function/RecSplit.hpp)
-  - GpuRecSplit [Paper](https://doi.org/10.4230/LIPICS.ESA.2023.19) [Code](https://github.com/ByteHamster/GpuRecSplit)
-  - SIMDRecSplit, RecSplit with rotation fitting [Paper](https://doi.org/10.4230/LIPICS.ESA.2023.19) [Code](https://github.com/ByteHamster/GpuRecSplit)
-- Retrieval
-  - BDZ / BPZ [Paper](https://doi.org/10.1145/1321440.1321532) [Code](https://cmph.sourceforge.net/)
-  - BMZ [Paper](https://www.researchgate.net/publication/228715398_A_new_algorithm_for_constructing_minimal_perfect_hash_functions) [Code](https://cmph.sourceforge.net/)
-  - CHM [Paper](https://doi.org/10.1016/0020-0190\(92\)90220-P) [Code](https://cmph.sourceforge.net/)
-  - WBPM [Paper](https://doi.org/10.1609/AAAI.V34I02.5529) [Code](https://github.com/weaversa/MPHF-WBPM)
-  - SicHash [Paper](https://doi.org/10.1137/1.9781611977561.CH15) [Code](https://github.com/ByteHamster/SicHash)
-- ShockHash
-  - ShockHash (+ SIMD version) [Paper](https://doi.org/10.1137/1.9781611977929.15) [Code](https://github.com/ByteHamster/ShockHash)
-  - Bipartite ShockHash [Paper](https://doi.org/10.48550/ARXIV.2310.14959) [Code](https://github.com/ByteHamster/ShockHash)
-  - Bipartite ShockHash-Flat [Paper](https://doi.org/10.48550/ARXIV.2310.14959) [Code](https://github.com/ByteHamster/ShockHash)
-  - MorphisHash [Paper](https://doi.org/10.48550/ARXIV.2503.10161) [Code](https://github.com/stefanfred/MorphisHash)
-  - MorphisHash-Flat [Paper](https://doi.org/10.48550/ARXIV.2503.10161) [Code](https://github.com/stefanfred/MorphisHash1)
-
 From these, it can generate comprehensive plots like Pareto plots, and simple comparison tables used in several papers.
 
 <img src="img/preview-dominance-map.png" width="500"/>
+
+The framework provides a unified interface to test basically all modern MPHF constructions that are currently available, including:
+
+- Bucket Placement
+  - CHD ([Paper](https://doi.org/10.1007/978-3-642-04128-0_61), [Code](https://cmph.sourceforge.net/))
+  - PHOBIC ([Paper](https://doi.org/10.4230/LIPIcs.ESA.2024.69), [Code](https://github.com/jermp/pthash))
+  - FCH ([Paper](https://doi.org/10.1145/133160.133209), [Code](https://cmph.sourceforge.net/))
+  - FCH (Re-Implementation by Pibiri) ([Code](https://github.com/roberto-trani/mphf_benchmark/blob/main/include/fch.hpp))
+  - PHOBIC-GPU ([Paper](https://doi.org/10.4230/LIPIcs.ESA.2024.69), [Code](https://github.com/stefanfred/PHOBIC-GPU))
+  - PTHash ([Paper](https://doi.org/10.1145/3404835.3462849), [Code](https://github.com/jermp/pthash))
+  - PTHash-HEM ([Paper](https://doi.org/10.1109/TKDE.2023.3303341), [Code](https://github.com/jermp/pthash))
+  - PHast (Not published yet) ([Code](https://github.com/beling/bsuccinct-rs/))
+  - PtrHash ([Paper](https://doi.org/10.48550/ARXIV.2502.15539), [Code](https://github.com/RagnarGrootKoerkamp/PTRHash))
+- Consensus
+  - Consensus-RS ([Paper](https://doi.org/10.48550/ARXIV.2502.05613), [Code](https://github.com/ByteHamster/ConsensusRecSplit/))
+- Fingerprinting
+  - BBHash ([Paper](https://doi.org/10.4230/LIPICS.SEA.2017.25), [Code](https://github.com/rizkg/BBHash))
+  - FiPS ([Paper](https://doi.org/10.5445/IR/1000176432), [Code](https://github.com/ByteHamster/FiPS))
+  - FMPH ([Paper](https://doi.org/10.1145/3596453), [Code](https://github.com/beling/bsuccinct-rs/))
+  - FMPH-GO ([Paper](https://doi.org/10.1145/3596453), [Code](https://github.com/beling/bsuccinct-rs/))
+- RecSplit
+  - RecSplit ([Paper](https://doi.org/10.1137/1.9781611976007.14), [Code](https://github.com/vigna/sux/blob/master/sux/function/RecSplit.hpp))
+  - GpuRecSplit ([Paper](https://doi.org/10.4230/LIPICS.ESA.2023.19), [Code](https://github.com/ByteHamster/GpuRecSplit))
+  - SIMDRecSplit, RecSplit with rotation fitting ([Paper](https://doi.org/10.4230/LIPICS.ESA.2023.19), [Code](https://github.com/ByteHamster/GpuRecSplit))
+- Retrieval
+  - BDZ / BPZ ([Paper](https://doi.org/10.1145/1321440.1321532), [Code](https://cmph.sourceforge.net/))
+  - BMZ ([Paper](https://www.researchgate.net/publication/228715398_A_new_algorithm_for_constructing_minimal_perfect_hash_functions), [Code](https://cmph.sourceforge.net/))
+  - CHM ([Paper](https://doi.org/10.1016/0020-0190\(92\)90220-P), [Code](https://cmph.sourceforge.net/))
+  - WBPM ([Paper](https://doi.org/10.1609/AAAI.V34I02.5529), [Code](https://github.com/weaversa/MPHF-WBPM))
+  - SicHash ([Paper](https://doi.org/10.1137/1.9781611977561.CH15), [Code](https://github.com/ByteHamster/SicHash))
+- ShockHash
+  - ShockHash (+ SIMD version) ([Paper](https://doi.org/10.1137/1.9781611977929.15), [Code](https://github.com/ByteHamster/ShockHash))
+  - Bipartite ShockHash ([Paper](https://doi.org/10.48550/ARXIV.2310.14959), [Code](https://github.com/ByteHamster/ShockHash))
+  - Bipartite ShockHash-Flat ([Paper](https://doi.org/10.48550/ARXIV.2310.14959), [Code](https://github.com/ByteHamster/ShockHash))
+  - MorphisHash ([Paper](https://doi.org/10.48550/ARXIV.2503.10161), [Code](https://github.com/stefanfred/MorphisHash))
+  - MorphisHash-Flat ([Paper](https://doi.org/10.48550/ARXIV.2503.10161), [Code](https://github.com/stefanfred/MorphisHash))
 
 ### Cloning the Repository
 
