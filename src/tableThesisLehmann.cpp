@@ -1,6 +1,6 @@
 #include <tlx/cmdline_parser.hpp>
 
-#include "bucketplacement/DensePartitionedPTHashContender.h"
+#include "bucketplacement/PhobicContender.h"
 #include "bucketplacement/PartitionedPTHashContender.h"
 #include "fingerprinting/FiPSContender.h"
 #include "fingerprinting/RustFmphContender.h"
@@ -72,8 +72,8 @@ int main(int argc, char** argv) {
     {PartitionedPTHashContender<true, pthash::elias_fano>(N, 0.95, 4.0).run();}
     {PartitionedPTHashContender<true, pthash::compact_compact>(N, 0.99, 4.0).run();}
 
-    {DensePartitionedPTHashContender<pthash::dense_interleaved<pthash::rice>, pthash::table_bucketer<pthash::opt_bucketer>>(N, 1.0, 6.5).run();}
-    {DensePartitionedPTHashContender<pthash::dense_interleaved<pthash::compact>, pthash::table_bucketer<pthash::opt_bucketer>>(N, 1.0, 6.5).run();}
+    {PhobicContender<pthash::dense_interleaved<pthash::rice>, pthash::table_bucketer<pthash::opt_bucketer>>(N, 1.0, 6.5).run();}
+    {PhobicContender<pthash::dense_interleaved<pthash::compact>, pthash::table_bucketer<pthash::opt_bucketer>>(N, 1.0, 6.5).run();}
 
     {RecSplitContender<8>(N, 100).run();}
     {RecSplitContender<14>(N, 2000).run();}

@@ -14,7 +14,7 @@
 #include "bucketplacement/RustPtrHashContender.h"
 #include "shockhash/BipartiteShockHashContender.h"
 #include "bucketplacement/FchContender.h"
-#include "bucketplacement/DensePartitionedPTHashContender.h"
+#include "bucketplacement/PhobicContender.h"
 #include "consensus/ConsensusContender.h"
 #include "shockhash/BipartiteShockHashFlatContender.h"
 #include "fingerprinting/FiPSContender.h"
@@ -185,7 +185,7 @@ int main(int argc, char** argv) {
         partitionedPtHashContenderRunner(N, loadFactor, minimalOnly);
     }
     if (densePartitionedPtHash) {
-        densePartitionedPtHashContenderRunner(N);
+        PhobicContenderRunner(N);
     }
     if (gpuPhobic) {
         #ifdef HAS_VULKAN
