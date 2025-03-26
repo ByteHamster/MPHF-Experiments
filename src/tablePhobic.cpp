@@ -49,6 +49,7 @@ int main(int argc, char** argv) {
 
     {RustFmphContender(N, 1.0).run();}
     {RustFmphContender(N, 2.0).run();}
+
     {ChdContender(N, 1.0, 1.0, 3, true).run();}
     {ChdContender(N, 1.0, 1.0, 5, true).run();}
 

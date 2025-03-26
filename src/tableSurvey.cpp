@@ -14,7 +14,7 @@
 #include "retrievalbased/SicHashContender.h"
 #include "shockhash/BipartiteShockHashContender.h"
 #include "shockhash/BipartiteShockHashFlatContender.h"
-#include "shockhash/ShockHashContender.h"
+#include "shockhash/ShockHashSimdContender.h"
 #include "bucketplacement/ChdContender.h"
 #include "consensus/ConsensusContender.h"
 #include "bucketplacement/FchContender.h"
@@ -43,8 +43,8 @@ int main(int argc, char** argv) {
     {SIMDRecSplitContender<8>(N, 100).run();}
     {SIMDRecSplitContender<16>(N, 2000).run();}
 
-    {ShockHashContender<55>(N, 2000).run();}
-    {ShockHashContender<40>(N, 2000).run();}
+    {ShockHashSimdContender<55>(N, 2000).run();}
+    {ShockHashSimdContender<40>(N, 2000).run();}
 
     {BipartiteShockHashContender<128>(N, 2000).run();}
     {BipartiteShockHashContender<64>(N, 2000).run();}
