@@ -1,6 +1,5 @@
 #include <tlx/cmdline_parser.hpp>
 
-#include "bucketplacement/PartitionedPTHashContender.h"
 #include "fingerprinting/RustFmphContender.h"
 #include "bucketplacement/PTHashContender.h"
 #include "fingerprinting/RustFmphGoContender.h"
@@ -9,7 +8,7 @@
 #include "retrievalbased/SicHashContender.h"
 #include "shockhash/BipartiteShockHashContender.h"
 #include "shockhash/BipartiteShockHashFlatContender.h"
-#include "shockhash/ShockHashContender.h"
+#include "shockhash/ShockHashSimdContender.h"
 
 /**
  * Comparison table used in "ShockHash: Near Optimal-Space Minimal Perfect Hashing Beyond Brute-Force".
@@ -37,9 +36,9 @@ int main(int argc, char** argv) {
     {SIMDRecSplitContender<18>(N, 2000).run();}
     {SIMDRecSplitContender<20>(N, 2000).run();}
 
-    {ShockHashContender<30>(N, 2000).run();}
-    {ShockHashContender<39>(N, 2000).run();}
-    {ShockHashContender<58>(N, 2000).run();}
+    {ShockHashSimdContender<30>(N, 2000).run();}
+    {ShockHashSimdContender<39>(N, 2000).run();}
+    {ShockHashSimdContender<58>(N, 2000).run();}
 
     {BipartiteShockHashContender<64>(N, 2000).run();}
     {BipartiteShockHashContender<104>(N, 2000).run();}
