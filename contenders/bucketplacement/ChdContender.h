@@ -30,7 +30,8 @@ class ChdContender : public Contender {
 
         std::string name() override {
             return std::string("cmph-CHD")
-                    + " c=" + std::to_string(c);
+                    + " c=" + std::to_string(c)
+                    + " keysPerBucket=" + std::to_string(keysPerBucket);
         }
 
         void beforeConstruction(const std::vector<std::string> &keys) override {
