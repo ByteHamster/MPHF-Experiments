@@ -6,10 +6,12 @@ void ptHashContenderRunner(size_t N, double loadFactor, bool minimalOnly) {
             PTHashContender<false, pthash::elias_fano>(N, loadFactor, lambda).run();
             PTHashContender<false, pthash::dictionary_dictionary>(N, loadFactor, lambda).run();
             PTHashContender<false, pthash::dictionary_elias_fano>(N, loadFactor, lambda).run();
+            PTHashContender<false, pthash::compact_compact>(N, loadFactor, lambda).run();
         }
 
         PTHashContender<true, pthash::elias_fano>(N, loadFactor, lambda).run();
         PTHashContender<true, pthash::dictionary_dictionary>(N, loadFactor, lambda).run();
         PTHashContender<true, pthash::dictionary_elias_fano>(N, loadFactor, lambda).run();
+        PTHashContender<true, pthash::compact_compact>(N, loadFactor, lambda).run();
     }
 }
