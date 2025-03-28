@@ -34,7 +34,7 @@ class RustFmphContender : public RustContender {
 
         void beforeConstruction(const std::vector<std::string> &keys) override {
             RustContender::beforeConstruction(keys);
-            rustStruct = createFmphStruct(N, data);
+            rustStruct = createFmphStruct(N, keysAsCString);
         }
 
         void construct(const std::vector<std::string> &keys) override {

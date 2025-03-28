@@ -5,8 +5,9 @@
 extern "C" {
     void *createPhastStruct(uint64_t len, const char **str);
     void constructPhast(void *rustStruct, uint8_t bits_per_seed, uint16_t bucket_size100, size_t threads);
+    void preparePhastQueries(void *rustStruct, uint64_t len, const char **str);
+    uint64_t queryPhastAll(void *rustStruct);
     uint64_t queryPhast(void *rustStruct, const char *key, size_t length);
-    uint64_t queryPhast8(void *rustStruct, const char *key, size_t length);
     size_t sizePhast(void *rustStruct);
     void destroyPhastStruct(void *rustStruct);
 }
@@ -36,7 +37,12 @@ class RustPhastContender : public RustContender {
 
         void beforeConstruction(const std::vector<std::string> &keys) override {
             RustContender::beforeConstruction(keys);
-            rustStruct = createPhastStruct(N, data);
+            rustStruct = createPhastStruct(N, keysAsCString);
+        }
+
+        void beforeQueries(const std::span<std::string> &keys) override {
+            RustContender::beforeQueries(keys);
+            preparePhastQueries(rustStruct, N, keysAsCString);
         }
 
         void construct(const std::vector<std::string> &keys) override {
@@ -49,27 +55,14 @@ class RustPhastContender : public RustContender {
         }
 
         void performQueries(const std::span<std::string> keys) override {
-            if (bits_per_seed == 8) {
-                auto x = [&] (std::string &key) {
-                    return queryPhast8(rustStruct, key.c_str(), key.length()); };
-                doPerformQueries(keys, x);
-            } else {
-                auto x = [&] (std::string &key) {
-                    return queryPhast(rustStruct, key.c_str(), key.length()); };
-                doPerformQueries(keys, x);
-            }
+            (void)keys;
+            queryPhastAll(rustStruct);
         }
 
         void performTest(const std::span<std::string> keys) override {
-            if (bits_per_seed == 8) {
-                auto x = [&] (std::string &key) {
-                    return queryPhast8(rustStruct, key.c_str(), key.length()); };
-                doPerformTest(keys, x);
-            } else {
-                auto x = [&] (std::string &key) {
-                    return queryPhast(rustStruct, key.c_str(), key.length()); };
-                doPerformTest(keys, x);
-            }
+            auto x = [&] (std::string &key) {
+                return queryPhast(rustStruct, key.c_str(), key.length()); };
+            doPerformTest(keys, x);
         }
 };
 

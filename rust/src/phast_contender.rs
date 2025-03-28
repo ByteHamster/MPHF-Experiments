@@ -3,6 +3,7 @@ use std::slice;
 
 use crate::c_strings_to_slices;
 use std::os::raw::c_char;
+use std::hint::black_box;
 
 pub struct PhastWrapper {
     vector: Vec<&'static [u8]>,
@@ -27,6 +28,12 @@ pub extern "C" fn createPhastStruct(len: usize, my_strings: *const *const c_char
     };
     let boxx = Box::new(struct_instance);
     Box::into_raw(boxx)
+}
+
+#[no_mangle]
+pub extern "C" fn preparePhastQueries(struct_ptr: *mut PhastWrapper, len: usize, my_strings: *const *const c_char) {
+    let struct_instance = unsafe { &mut *struct_ptr };
+    struct_instance.vector = c_strings_to_slices(len, my_strings);
 }
 
 #[no_mangle]
@@ -56,14 +63,25 @@ pub extern "C" fn constructPhast(struct_ptr: *mut PhastWrapper, bits_per_seed: u
 pub extern "C" fn queryPhast(struct_ptr: *mut PhastWrapper, key_c_s: *const c_char, length: usize) -> u64 {
     let struct_instance = unsafe { &mut *struct_ptr };
     let key = unsafe { slice::from_raw_parts(key_c_s as *const u8, length + 1) };
-    struct_instance.hash_func.get(key) as u64
+    if struct_instance.bits_per_seed == 8 {
+        struct_instance.hash_func8.get(key) as u64
+    } else {
+        struct_instance.hash_func.get(key) as u64
+    }
 }
 
 #[no_mangle]
-pub extern "C" fn queryPhast8(struct_ptr: *mut PhastWrapper, key_c_s: *const c_char, length: usize) -> u64 {
+pub extern "C" fn queryPhastAll(struct_ptr: *mut PhastWrapper) {
     let struct_instance = unsafe { &mut *struct_ptr };
-    let key = unsafe { slice::from_raw_parts(key_c_s as *const u8, length + 1) };
-    struct_instance.hash_func8.get(key) as u64
+    if struct_instance.bits_per_seed == 8 {
+        for key in &struct_instance.vector {
+            black_box(struct_instance.hash_func8.get(*key));
+        }
+    } else {
+        for key in &struct_instance.vector {
+            black_box(struct_instance.hash_func.get(*key));
+        }
+    }
 }
 
 #[no_mangle]

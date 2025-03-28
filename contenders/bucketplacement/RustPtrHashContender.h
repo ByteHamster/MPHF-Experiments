@@ -47,7 +47,7 @@ class RustPtrHashContender : public RustContender {
 
         void beforeConstruction(const std::vector<std::string> &keys) override {
             RustContender::beforeConstruction(keys);
-            rustStruct = createPtrHashStruct(N, data);
+            rustStruct = createPtrHashStruct(N, keysAsCString);
         }
 
         void construct(const std::vector<std::string> &keys) override {

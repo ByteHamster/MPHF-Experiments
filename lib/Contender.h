@@ -39,6 +39,10 @@ class Contender {
             (void) keys;
         }
 
+        virtual void beforeQueries(const std::span<std::string> &keys) {
+            (void) keys;
+        }
+
         virtual void performQueries(const std::span<std::string> keys) = 0;
         virtual void performTest(const std::span<std::string> keys) = 0;
 
@@ -76,6 +80,7 @@ class Contender {
                 for (size_t i = 0; i < numQueries * numQueryThreads; i++) {
                     queryPlan.push_back(keys[prng(N)]);
                 }
+                beforeQueries(queryPlan);
                 std::cout << "Cooldown" << std::endl;
                 usleep(1000*1000);
                 std::cout<<"Querying"<<std::endl;
