@@ -76,7 +76,7 @@ add_custom_command(
     OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/target/release/libmphf_experiments.a
     COMMAND bash -c "RUSTFLAGS='-C target-cpu=native -C linker=${CMAKE_C_COMPILER}' CARGO_TARGET_DIR='${CMAKE_CURRENT_BINARY_DIR}/target' cargo build --release"
     WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/rust
-    DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/rust/src/lib.rs)
+    DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/rust/src/lib.rs ${CMAKE_CURRENT_SOURCE_DIR}/rust/src/ph.rs ${CMAKE_CURRENT_SOURCE_DIR}/rust/src/ptr_hash.rs)
 add_custom_target(RustCompilation DEPENDS "${CMAKE_CURRENT_BINARY_DIR}/target/release/libmphf_experiments.a")
 add_library(RustCompetitors STATIC IMPORTED)
 set_property(TARGET RustCompetitors PROPERTY IMPORTED_LOCATION "${CMAKE_CURRENT_BINARY_DIR}/target/release/libmphf_experiments.a")
