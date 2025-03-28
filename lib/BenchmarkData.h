@@ -4,12 +4,10 @@
 #include <chrono>
 #include <bytehamster/util/XorShift64.h>
 
-std::vector<std::string> generateInputData(size_t N) {
+std::vector<std::string> generateInputData(size_t N, uint64_t seed) {
     std::vector<std::string> inputData;
     inputData.reserve(N);
-    auto time = std::chrono::system_clock::now();
-    long constructionTime = std::chrono::duration_cast<std::chrono::milliseconds>(time.time_since_epoch()).count();
-    bytehamster::util::XorShift64 prng(constructionTime);
+    bytehamster::util::XorShift64 prng(0xc6a4a7935bd1e995 ^ seed);
     std::cout<<"Generating input"<<std::flush;
     char string[200];
     for (size_t i = 0; i < N; i++) {
@@ -29,6 +27,6 @@ std::vector<std::string> generateInputData(size_t N) {
         string[length] = 0;
         inputData.emplace_back(string, length);
     }
-    std::cout<<"\rInput generation complete."<<std::endl;
+    std::cout<<"\rInput generation complete (seed "<<seed<<")"<<std::endl;
     return inputData;
 }

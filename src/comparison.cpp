@@ -76,6 +76,7 @@ int main(int argc, char** argv) {
     cmd.add_bytes('t', "numQueryThreads", Contender::numQueryThreads, "Number of threads to run queries with");
     cmd.add_flag('M', "minimalOnly", minimalOnly, "Skip generation of non-minimal variants in case the method supports both");
     cmd.add_flag('T', "skipTests", Contender::skipTests, "Skip testing PHF for validity");
+    cmd.add_bytes('s', "seed", Contender::seed, "Seed for pseudo-number generator");
 
     cmd.add_flag("recsplit", recsplit, "Execute RecSplit benchmark");
     cmd.add_flag("simdrecsplit", simdrecsplit, "Execute SIMDRecSplit benchmark");
