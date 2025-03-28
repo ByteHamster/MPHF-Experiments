@@ -1,11 +1,12 @@
-mod ph;
-mod ptr_hash;
+mod fmph_contender;
+mod fmph_go_contender;
+mod phast_contender;
+mod ptr_hash_contender;
 
 use std::os::raw::c_char;
 use libc::strlen;
 use std::{str, slice};
 
-////////////////////////////////////////// General methods //////////////////////////////////////////
 fn c_strings_to_vec(len: usize, my_strings: *const *const c_char) -> Vec<String> {
     let mut vector = Vec::with_capacity(len);
     let sl = unsafe { std::slice::from_raw_parts(my_strings, len) };

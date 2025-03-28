@@ -5,7 +5,6 @@ use std::os::raw::c_char;
 use std::slice;
 use crate::c_strings_to_slices;
 
-//////////////////////////////////////////// PtrHash ///////////////////////////////////////////
 type PtrHashLinearVec = ptr_hash::PtrHash<&'static [u8], ptr_hash::bucket_fn::Linear,
     Vec<u32>, ptr_hash::hash::Xx64, Vec<u8>>; // Fast
 type PtrHashSquareVec = ptr_hash::PtrHash<&'static [u8], ptr_hash::bucket_fn::SquareEps,
