@@ -53,25 +53,25 @@ int main(int argc, char** argv) {
     {BipartiteShockHashFlatContender<100>(N).run();}
 
     {RustFmphContender(N, 1.5).run();}
-    {RustFmphContender(N, 3.5).run();}
+    {RustFmphContender(N, 5.0).run();}
 
     {RustFmphGoContender(N, 1.5).run();}
-    {RustFmphGoContender(N, 3.5).run();}
+    {RustFmphGoContender(N, 5.0).run();}
 
     {BBHashContender(N, 1.5, 0).run();}
-    {BBHashContender(N, 3.5, 0).run();}
+    {BBHashContender(N, 5.0, 0).run();}
 
     {FiPSContender<>(N, 1.5).run();}
-    {FiPSContender<>(N, 3.5).run();}
+    {FiPSContender<256, uint32_t, false>(N, 5.0).run();}
 
     {ChdContender(N, 1.0, 1.0, 4, true).run();}
     {ChdContender(N, 1.0, 1.0, 6, true).run();}
 
-    {PTHashContender<true, pthash::elias_fano>(N, 0.95, 4.0).run();}
-    {PTHashContender<true, pthash::compact_compact>(N, 0.99, 6.0).run();}
+    {PTHashContender<true, pthash::elias_fano>(N, 0.95, 6.0).run();}
+    {PTHashContender<true, pthash::compact_compact>(N, 0.99, 4.0).run();}
 
-    {PartitionedPTHashContender<true, pthash::elias_fano>(N, 0.95, 4.0).run();}
-    {PartitionedPTHashContender<true, pthash::compact_compact>(N, 0.99, 6.0).run();}
+    {PartitionedPTHashContender<true, pthash::elias_fano>(N, 0.95, 6.0).run();}
+    {PartitionedPTHashContender<true, pthash::compact_compact>(N, 0.99, 4.0).run();}
 
     {DensePartitionedPTHashContender<pthash::dense_interleaved<pthash::compact>, pthash::table_bucketer<pthash::opt_bucketer>>(N, 1.0, 4.0).run();}
     {DensePartitionedPTHashContender<pthash::dense_interleaved<pthash::rice>, pthash::table_bucketer<pthash::opt_bucketer>>(N, 1.0, 6.0).run();}
@@ -86,7 +86,7 @@ int main(int argc, char** argv) {
     {RustPtrHashContender(N, RustPtrHashContender::VARIANT_CUBIC_EF, 4.0).run();}
 
     {FchContender(N, 3).run();}
-    {FchContender(N, 4).run();}
+    {FchContender(N, 7).run();}
 
     {BdzContender(N, 0.8, 1.0/0.8, 3, true).run();}
     {BdzContender(N, 0.6, 1.0/0.8, 6, true).run();}
@@ -97,6 +97,5 @@ int main(int argc, char** argv) {
     {MorphisHashFlatContender<60,3,2>(N).run();}
     {MorphisHashFlatContender<84,3,2>(N).run();}
 
-    // PHast
     return 0;
 }
