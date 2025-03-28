@@ -3,11 +3,10 @@
 #include "RustContender.h"
 
 extern "C" {
-    void *createPhastStruct(uint64_t len, const char **str);
-    void constructPhast(void *rustStruct, uint8_t bits_per_seed, uint16_t bucket_size100, size_t threads);
-    void preparePhastQueries(void *rustStruct, uint64_t len, const char **str);
-    uint64_t queryPhastAll(void *rustStruct);
+    void *createPhastStruct();
+    void constructPhast(void *rustStruct, void *keysStruct, uint8_t bits_per_seed, uint16_t bucket_size100, size_t threads);
     uint64_t queryPhast(void *rustStruct, const char *key, size_t length);
+    void queryPhastAll(void *rustStruct, void *keysStruct);
     size_t sizePhast(void *rustStruct);
     void destroyPhastStruct(void *rustStruct);
 }
@@ -19,14 +18,12 @@ class RustPhastContender : public RustContender {
         uint16_t bucket_size100;
     public:
         RustPhastContender(size_t N, uint8_t bits_per_seed, uint16_t bucket_size100)
-            : RustContender(N), bits_per_seed(bits_per_seed), bucket_size100(bucket_size100) {
+            : RustContender(N, RUST_INPUT_VEC_SLICE), bits_per_seed(bits_per_seed), bucket_size100(bucket_size100) {
+            rustStruct = createPhastStruct();
         }
 
         ~RustPhastContender() override {
-            if (rustStruct != nullptr) {
-                destroyPhastStruct(rustStruct);
-                rustStruct = nullptr;
-            }
+            destroyPhastStruct(rustStruct);
         }
 
         std::string name() override {
@@ -35,28 +32,16 @@ class RustPhastContender : public RustContender {
                 + " bucket_size100=" + std::to_string(bucket_size100);
         }
 
-        void beforeConstruction(const std::vector<std::string> &keys) override {
-            RustContender::beforeConstruction(keys);
-            rustStruct = createPhastStruct(N, keysAsCString);
-        }
-
-        void beforeQueries(const std::span<std::string> &keys) override {
-            RustContender::beforeQueries(keys);
-            preparePhastQueries(rustStruct, N, keysAsCString);
-        }
-
-        void construct(const std::vector<std::string> &keys) override {
-            (void) keys;
-            constructPhast(rustStruct, bits_per_seed, bucket_size100, numThreads);
+        void construct(void *keys) override {
+            constructPhast(rustStruct, keys, bits_per_seed, bucket_size100, numThreads);
         }
 
         size_t sizeBits() override {
             return sizePhast(rustStruct) * 8;
         }
 
-        void performQueries(const std::span<std::string> keys) override {
-            (void)keys;
-            queryPhastAll(rustStruct);
+        void performQueries(void *keys) override {
+            queryPhastAll(rustStruct, keys);
         }
 
         void performTest(const std::span<std::string> keys) override {

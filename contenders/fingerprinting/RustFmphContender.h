@@ -3,9 +3,10 @@
 #include "RustContender.h"
 
 extern "C" {
-void *createFmphStruct(uint64_t len, const char **str);
-void constructFmph(void *rustStruct, uint16_t);
-uint64_t queryFmph(void *rustStruct, const char *key, const size_t length);
+void *createFmphStruct();
+void constructFmph(void *rustStruct, void *keysStruct, uint16_t gamma);
+uint64_t queryFmph(void *rustStruct, const char *key, size_t length);
+void queryFmphAll(void *rustStruct, void *keysStruct);
 size_t sizeFmph(void *rustStruct);
 void destroyFmphStruct(void *rustStruct);
 }
@@ -17,14 +18,12 @@ class RustFmphContender : public RustContender {
     public:
 
         RustFmphContender(size_t N, double gamma)
-            : RustContender(N), gamma(gamma) {
+            : RustContender(N, RUST_INPUT_VEC_STRING), gamma(gamma) {
+            rustStruct = createFmphStruct();
         }
 
         ~RustFmphContender() override {
-            if (rustStruct != nullptr) {
-                destroyFmphStruct(rustStruct);
-                rustStruct = nullptr;
-            }
+            destroyFmphStruct(rustStruct);
         }
 
         std::string name() override {
@@ -32,25 +31,16 @@ class RustFmphContender : public RustContender {
                 + " gamma=" + std::to_string(gamma);
         }
 
-        void beforeConstruction(const std::vector<std::string> &keys) override {
-            RustContender::beforeConstruction(keys);
-            rustStruct = createFmphStruct(N, keysAsCString);
-        }
-
-        void construct(const std::vector<std::string> &keys) override {
-            (void) keys;
-            constructFmph(rustStruct, 100 * gamma);
+        void construct(void *keys) override {
+            constructFmph(rustStruct, keys, 100 * gamma);
         }
 
         size_t sizeBits() override {
             return sizeFmph(rustStruct) * 8;
         }
 
-        void performQueries(const std::span<std::string> keys) override {
-            auto x = [&] (std::string &key) {
-                return queryFmph(rustStruct, key.c_str(), key.length());
-            };
-            doPerformQueries(keys, x);
+        void performQueries(void *keys) override {
+            queryFmphAll(rustStruct, keys);
         }
 
         void performTest(const std::span<std::string> keys) override {
