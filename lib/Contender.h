@@ -149,7 +149,7 @@ class Contender {
                     throw std::logic_error("Range wrong");
                 }
                 if (taken[retrieved]) {
-                    std::cout<<"Error: Collision: Key #"<<i<<"/"<<N<<" resulted in "<<retrieved<<": "<<keys[i]<<std::endl;
+                    std::cout<<"Error: Collision: Key #"<<i<<"/"<<N<<" resulted in "<<retrieved<<std::endl;
                     std::cout<<"Aborting query"<<std::endl;
                     throw std::logic_error("Collision");
                 }
