@@ -1,6 +1,6 @@
 use ph::{fmph, GetSize};
 use ph::fmph::BuildConf;
-use std::{str, slice};
+use std::slice;
 
 use std::os::raw::c_char;
 use std::hint::black_box;
@@ -22,14 +22,14 @@ pub extern "C" fn constructFmph(struct_ptr: *mut fmph::Function, keys_ptr: *cons
 
 #[no_mangle]
 pub extern "C" fn queryFmph(struct_ptr: *mut fmph::Function, key_c_s: *const c_char, length: usize) -> u64 {
-    let f = unsafe { &mut *struct_ptr };
+    let f = unsafe { &*struct_ptr };
     let key = unsafe { slice::from_raw_parts(key_c_s as *const u8, length+1) };
     f.get_or_panic(key)
 }
 
 #[no_mangle]
 pub extern "C" fn queryFmphAll(struct_ptr: *mut fmph::Function, keys_ptr: *const Box<[&'static [u8]]>) {
-    let f = unsafe { &mut *struct_ptr };
+    let f = unsafe { &*struct_ptr };
     let keys = unsafe { &*keys_ptr };
     for key in keys {
         black_box(f.get(key).unwrap());
@@ -38,7 +38,7 @@ pub extern "C" fn queryFmphAll(struct_ptr: *mut fmph::Function, keys_ptr: *const
 
 #[no_mangle]
 pub extern "C" fn sizeFmph(struct_ptr: *mut fmph::Function) -> usize {
-    unsafe { &mut *struct_ptr }.size_bytes()
+    unsafe { &*struct_ptr }.size_bytes()
 }
 
 #[no_mangle]
