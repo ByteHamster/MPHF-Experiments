@@ -13,7 +13,6 @@ class RustContender : public Contender {
     private:
         const char **keysAsCString;
         void *keysRustWrapper = nullptr;
-        int rustInputType = 0;
     public:
         RustContender(size_t N): Contender(N, 1.0) {
             keysAsCString = static_cast<const char **>(malloc(std::max(N, Contender::numQueries) * sizeof(char*)));
