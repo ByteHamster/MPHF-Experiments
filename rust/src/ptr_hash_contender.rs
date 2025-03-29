@@ -74,35 +74,33 @@ pub extern "C" fn constructPtrHash(struct_ptr: *mut PtrHashVariant, keys_ptr: *c
 
 #[no_mangle]
 pub extern "C" fn queryPtrHash(struct_ptr: *const PtrHashVariant, key_c_s: *const c_char, length: usize) -> u64 {
-    let f = unsafe { &*struct_ptr };
     let key = unsafe { slice::from_raw_parts(key_c_s as *const u8, length + 1) };
-    match f {
-        PtrHashVariant::LinearVec(ref f) => f.index_minimal(&key) as u64,
-        PtrHashVariant::SquareVec(ref f) => f.index_minimal(&key) as u64,
-        PtrHashVariant::CubicVec(ref f) => f.index_minimal(&key) as u64,
-        PtrHashVariant::LinearEF(ref f) => f.index_minimal(&key) as u64,
-        PtrHashVariant::SquareEF(ref f) => f.index_minimal(&key) as u64,
-        PtrHashVariant::CubicEF(ref f) => f.index_minimal(&key) as u64,
+    match unsafe { &*struct_ptr } {
+        PtrHashVariant::LinearVec(f) => f.index_minimal(&key) as u64,
+        PtrHashVariant::SquareVec(f) => f.index_minimal(&key) as u64,
+        PtrHashVariant::CubicVec(f) => f.index_minimal(&key) as u64,
+        PtrHashVariant::LinearEF(f) => f.index_minimal(&key) as u64,
+        PtrHashVariant::SquareEF(f) => f.index_minimal(&key) as u64,
+        PtrHashVariant::CubicEF(f) => f.index_minimal(&key) as u64,
         PtrHashVariant::None => panic!("PtrHash not constructed yet"),
     }
 }
 
 #[no_mangle]
 pub extern "C" fn queryPtrHashAll(struct_ptr: *const PtrHashVariant, keys_ptr: *const Box<[&[u8]]>) {
-    let f = unsafe { &*struct_ptr };
     let keys = unsafe { &*keys_ptr }; 
-    match f {
-        PtrHashVariant::LinearVec(ref f) =>
+    match unsafe { &*struct_ptr } {
+        PtrHashVariant::LinearVec(f) =>
             for key in keys { black_box(f.index_minimal(key)); },
-        PtrHashVariant::SquareVec(ref f) =>
+        PtrHashVariant::SquareVec(f) =>
             for key in keys { black_box(f.index_minimal(key)); },
-        PtrHashVariant::CubicVec(ref f) =>
+        PtrHashVariant::CubicVec(f) =>
             for key in keys { black_box(f.index_minimal(key)); },
-        PtrHashVariant::LinearEF(ref f) =>
+        PtrHashVariant::LinearEF(f) =>
             for key in keys { black_box(f.index_minimal(key)); },
-        PtrHashVariant::SquareEF(ref f) =>
+        PtrHashVariant::SquareEF(f) =>
             for key in keys { black_box(f.index_minimal(key)); },
-        PtrHashVariant::CubicEF(ref f) =>
+        PtrHashVariant::CubicEF(f) =>
             for key in keys { black_box(f.index_minimal(key)); },
         PtrHashVariant::None => panic!("PtrHash not constructed yet"),
     };
@@ -110,9 +108,8 @@ pub extern "C" fn queryPtrHashAll(struct_ptr: *const PtrHashVariant, keys_ptr: *
 
 #[no_mangle]
 pub extern "C" fn sizePtrHash(struct_ptr: *const PtrHashVariant) -> usize {
-    let f = unsafe { &*struct_ptr };
     use mem_dbg::MemSize;
-    match f {   
+    match unsafe { &*struct_ptr } {   
         PtrHashVariant::LinearVec(f) => f.mem_size(SizeFlags::default()),
         PtrHashVariant::SquareVec(f) => f.mem_size(SizeFlags::default()),
         PtrHashVariant::CubicVec(f) => f.mem_size(SizeFlags::default()),
