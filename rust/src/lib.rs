@@ -28,6 +28,6 @@ pub extern "C" fn convertToVecSlice(len: usize, my_strings: *const *const c_char
 }
 
 #[no_mangle]
-pub extern "C" fn destroyVecSlice(struct_instance: *mut Box<[&'static [u8]]>) {
+pub extern "C" fn destroyVecSlice(struct_instance: *mut Box<[&[u8]]>) {
     unsafe { let _ = Box::from_raw(struct_instance); }
 }

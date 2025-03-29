@@ -7,11 +7,11 @@ use std::hint::black_box;
 
 #[no_mangle]
 pub extern "C" fn createFmphGoStruct() -> *mut fmph::GOFunction {
-    Box::into_raw(Box::new(fmph::GOFunction::from(&[] as &[&'static [u8]])))
+    Box::into_raw(Box::new(fmph::GOFunction::from(&[] as &[&[u8]])))
 }
 
 #[no_mangle]
-pub extern "C" fn constructFmphGo(struct_ptr: *mut fmph::GOFunction, keys_ptr: *const Box<[&'static [u8]]>, gamma: u16) {
+pub extern "C" fn constructFmphGo(struct_ptr: *mut fmph::GOFunction, keys_ptr: *const Box<[&[u8]]>, gamma: u16) {
     let keys = unsafe { &*keys_ptr };
     let f = unsafe { &mut *struct_ptr };
     let mut build_config = GOBuildConf::default();
@@ -28,7 +28,7 @@ pub extern "C" fn queryFmphGo(struct_ptr: *const fmph::GOFunction, key_c_s: *con
 }
 
 #[no_mangle]
-pub extern "C" fn queryFmphGoAll(struct_ptr: *const fmph::GOFunction, keys_ptr: *const Box<[&'static [u8]]>) {
+pub extern "C" fn queryFmphGoAll(struct_ptr: *const fmph::GOFunction, keys_ptr: *const Box<[&[u8]]>) {
     let f = unsafe { &*struct_ptr };
     let keys = unsafe { &*keys_ptr };
     for key in keys {

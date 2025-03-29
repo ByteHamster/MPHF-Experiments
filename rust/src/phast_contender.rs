@@ -17,7 +17,7 @@ pub extern "C" fn createPhastStruct() -> *mut PHastVariant {
 }
 
 #[no_mangle]
-pub extern "C" fn constructPhast(struct_ptr: *mut PHastVariant, keys_ptr: *const Box<[&'static [u8]]>,
+pub extern "C" fn constructPhast(struct_ptr: *mut PHastVariant, keys_ptr: *const Box<[&[u8]]>,
                                  bits_per_seed: u8, bucket_size100: u16, threads_num: usize) {
     let f = unsafe { &mut *struct_ptr };
     let keys = unsafe { &*keys_ptr };
@@ -59,7 +59,7 @@ pub extern "C" fn queryPhast(struct_ptr: *const PHastVariant, key_c_s: *const c_
 }
 
 #[no_mangle]
-pub extern "C" fn queryPhastAll(struct_ptr: *const PHastVariant, keys_ptr: *const Box<[&'static [u8]]>) {
+pub extern "C" fn queryPhastAll(struct_ptr: *const PHastVariant, keys_ptr: *const Box<[&[u8]]>) {
     let f = unsafe { &*struct_ptr };
     let keys = unsafe { &*keys_ptr };
     match f {

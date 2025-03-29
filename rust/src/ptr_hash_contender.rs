@@ -88,7 +88,7 @@ pub extern "C" fn queryPtrHash(struct_ptr: *const PtrHashVariant, key_c_s: *cons
 }
 
 #[no_mangle]
-pub extern "C" fn queryPtrHashAll(struct_ptr: *const PtrHashVariant, keys_ptr: *const Box<[&'static [u8]]>) {
+pub extern "C" fn queryPtrHashAll(struct_ptr: *const PtrHashVariant, keys_ptr: *const Box<[&[u8]]>) {
     let f = unsafe { &*struct_ptr };
     let keys = unsafe { &*keys_ptr }; 
     match f {
