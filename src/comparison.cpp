@@ -110,6 +110,7 @@ int main(int argc, char** argv) {
     if (!cmd.process(argc, argv)) {
         return 1;
     }
+    initializeRayonThreadPool(Contender::numThreads);
     if (rustFmphContender) {
         rustFmphContenderRunner(N);
     }

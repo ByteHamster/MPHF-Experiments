@@ -3,7 +3,6 @@
 #include "Contender.h"
 
 extern "C" {
-static bool rayonThreadsInitialized = false;
 void initializeRayonThreadPool(uint64_t threads);
 void *convertToVecSlice(uint64_t len, const char **str);
 void destroyVecSlice(void *rustStruct);
@@ -30,10 +29,6 @@ class RustContender : public Contender {
             }
             freeKeysWrapper();
             keysRustWrapper = convertToVecSlice(keys.size(), keysAsCString);
-            if (!rayonThreadsInitialized) {
-                rayonThreadsInitialized = true;
-                //initializeRayonThreadPool(numThreads); //TODO: Make sure to set number of threads
-            }
         }
 
         void construct(const std::vector<std::string> &keys) final {
