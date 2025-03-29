@@ -11,7 +11,7 @@ pub extern "C" fn createFmphGoStruct() -> *mut fmph::GOFunction {
 }
 
 #[no_mangle]
-pub extern "C" fn constructFmphGo(struct_ptr: *mut fmph::GOFunction, keys_ptr: *mut Vec<String>, gamma: u16) {
+pub extern "C" fn constructFmphGo(struct_ptr: *mut fmph::GOFunction, keys_ptr: *const Box<[&'static [u8]]>, gamma: u16) {
     let keys = unsafe { &*keys_ptr };
     let f = unsafe { &mut *struct_ptr };
     let mut build_config = GOBuildConf::default();
@@ -21,14 +21,14 @@ pub extern "C" fn constructFmphGo(struct_ptr: *mut fmph::GOFunction, keys_ptr: *
 }
 
 #[no_mangle]
-pub extern "C" fn queryFmphGo(struct_ptr: *mut fmph::GOFunction, key_c_s : *const c_char, length : usize) -> u64 {
+pub extern "C" fn queryFmphGo(struct_ptr: *const fmph::GOFunction, key_c_s: *const c_char, length : usize) -> u64 {
     let f = unsafe { &*struct_ptr };
-    let key = unsafe { str::from_utf8_unchecked(slice::from_raw_parts(key_c_s as *const u8, length+1)) };
-    f.get(key).unwrap()
+    let key = unsafe { slice::from_raw_parts(key_c_s as *const u8, length+1) };
+    f.get_or_panic(key)
 }
 
 #[no_mangle]
-pub extern "C" fn queryFmphGoAll(struct_ptr: *mut fmph::GOFunction, keys_ptr: *mut Vec<String>) {
+pub extern "C" fn queryFmphGoAll(struct_ptr: *const fmph::GOFunction, keys_ptr: *const Box<[&'static [u8]]>) {
     let f = unsafe { &*struct_ptr };
     let keys = unsafe { &*keys_ptr };
     for key in keys {
