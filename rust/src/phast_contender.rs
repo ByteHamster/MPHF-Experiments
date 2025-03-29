@@ -28,10 +28,10 @@ pub extern "C" fn createPhastStruct() -> *mut PhastWrapper {
 }
 
 #[no_mangle]
-pub extern "C" fn constructPhast(struct_ptr: *mut PhastWrapper, keys_ptr: *mut Vec<&'static [u8]>,
+pub extern "C" fn constructPhast(struct_ptr: *mut PhastWrapper, keys_ptr: *const Box<[&'static [u8]]>,
                                  bits_per_seed: u8, bucket_size100: u16, threads_num: usize) {
     let struct_instance = unsafe { &mut *struct_ptr };
-    let keys = unsafe { &mut *keys_ptr };
+    let keys = unsafe { &*keys_ptr };
     if bits_per_seed == 8 {
         struct_instance.hash_func8 = phast::Function::with_slice_bps_bs_threads_hash(
             &keys[..],
@@ -64,9 +64,9 @@ pub extern "C" fn queryPhast(struct_ptr: *mut PhastWrapper, key_c_s: *const c_ch
 }
 
 #[no_mangle]
-pub extern "C" fn queryPhastAll(struct_ptr: *mut PhastWrapper, keys_ptr: *mut Vec<&'static [u8]>) {
+pub extern "C" fn queryPhastAll(struct_ptr: *mut PhastWrapper, keys_ptr: *const Box<[&'static [u8]]>) {
     let struct_instance = unsafe { &mut *struct_ptr };
-    let keys = unsafe { &mut *keys_ptr };
+    let keys = unsafe { &*keys_ptr };
     if struct_instance.bits_per_seed == 8 {
         for key in keys {
             black_box(struct_instance.hash_func8.get(*key));

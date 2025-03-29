@@ -42,9 +42,9 @@ pub extern "C" fn createPtrHashStruct() -> *mut PtrHashWrapper {
 }
 
 #[no_mangle]
-pub extern "C" fn constructPtrHash(struct_ptr: *mut PtrHashWrapper, keys_ptr: *mut Vec<&'static [u8]>, variant: u64, lambda: f64) {
+pub extern "C" fn constructPtrHash(struct_ptr: *mut PtrHashWrapper, keys_ptr: *const Box<[&'static [u8]]>, variant: u64, lambda: f64) {
     let struct_instance = unsafe { &mut *struct_ptr };
-    let keys = unsafe { &mut *keys_ptr };
+    let keys = unsafe { &*keys_ptr };
     struct_instance.func = match variant {
         1 => {
             let mut params = PtrHashParams::default_fast();
@@ -96,21 +96,24 @@ pub extern "C" fn queryPtrHash(struct_ptr: *mut PtrHashWrapper, key_c_s: *const 
 }
 
 #[no_mangle]
-pub extern "C" fn queryPtrHashAll(struct_ptr: *mut PtrHashWrapper, keys_ptr: *mut Vec<&'static [u8]>) {
+pub extern "C" fn queryPtrHashAll(struct_ptr: *mut PtrHashWrapper, keys_ptr: *const Box<[&'static [u8]]>) {
     let struct_instance = unsafe { &mut *struct_ptr };
-    let keys = unsafe { &mut *keys_ptr };
-    for key in keys {
-        let result = match &struct_instance.func {
-            PtrHashVariant::LinearVec(ref f) => f.index_minimal(&key),
-            PtrHashVariant::SquareVec(ref f) => f.index_minimal(&key),
-            PtrHashVariant::CubicVec(ref f) => f.index_minimal(&key),
-            PtrHashVariant::LinearEF(ref f) => f.index_minimal(&key),
-            PtrHashVariant::SquareEF(ref f) => f.index_minimal(&key),
-            PtrHashVariant::CubicEF(ref f) => f.index_minimal(&key),
-            PtrHashVariant::None => panic!("PtrHash not constructed yet"),
-        };
-        black_box(result);
-    }
+    let keys = unsafe { &*keys_ptr }; 
+    match &struct_instance.func {
+        PtrHashVariant::LinearVec(ref f) =>
+            for key in keys { black_box(f.index_minimal(key)); },
+        PtrHashVariant::SquareVec(ref f) =>
+            for key in keys { black_box(f.index_minimal(key)); },
+        PtrHashVariant::CubicVec(ref f) =>
+            for key in keys { black_box(f.index_minimal(key)); },
+        PtrHashVariant::LinearEF(ref f) =>
+            for key in keys { black_box(f.index_minimal(key)); },
+        PtrHashVariant::SquareEF(ref f) =>
+            for key in keys { black_box(f.index_minimal(key)); },
+        PtrHashVariant::CubicEF(ref f) =>
+            for key in keys { black_box(f.index_minimal(key)); },
+        PtrHashVariant::None => panic!("PtrHash not constructed yet"),
+    };
 }
 
 #[no_mangle]

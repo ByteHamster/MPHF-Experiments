@@ -33,7 +33,7 @@ pub extern "C" fn destroyVecString(keys_ptr: *mut Vec<String>) {
 }
 
 #[no_mangle]
-pub extern "C" fn convertToVecSlice(len: usize, my_strings: *const *const c_char) -> *mut Vec<&'static [u8]> {
+pub extern "C" fn convertToVecSlice(len: usize, my_strings: *const *const c_char) -> *mut Box<[&'static [u8]]> {
     let mut keys = Vec::with_capacity(len);
     let sl = unsafe { std::slice::from_raw_parts(my_strings, len) };
     let mut index = 0;
@@ -43,11 +43,11 @@ pub extern "C" fn convertToVecSlice(len: usize, my_strings: *const *const c_char
         keys.push(s);
         index += 1;
     }
-    let boxx = Box::new(keys);
+    let boxx = Box::new(keys.into_boxed_slice());
     Box::into_raw(boxx)
 }
 
 #[no_mangle]
-pub extern "C" fn destroyVecSlice(struct_instance: *mut Vec<&'static [u8]>) {
+pub extern "C" fn destroyVecSlice(struct_instance: *mut Box<[&'static [u8]]>) {
     unsafe { let _ = Box::from_raw(struct_instance); }
 }
