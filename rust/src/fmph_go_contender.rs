@@ -1,6 +1,6 @@
 use ph::{fmph, GetSize};
 use ph::fmph::GOBuildConf;
-use std::{str, slice};
+use std::slice;
 
 use std::os::raw::c_char;
 use std::hint::black_box;
@@ -37,7 +37,7 @@ pub extern "C" fn queryFmphGoAll(struct_ptr: *const fmph::GOFunction, keys_ptr: 
 }
 
 #[no_mangle]
-pub extern "C" fn sizeFmphGo(struct_ptr: *mut fmph::GOFunction) -> usize {
+pub extern "C" fn sizeFmphGo(struct_ptr: *const fmph::GOFunction) -> usize {
     unsafe { &*struct_ptr }.size_bytes()
 }
 

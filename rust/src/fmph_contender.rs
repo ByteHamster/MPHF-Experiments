@@ -21,14 +21,14 @@ pub extern "C" fn constructFmph(struct_ptr: *mut fmph::Function, keys_ptr: *cons
 }
 
 #[no_mangle]
-pub extern "C" fn queryFmph(struct_ptr: *mut fmph::Function, key_c_s: *const c_char, length: usize) -> u64 {
+pub extern "C" fn queryFmph(struct_ptr: *const fmph::Function, key_c_s: *const c_char, length: usize) -> u64 {
     let f = unsafe { &*struct_ptr };
     let key = unsafe { slice::from_raw_parts(key_c_s as *const u8, length+1) };
     f.get_or_panic(key)
 }
 
 #[no_mangle]
-pub extern "C" fn queryFmphAll(struct_ptr: *mut fmph::Function, keys_ptr: *const Box<[&'static [u8]]>) {
+pub extern "C" fn queryFmphAll(struct_ptr: *const fmph::Function, keys_ptr: *const Box<[&'static [u8]]>) {
     let f = unsafe { &*struct_ptr };
     let keys = unsafe { &*keys_ptr };
     for key in keys {
@@ -37,7 +37,7 @@ pub extern "C" fn queryFmphAll(struct_ptr: *mut fmph::Function, keys_ptr: *const
 }
 
 #[no_mangle]
-pub extern "C" fn sizeFmph(struct_ptr: *mut fmph::Function) -> usize {
+pub extern "C" fn sizeFmph(struct_ptr: *const fmph::Function) -> usize {
     unsafe { &*struct_ptr }.size_bytes()
 }
 
