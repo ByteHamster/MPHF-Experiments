@@ -81,7 +81,7 @@ class Contender {
                 std::cout<<"Preparing query plan"<<std::endl;
                 std::vector<std::string> queryPlan;
                 queryPlan.reserve(numQueries * numQueryThreads);
-                bytehamster::util::XorShift64 prng(0xbf58476d1ce4e5b9 ^ seed);
+                bytehamster::util::XorShift64 prng(seed);
                 for (size_t i = 0; i < numQueries * numQueryThreads; i++) {
                     queryPlan.push_back(keys[prng(N)]);
                 }

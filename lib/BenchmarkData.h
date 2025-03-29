@@ -7,7 +7,7 @@
 std::vector<std::string> generateInputData(size_t N, uint64_t seed) {
     std::vector<std::string> inputData;
     inputData.reserve(N);
-    bytehamster::util::XorShift64 prng(0xc6a4a7935bd1e995 ^ seed);
+    bytehamster::util::XorShift64 prng(seed);
     std::cout<<"Generating input"<<std::flush;
     char string[200];
     for (size_t i = 0; i < N; i++) {
