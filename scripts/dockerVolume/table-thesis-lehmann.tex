@@ -1,0 +1,60 @@
+\documentclass{article}
+\usepackage[a4paper, margin=2cm]{geometry}
+\usepackage{xcolor}
+\usepackage{xspace}
+\usepackage{booktabs}
+\usepackage{dsfont}
+\usepackage{footmisc}
+\usepackage{marvosym}
+\usepackage{amsmath}
+\usepackage{hyperref}
+\usepackage[capitalise,noabbrev]{cleveref}
+\usepackage{tabularx}
+\usepackage{listings}
+\usepackage{multirow}
+\usepackage{graphicx}
+
+\title{MPHF table}
+\date{}
+\begin{document}
+
+\addtolength\tabcolsep{-0.5pt}
+\newcommand{\mr}[1]{\multirow{2}{*}{#1}}
+\begin{centering}
+\begin{tabular}[t]{lll rr}
+    \toprule
+    Approach & Configuration & Space    & Construction & Query \\
+             &               & bits/key & ns/key       & ns/query \\ \midrule
+
+    % IMPORT-DATA parametersOverview table-thesis-lehmann.txt
+    %% TABULAR REFORMAT(col 1=(precision=3))
+    %% SELECT
+    %%    CASE
+    %%      WHEN name=="RecSplit"               THEN IIF(l==8,"\mr{RecSplit}", "")             || "& $n$=$" || l || "$, $b$=$" || b || "$"
+    %%      WHEN name=="SIMDRecSplit"           THEN IIF(l==8,"\mr{SIMDRecSplit}", "")         || "& $n$=$" || l || "$, $b$=$" || b || "$"
+    %%      WHEN name=="ShockHashSIMD"          THEN IIF(l==40,"\mr{ShockHash-RS}", "")        || "& $n$=$" || l || "$, $b$=$" || b || "$"
+    %%      WHEN name=="BipartiteShockHash"     THEN IIF(l==64,"\mr{Bip. ShockHash-RS}", "")   || "& $n$=$" || l || "$, $b$=$" || b || "$"
+    %%      WHEN name=="BipartiteShockHashFlat" THEN IIF(l==64,"\mr{Bip. ShockHash-Flat}", "") || "& $n$=$" || l || "$"
+    %%      WHEN name=="PTHash"                 THEN IIF(lf==0.99,"\mr{PTHash}", "")           || "& $\lambda$=$" || lambda || "$, $\alpha$=$" || lf || "$, " || encoder
+    %%      WHEN name=="PartitionedPTHash"      THEN IIF(lf==0.99,"\mr{PTHash-HEM}", "")       || "& $\lambda$=$" || lambda || "$, $\alpha$=$" || lf || "$, " || encoder
+    %%      WHEN name=="DensePartitionedPTHash" THEN IIF(encoder=="inter-C","\mr{PHOBIC}", "") || "& $\lambda$=$" || lambda || "$, $\alpha$=$" || lf || "$, " || IIF(encoder=="inter-R", "IC, Rice", IIF(encoder=="inter-C", "IC, C", encoder))
+    %%      WHEN name=="BBHash"                 THEN IIF(gamma==2.0,"\mr{BBHash}", "")         || "& $\gamma$=$" || gamma || "$"
+    %%      WHEN name=="RustFmphContender"      THEN IIF(gamma==2.0,"\mr{FMPH}", "")           || "& $\gamma$=$" || gamma || "$"
+    %%      WHEN name=="RustFmphGoContender"    THEN IIF(gamma==2.0,"\mr{FMPHGO}", "")         || "& $\gamma$=$" || gamma || ", s$=$4, b$=$16$"
+    %%      WHEN name=="FiPS"                   THEN IIF(gamma==2.0,"\mr{FiPS}", "")           || "& $\gamma$=$" || gamma || "$"
+    %%      WHEN name=="cmph-BDZ"               THEN IIF(b==3,"\mr{BPZ}", "")                  || "& $c$=$" || c || "$, $b$=$" || b || "$"
+    %%      WHEN name=="SicHash"                THEN IIF(lf==0.95,"\mr{SicHash}", "")          || "& $\alpha$=$" || lf || "$, $p_1$=$" || CAST(ROUND(100*t1) AS INT) || "$, $p_2$=$" || CAST(ROUND(100*t2) AS INT) || "$"
+    %%      ELSE (name || "&?")
+    %%    END AS method,
+    %%    ROUND(bitsPerElement, 3),
+    %%    REPLACE(printf("%,d", CAST(1000000.0*constructionTimeMilliseconds/N AS INT)), ",", "\,") AS nsPerObject,
+    %%    CAST(1000000.0*queryTimeMilliseconds/numQueries AS INT) || "" AS nsPerObjectQuery
+    %% FROM parametersOverview
+    %% ORDER BY name, -bitsPerElement
+
+    \bottomrule
+\end{tabular}
+\end{centering}
+
+\end{document}
+
