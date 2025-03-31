@@ -7,17 +7,17 @@ use std::slice;
 use std::hint::black_box;
 
 type PtrHashLinearVec = ptr_hash::PtrHash<Box<[u8]>, ptr_hash::bucket_fn::Linear,
-    Vec<u32>, ptr_hash::hash::Wy64, Vec<u8>>; // Fast
+    Vec<u32>, ptr_hash::hash::FxHash, Vec<u8>>; // Fast
 type PtrHashSquareVec = ptr_hash::PtrHash<Box<[u8]>, ptr_hash::bucket_fn::SquareEps,
-    Vec<u32>, ptr_hash::hash::Wy64, Vec<u8>>;
+    Vec<u32>, ptr_hash::hash::FxHash, Vec<u8>>;
 type PtrHashCubicVec = ptr_hash::PtrHash<Box<[u8]>, ptr_hash::bucket_fn::CubicEps,
-    Vec<u32>, ptr_hash::hash::Wy64, Vec<u8>>;
+    Vec<u32>, ptr_hash::hash::FxHash, Vec<u8>>;
 type PtrHashLinearEF = ptr_hash::PtrHash<Box<[u8]>, ptr_hash::bucket_fn::Linear,
-    ptr_hash::CachelineEfVec, ptr_hash::hash::Wy64, Vec<u8>>;
+    ptr_hash::CachelineEfVec, ptr_hash::hash::FxHash, Vec<u8>>;
 type PtrHashSquareEF = ptr_hash::PtrHash<Box<[u8]>, ptr_hash::bucket_fn::SquareEps,
-    ptr_hash::CachelineEfVec, ptr_hash::hash::Wy64, Vec<u8>>;
+    ptr_hash::CachelineEfVec, ptr_hash::hash::FxHash, Vec<u8>>;
 type PtrHashCubicEF = ptr_hash::PtrHash<Box<[u8]>, ptr_hash::bucket_fn::CubicEps,
-    ptr_hash::CachelineEfVec, ptr_hash::hash::Wy64, Vec<u8>>; // Compact
+    ptr_hash::CachelineEfVec, ptr_hash::hash::FxHash, Vec<u8>>; // Compact
 
 pub enum PtrHashVariant {
     None,
