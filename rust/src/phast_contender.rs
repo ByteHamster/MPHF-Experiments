@@ -17,7 +17,7 @@ pub extern "C" fn createPhastStruct() -> *mut PHastVariant {
 }
 
 #[no_mangle]
-pub extern "C" fn constructPhast(struct_ptr: *mut PHastVariant, keys_ptr: *const Box<[&[u8]]>,
+pub extern "C" fn constructPhast(struct_ptr: *mut PHastVariant, keys_ptr: *const Box<[Box<[u8]>]>,
                                  bits_per_seed: u8, bucket_size100: u16, threads_num: usize) {
     let f = unsafe { &mut *struct_ptr };
     let keys = unsafe { &*keys_ptr };
@@ -48,7 +48,7 @@ pub extern "C" fn constructPhast(struct_ptr: *mut PHastVariant, keys_ptr: *const
 
 #[no_mangle]
 pub extern "C" fn queryPhast(struct_ptr: *const PHastVariant, key_c_s: *const c_char, length: usize) -> u64 {
-    let key = unsafe { slice::from_raw_parts(key_c_s as *const u8, length + 1) };
+    let key = unsafe { slice::from_raw_parts(key_c_s as *const u8, length) };
     match unsafe { &*struct_ptr } {
         PHastVariant::Bits(function) => function.get(key) as u64,
         PHastVariant::Bits8(function) => function.get(key) as u64,
@@ -58,15 +58,15 @@ pub extern "C" fn queryPhast(struct_ptr: *const PHastVariant, key_c_s: *const c_
 }
 
 #[no_mangle]
-pub extern "C" fn queryPhastAll(struct_ptr: *const PHastVariant, keys_ptr: *const Box<[&[u8]]>) {
+pub extern "C" fn queryPhastAll(struct_ptr: *const PHastVariant, keys_ptr: *const Box<[Box<[u8]>]>) {
     let keys = unsafe { &*keys_ptr };
     match unsafe { &*struct_ptr } {
         PHastVariant::Bits(function) =>
-            for key in keys { black_box(function.get(*key)); },
+            for key in keys { black_box(function.get(key)); },
         PHastVariant::Bits8(function) => 
-            for key in keys { black_box(function.get(*key)); },
+            for key in keys { black_box(function.get(key)); },
         PHastVariant::Bits4(function) => 
-            for key in keys { black_box(function.get(*key)); },
+            for key in keys { black_box(function.get(key)); },
         PHastVariant::None => panic!("PHast not constructed yet"),
     }
 }

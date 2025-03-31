@@ -7,11 +7,11 @@ use std::hint::black_box;
 
 #[no_mangle]
 pub extern "C" fn createFmphStruct() -> *mut fmph::Function {
-    Box::into_raw(Box::new(fmph::Function::from(&[] as &[&[u8]])))
+    Box::into_raw(Box::new(fmph::Function::from(&[] as &[Box<[u8]>])))
 }
 
 #[no_mangle]
-pub extern "C" fn constructFmph(struct_ptr: *mut fmph::Function, keys_ptr: *const Box<[&[u8]]>, gamma: u16) {
+pub extern "C" fn constructFmph(struct_ptr: *mut fmph::Function, keys_ptr: *const Box<[Box<[u8]>]>, gamma: u16) {
     let keys = unsafe { &*keys_ptr };
     let f = unsafe { &mut *struct_ptr };
     let mut build_config = BuildConf::default();
@@ -23,16 +23,16 @@ pub extern "C" fn constructFmph(struct_ptr: *mut fmph::Function, keys_ptr: *cons
 #[no_mangle]
 pub extern "C" fn queryFmph(struct_ptr: *const fmph::Function, key_c_s: *const c_char, length: usize) -> u64 {
     let f = unsafe { &*struct_ptr };
-    let key = unsafe { slice::from_raw_parts(key_c_s as *const u8, length+1) };
+    let key = unsafe { slice::from_raw_parts(key_c_s as *const u8, length) };
     f.get_or_panic(key)
 }
 
 #[no_mangle]
-pub extern "C" fn queryFmphAll(struct_ptr: *const fmph::Function, keys_ptr: *const Box<[&[u8]]>) {
+pub extern "C" fn queryFmphAll(struct_ptr: *const fmph::Function, keys_ptr: *const Box<[Box<[u8]>]>) {
     let f = unsafe { &*struct_ptr };
     let keys = unsafe { &*keys_ptr };
     for key in keys {
-        black_box(f.get(key).unwrap());
+        black_box(f.get(key.as_ref()));
     }
 }
 

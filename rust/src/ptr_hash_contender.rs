@@ -5,18 +5,18 @@ use std::os::raw::c_char;
 use std::slice;
 use std::hint::black_box;
 
-type PtrHashLinearVec = ptr_hash::PtrHash<&'static [u8], ptr_hash::bucket_fn::Linear,
-    Vec<u32>, ptr_hash::hash::Xx64, Vec<u8>>; // Fast
-type PtrHashSquareVec = ptr_hash::PtrHash<&'static [u8], ptr_hash::bucket_fn::SquareEps,
-    Vec<u32>, ptr_hash::hash::Xx64, Vec<u8>>;
-type PtrHashCubicVec = ptr_hash::PtrHash<&'static [u8], ptr_hash::bucket_fn::CubicEps,
-    Vec<u32>, ptr_hash::hash::Xx64, Vec<u8>>;
-type PtrHashLinearEF = ptr_hash::PtrHash<&'static [u8], ptr_hash::bucket_fn::Linear,
-    ptr_hash::CachelineEfVec, ptr_hash::hash::Xx64, Vec<u8>>;
-type PtrHashSquareEF = ptr_hash::PtrHash<&'static [u8], ptr_hash::bucket_fn::SquareEps,
-    ptr_hash::CachelineEfVec, ptr_hash::hash::Xx64, Vec<u8>>;
-type PtrHashCubicEF = ptr_hash::PtrHash<&'static [u8], ptr_hash::bucket_fn::CubicEps,
-    ptr_hash::CachelineEfVec, ptr_hash::hash::Xx64, Vec<u8>>; // Compact
+type PtrHashLinearVec = ptr_hash::PtrHash<Box<[u8]>, ptr_hash::bucket_fn::Linear,
+    Vec<u32>, ptr_hash::hash::Wy64, Vec<u8>>; // Fast
+type PtrHashSquareVec = ptr_hash::PtrHash<Box<[u8]>, ptr_hash::bucket_fn::SquareEps,
+    Vec<u32>, ptr_hash::hash::Wy64, Vec<u8>>;
+type PtrHashCubicVec = ptr_hash::PtrHash<Box<[u8]>, ptr_hash::bucket_fn::CubicEps,
+    Vec<u32>, ptr_hash::hash::Wy64, Vec<u8>>;
+type PtrHashLinearEF = ptr_hash::PtrHash<Box<[u8]>, ptr_hash::bucket_fn::Linear,
+    ptr_hash::CachelineEfVec, ptr_hash::hash::Wy64, Vec<u8>>;
+type PtrHashSquareEF = ptr_hash::PtrHash<Box<[u8]>, ptr_hash::bucket_fn::SquareEps,
+    ptr_hash::CachelineEfVec, ptr_hash::hash::Wy64, Vec<u8>>;
+type PtrHashCubicEF = ptr_hash::PtrHash<Box<[u8]>, ptr_hash::bucket_fn::CubicEps,
+    ptr_hash::CachelineEfVec, ptr_hash::hash::Wy64, Vec<u8>>; // Compact
 
 pub enum PtrHashVariant {
     None,
@@ -34,7 +34,7 @@ pub extern "C" fn createPtrHashStruct() -> *mut PtrHashVariant {
 }
 
 #[no_mangle]
-pub extern "C" fn constructPtrHash(struct_ptr: *mut PtrHashVariant, keys_ptr: *const Box<[&'static [u8]]>, variant: u64, lambda: f64) {
+pub extern "C" fn constructPtrHash(struct_ptr: *mut PtrHashVariant, keys_ptr: *const Box<[Box<[u8]>]>, variant: u64, lambda: f64) {
     let f = unsafe { &mut *struct_ptr };
     let keys = unsafe { &*keys_ptr };
     *f = match variant {
@@ -74,7 +74,8 @@ pub extern "C" fn constructPtrHash(struct_ptr: *mut PtrHashVariant, keys_ptr: *c
 
 #[no_mangle]
 pub extern "C" fn queryPtrHash(struct_ptr: *const PtrHashVariant, key_c_s: *const c_char, length: usize) -> u64 {
-    let key = unsafe { slice::from_raw_parts(key_c_s as *const u8, length + 1) };
+    let key = unsafe { slice::from_raw_parts(key_c_s as *const u8, length) };
+    let key = key.to_owned().into_boxed_slice();
     match unsafe { &*struct_ptr } {
         PtrHashVariant::LinearVec(f) => f.index_minimal(&key) as u64,
         PtrHashVariant::SquareVec(f) => f.index_minimal(&key) as u64,
@@ -87,7 +88,7 @@ pub extern "C" fn queryPtrHash(struct_ptr: *const PtrHashVariant, key_c_s: *cons
 }
 
 #[no_mangle]
-pub extern "C" fn queryPtrHashAll(struct_ptr: *const PtrHashVariant, keys_ptr: *const Box<[&[u8]]>) {
+pub extern "C" fn queryPtrHashAll(struct_ptr: *const PtrHashVariant, keys_ptr: *const Box<[Box<[u8]>]>) {
     let keys = unsafe { &*keys_ptr }; 
     match unsafe { &*struct_ptr } {
         PtrHashVariant::LinearVec(f) =>
