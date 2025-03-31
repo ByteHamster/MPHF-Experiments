@@ -32,7 +32,7 @@ pub extern "C" fn queryFmphGoAll(struct_ptr: *const fmph::GOFunction, keys_ptr: 
     let f = unsafe { &*struct_ptr };
     let keys = unsafe { &*keys_ptr };
     for key in keys {
-        black_box(f.get(key));
+        black_box(f.get(key.as_ref()));
     }
 }
 

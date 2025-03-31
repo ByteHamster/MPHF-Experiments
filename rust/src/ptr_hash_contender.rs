@@ -1,3 +1,4 @@
+use libc::strlen;
 use mem_dbg::SizeFlags;
 use ptr_hash::PtrHashParams;
 

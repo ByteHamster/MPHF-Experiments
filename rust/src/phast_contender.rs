@@ -62,11 +62,11 @@ pub extern "C" fn queryPhastAll(struct_ptr: *const PHastVariant, keys_ptr: *cons
     let keys = unsafe { &*keys_ptr };
     match unsafe { &*struct_ptr } {
         PHastVariant::Bits(function) =>
-            for key in keys { black_box(function.get(key)); },
+            for key in keys { black_box(function.get(key.as_ref())); },
         PHastVariant::Bits8(function) => 
-            for key in keys { black_box(function.get(key)); },
+            for key in keys { black_box(function.get(key.as_ref())); },
         PHastVariant::Bits4(function) => 
-            for key in keys { black_box(function.get(key)); },
+            for key in keys { black_box(function.get(key.as_ref())); },
         PHastVariant::None => panic!("PHast not constructed yet"),
     }
 }
