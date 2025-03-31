@@ -6,3 +6,4 @@ build
 rust/target
 .spack-env
 spack.lock
+.cache/

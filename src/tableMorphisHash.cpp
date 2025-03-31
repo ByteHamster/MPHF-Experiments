@@ -1,7 +1,7 @@
 #include <tlx/cmdline_parser.hpp>
 #include "bucketplacement/PTHashContender.h"
 #include "shockhash/BipartiteShockHashContender.h"
-#include "bucketplacement/DensePartitionedPTHashContender.h"
+#include "bucketplacement/PhobicContender.h"
 #include "shockhash/BipartiteShockHashFlatContender.h"
 #include "shockhash/MorphisHashContender.h"
 #include "shockhash/MorphisHashFlatContender.h"
@@ -27,6 +27,6 @@ int main(int argc, char** argv) {
     {MorphisHashContender<46,4>(N, 2000).run();}
     {BipartiteShockHashFlatContender<94>(N).run();}
     {MorphisHashFlatContender<86,3,2>(N).run();}
-    {DensePartitionedPTHashContender<pthash::dense_interleaved<pthash::rice>, pthash::table_bucketer<pthash::opt_bucketer>>(N, 1.0, 8.8).run();}
+    {PhobicContender<pthash::dense_interleaved<pthash::rice>, pthash::table_bucketer<pthash::opt_bucketer>>(N, 1.0, 8.8).run();}
     return 0;
 }

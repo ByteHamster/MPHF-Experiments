@@ -1,7 +1,7 @@
 #include <bucketplacement/ChdContender.h>
 #include <tlx/cmdline_parser.hpp>
 
-#include "bucketplacement/DensePartitionedPTHashContender.h"
+#include "bucketplacement/PhobicContender.h"
 #include "bucketplacement/PartitionedPTHashContender.h"
 #include "fingerprinting/RustFmphContender.h"
 #include "bucketplacement/PTHashContender.h"
@@ -32,7 +32,7 @@ int main(int argc, char** argv) {
     /*
     // CPU vs GPU
     for (size_t n = 5120; n <= 1e8; n *= 4) {
-        {DensePartitionedPTHashContender<pthash::multi_interleaved<pthash::rice>, pthash::table_bucketer<pthash::opt_bucketer>>(n, 1.0, 8.0).run();}
+        {PhobicContender<pthash::multi_interleaved<pthash::rice>, pthash::table_bucketer<pthash::opt_bucketer>>(n, 1.0, 8.0).run();}
         {GpuPtHashContender(n, 8.0, 2500, 1.0).run();} // multi-R
     }
     */
@@ -60,11 +60,11 @@ int main(int argc, char** argv) {
     {PartitionedPTHashContender<true, pthash::compact_compact>(N, 0.99, 4.0).run();}
     {PartitionedPTHashContender<true, pthash::elias_fano>(N, 0.99, 5.0).run();}
 
-    {DensePartitionedPTHashContender<pthash::dense_interleaved<pthash::compact>, pthash::table_bucketer<pthash::opt_bucketer>>(N, 1.0, 3.9).run();}
-    {DensePartitionedPTHashContender<pthash::dense_interleaved<pthash::rice>, pthash::table_bucketer<pthash::opt_bucketer>>(N, 1.0, 4.5).run();}
-    {DensePartitionedPTHashContender<pthash::dense_interleaved<pthash::rice>, pthash::table_bucketer<pthash::opt_bucketer>>(N, 1.0, 6.5).run();}
-    {DensePartitionedPTHashContender<pthash::dense_interleaved<pthash::rice>, pthash::table_bucketer<pthash::opt_bucketer>>(N, 1.0, 7.0).run();}
-    {DensePartitionedPTHashContender<pthash::dense_interleaved<pthash::rice>, pthash::table_bucketer<pthash::opt_bucketer>>(N, 1.0, 9.0).run();}
+    {PhobicContender<pthash::dense_interleaved<pthash::compact>, pthash::table_bucketer<pthash::opt_bucketer>>(N, 1.0, 3.9).run();}
+    {PhobicContender<pthash::dense_interleaved<pthash::rice>, pthash::table_bucketer<pthash::opt_bucketer>>(N, 1.0, 4.5).run();}
+    {PhobicContender<pthash::dense_interleaved<pthash::rice>, pthash::table_bucketer<pthash::opt_bucketer>>(N, 1.0, 6.5).run();}
+    {PhobicContender<pthash::dense_interleaved<pthash::rice>, pthash::table_bucketer<pthash::opt_bucketer>>(N, 1.0, 7.0).run();}
+    {PhobicContender<pthash::dense_interleaved<pthash::rice>, pthash::table_bucketer<pthash::opt_bucketer>>(N, 1.0, 9.0).run();}
 
     #ifdef HAS_VULKAN
         {GpuPhobicContender(N, 9, 2500, 1.0).run();} // Multi-R

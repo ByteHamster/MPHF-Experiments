@@ -9,12 +9,12 @@
 #include "retrievalbased/SicHashContender.h"
 #include "shockhash/BipartiteShockHashFlatContender.h"
 #include "bucketplacement/ChdContender.h"
+#include "bucketplacement/RustPhastContender.h"
 #include "bucketplacement/RustPtrHashContender.h"
 #include "consensus/ConsensusContender.h"
 
 /**
-* Comparison table used in "PtrHash: Minimal Perfect Hashing at RAM Throughput".
-* https://arxiv.org/abs/2502.15539
+* Comparison table used in "PHast".
 */
 int main(int argc, char** argv) {
     size_t N = 5e6;
@@ -33,6 +33,16 @@ int main(int argc, char** argv) {
 
     {FiPSContender<>(N, 1.5).run();}
     {FiPSContender<>(N, 2.0).run();}
+
+    {RustPhastContender(N, 6, 320).run();}
+    {RustPhastContender(N, 7, 370).run();}
+    {RustPhastContender(N, 8, 410).run();}
+    {RustPhastContender(N, 8, 430).run();}
+    {RustPhastContender(N, 8, 450).run();}
+    {RustPhastContender(N, 9, 510).run();}
+    {RustPhastContender(N, 9, 530).run();}
+    {RustPhastContender(N, 10, 620).run();}
+    {RustPhastContender(N, 10, 650).run();}
 
     {RustPtrHashContender(N, RustPtrHashContender::VARIANT_LINEAR_VEC, 3.0).run();}
     {RustPtrHashContender(N, RustPtrHashContender::VARIANT_CUBIC_EF, 4.0).run();}

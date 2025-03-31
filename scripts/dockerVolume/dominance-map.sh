@@ -29,6 +29,7 @@ echo "" > /opt/dockerVolume/dominance-map.txt
 ./Comparison $params --bbhash | $tee
 ./Comparison $params --rustFmph | $tee
 ./Comparison $params --rustFmphGo | $tee
+./Comparison $params --rustPHast | $tee
 ./Comparison $params --shockhash | $tee
 ./Comparison $params --bipartiteShockHash | $tee
 ./Comparison $params --consensus | $tee

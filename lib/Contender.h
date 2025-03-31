@@ -16,6 +16,7 @@ class Contender {
         static size_t numQueries;
         static size_t numThreads;
         static size_t numQueryThreads;
+        static size_t seed;
         static bool skipTests;
 
         const size_t N;
@@ -39,13 +40,21 @@ class Contender {
             (void) keys;
         }
 
+        virtual void beforeQueries(const std::span<std::string> &keys) {
+            (void) keys;
+        }
+
         virtual void performQueries(const std::span<std::string> keys) = 0;
         virtual void performTest(const std::span<std::string> keys) = 0;
 
         void run(bool shouldPrintResult = true) {
+            if (seed == 0) {
+                auto time = std::chrono::system_clock::now();
+                seed = std::chrono::duration_cast<std::chrono::milliseconds>(time.time_since_epoch()).count();
+            }
             std::cout << std::endl;
             std::cout << "Contender: " << name().substr(0, name().find(' ')) << std::endl;
-            std::vector<std::string> keys = generateInputData(N);
+            std::vector<std::string> keys = generateInputData(N, seed);
             beforeConstruction(keys);
 
             std::cout << "Cooldown" << std::endl;
@@ -72,10 +81,11 @@ class Contender {
                 std::cout<<"Preparing query plan"<<std::endl;
                 std::vector<std::string> queryPlan;
                 queryPlan.reserve(numQueries * numQueryThreads);
-                bytehamster::util::XorShift64 prng(time(nullptr));
+                bytehamster::util::XorShift64 prng(0xbf58476d1ce4e5b9 ^ seed);
                 for (size_t i = 0; i < numQueries * numQueryThreads; i++) {
                     queryPlan.push_back(keys[prng(N)]);
                 }
+                beforeQueries(queryPlan);
                 std::cout << "Cooldown" << std::endl;
                 usleep(1000*1000);
                 std::cout<<"Querying"<<std::endl;
@@ -149,7 +159,7 @@ class Contender {
                     throw std::logic_error("Range wrong");
                 }
                 if (taken[retrieved]) {
-                    std::cout<<"Error: Collision: Key #"<<i<<"/"<<N<<" resulted in "<<retrieved<<": "<<keys[i]<<std::endl;
+                    std::cout<<"Error: Collision: Key #"<<i<<"/"<<N<<" resulted in "<<retrieved<<std::endl;
                     std::cout<<"Aborting query"<<std::endl;
                     throw std::logic_error("Collision");
                 }
@@ -161,4 +171,5 @@ class Contender {
 size_t Contender::numQueries = 5e7;
 size_t Contender::numThreads = 1;
 size_t Contender::numQueryThreads = 1;
+size_t Contender::seed = 0;
 bool Contender::skipTests = false;

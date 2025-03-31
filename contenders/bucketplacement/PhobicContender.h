@@ -8,7 +8,7 @@
 #include "Contender.h"
 
 template <typename encoder, typename bucketer = pthash::skew_bucketer>
-class DensePartitionedPTHashContender : public Contender {
+class PhobicContender : public Contender {
     public:
         double lambda;
         double internalLoadFactor;
@@ -16,7 +16,7 @@ class DensePartitionedPTHashContender : public Contender {
         pthash::dense_partitioned_phf<pthash::xxhash128, bucketer, encoder, false, pthash::add_displacement> pthashFunction;
         pthash::build_timings buildTimings;
 
-        DensePartitionedPTHashContender(size_t N, double loadFactor, double lambda)
+        PhobicContender(size_t N, double loadFactor, double lambda)
                 : Contender(N, 1.0), lambda(lambda), internalLoadFactor(loadFactor) {
         }
 
@@ -63,4 +63,4 @@ class DensePartitionedPTHashContender : public Contender {
         }
 };
 
-void densePartitionedPtHashContenderRunner(size_t N);
+void PhobicContenderRunner(size_t N);

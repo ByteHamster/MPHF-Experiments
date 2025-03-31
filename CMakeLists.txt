@@ -72,11 +72,14 @@ if(NOT TARGET Sux)
 endif()
 target_link_libraries(PerfectHashingCompetitors INTERFACE Sux)
 
+file(GLOB_RECURSE RustSourceFiles "${CMAKE_SOURCE_DIR}/rust/src/**.rs")
 add_custom_command(
     OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/target/release/libmphf_experiments.a
-    COMMAND bash -c "RUSTFLAGS='-C target-cpu=native -C linker=${CMAKE_C_COMPILER}' CARGO_TARGET_DIR='${CMAKE_CURRENT_BINARY_DIR}/target' cargo build --release"
+    COMMAND bash -c "RUSTFLAGS='-C target-cpu=native -C linker=${CMAKE_C_COMPILER}' \
+                     CARGO_TARGET_DIR='${CMAKE_CURRENT_BINARY_DIR}/target' \
+                     cargo build --release"
     WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/rust
-    DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/rust/src/lib.rs)
+    DEPENDS ${RustSourceFiles})
 add_custom_target(RustCompilation DEPENDS "${CMAKE_CURRENT_BINARY_DIR}/target/release/libmphf_experiments.a")
 add_library(RustCompetitors STATIC IMPORTED)
 set_property(TARGET RustCompetitors PROPERTY IMPORTED_LOCATION "${CMAKE_CURRENT_BINARY_DIR}/target/release/libmphf_experiments.a")
@@ -163,3 +166,7 @@ target_compile_features(TableSurvey PRIVATE cxx_std_20)
 add_executable(TableMorphisHash src/tableMorphisHash.cpp)
 target_link_libraries(TableMorphisHash PRIVATE PerfectHashingCompetitors Sux)
 target_compile_features(TableMorphisHash PRIVATE cxx_std_20)
+
+add_executable(TablePHast src/tablePHast.cpp)
+target_link_libraries(TablePHast PRIVATE PerfectHashingCompetitors Sux)
+target_compile_features(TablePHast PRIVATE cxx_std_20)
