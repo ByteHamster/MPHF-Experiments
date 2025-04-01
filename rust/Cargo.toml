@@ -11,6 +11,8 @@ crate-type = ["staticlib"]
 libc = "0.2"
 ph = { version = "0.9", features = ["gxhash"] }
 seedable_hash = { version = "0.1.6", features = ["gxhash"] }
-mem_dbg = "0.2.4"
-ptr_hash = { path = "../extlib/ptrhash" }
+mem_dbg = "0.3"
+#ptr_hash = { path = "../extlib/ptrhash" }
+ptr_hash = "1.1"
+cacheline-ef = "1.1"
 rayon = "1.7.0"
