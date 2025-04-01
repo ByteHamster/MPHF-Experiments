@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.25)
+cmake_minimum_required(VERSION 3.25...4.0)
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 project(MPHF-Experiments)
 
@@ -46,7 +46,6 @@ target_link_libraries(PerfectHashingCompetitors INTERFACE MphfWbpm)
 
 add_subdirectory(extlib/ShockHash)
 target_link_libraries(PerfectHashingCompetitors INTERFACE ShockHash)
-target_compile_options(sdsl PRIVATE -fPIC)
 if(TARGET ShockHashSIMD)
     target_link_libraries(PerfectHashingCompetitors INTERFACE ShockHashSIMD)
 endif()
