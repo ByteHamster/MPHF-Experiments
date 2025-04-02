@@ -141,13 +141,9 @@ if (CMAKE_CUDA_COMPILER)
     set_target_properties(ComparisonCuda PROPERTIES CUDA_ARCHITECTURES "50;61;72")
 endif()
 
-add_executable(ComparisonScaling src/comparisonScaling.cpp)
-target_link_libraries(ComparisonScaling PRIVATE PerfectHashingCompetitors Sux)
-target_compile_features(ComparisonScaling PRIVATE cxx_std_20)
-
-add_executable(ComparisonQueries src/comparisonQueries.cpp)
-target_link_libraries(ComparisonQueries PRIVATE PerfectHashingCompetitors Sux)
-target_compile_features(ComparisonQueries PRIVATE cxx_std_20)
+add_executable(ScalingThesisLehmann src/scalingThesisLehmann.cpp)
+target_link_libraries(ScalingThesisLehmann PRIVATE PerfectHashingCompetitors Sux)
+target_compile_features(ScalingThesisLehmann PRIVATE cxx_std_20)
 
 add_executable(TablePhobic src/tablePhobic.cpp)
 target_link_libraries(TablePhobic PRIVATE PerfectHashingCompetitors Sux)

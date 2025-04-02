@@ -16,6 +16,10 @@
 #include "shockhash/BipartiteShockHashFlatContender.h"
 #include "shockhash/ShockHashContender.h"
 
+/**
+ * Comparison table used in "Fast and Space-Efficient Perfect Hashing".
+ * https://doi.org/10.5445/IR/1000176432
+ */
 int main(int argc, char** argv) {
     size_t N = 5e6;
     size_t iterations = 1;
