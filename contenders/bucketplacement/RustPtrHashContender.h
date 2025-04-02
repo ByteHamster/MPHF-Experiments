@@ -25,7 +25,7 @@ class RustPtrHashContender : public RustContender {
         static constexpr int VARIANT_CUBIC_EF = 6;
 
         RustPtrHashContender(size_t N, uint64_t variant, double lambda)
-            : RustContender(N, RUST_INPUT_VEC_SLICE), variant(variant), lambda(lambda) {
+            : RustContender(N), variant(variant), lambda(lambda) {
             rustStruct = createPtrHashStruct();
         }
 

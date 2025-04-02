@@ -4,91 +4,84 @@ use std::slice;
 use std::os::raw::c_char;
 use std::hint::black_box;
 
-pub struct PhastWrapper {
-    hash_func8: phast::Function<ph::seeds::Bits8>,
-    hash_func: phast::Function<ph::seeds::BitsFast>,
-    bits_per_seed: u8
+pub enum PHastVariant {
+    Bits(phast::Function<ph::seeds::BitsFast>),
+    Bits8(phast::Function<ph::seeds::Bits8>),
+    Bits4(phast::Function<ph::seeds::TwoToPowerBitsStatic::<2>>),
+    None
 }
 
 #[no_mangle]
-pub extern "C" fn createPhastStruct() -> *mut PhastWrapper {
-    let struct_instance = PhastWrapper {
-        hash_func8: phast::Function::from_slice_mt(&[] as &[&[u8]]),
-        hash_func: phast::Function::with_slice_bps_bs_threads_hash(
-            &[] as &[&[u8]],
-            ph::seeds::BitsFast(4),
-            300,
-            1,
-            seedable_hash::BuildDefaultSeededHasher::default()
-        ),
-        bits_per_seed: 0
-    };
-    let boxx = Box::new(struct_instance);
-    Box::into_raw(boxx)
+pub extern "C" fn createPhastStruct() -> *mut PHastVariant {
+    Box::into_raw(Box::new(PHastVariant::None))
 }
 
 #[no_mangle]
-pub extern "C" fn constructPhast(struct_ptr: *mut PhastWrapper, keys_ptr: *mut Vec<&'static [u8]>,
+pub extern "C" fn constructPhast(struct_ptr: *mut PHastVariant, keys_ptr: *const Box<[Box<[u8]>]>,
                                  bits_per_seed: u8, bucket_size100: u16, threads_num: usize) {
-    let struct_instance = unsafe { &mut *struct_ptr };
-    let keys = unsafe { &mut *keys_ptr };
-    if bits_per_seed == 8 {
-        struct_instance.hash_func8 = phast::Function::with_slice_bps_bs_threads_hash(
+    let f = unsafe { &mut *struct_ptr };
+    let keys = unsafe { &*keys_ptr };
+    *f = match bits_per_seed {
+        8 => PHastVariant::Bits8(phast::Function::with_slice_bps_bs_threads_hash(
             &keys[..],
             ph::seeds::Bits8,
             bucket_size100,
             threads_num,
             seedable_hash::BuildDefaultSeededHasher::default()
-        );
-    } else {
-        struct_instance.hash_func = phast::Function::with_slice_bps_bs_threads_hash(
+        )),
+        4 => PHastVariant::Bits4(phast::Function::with_slice_bps_bs_threads_hash(
+            &keys[..],
+            ph::seeds::TwoToPowerBitsStatic::<2>,
+            bucket_size100,
+            threads_num,
+            seedable_hash::BuildDefaultSeededHasher::default()
+        )),
+        _ => PHastVariant::Bits(phast::Function::with_slice_bps_bs_threads_hash(
             &keys[..],
             ph::seeds::BitsFast(bits_per_seed),
             bucket_size100,
             threads_num,
             seedable_hash::BuildDefaultSeededHasher::default()
-        );
-    }
-    struct_instance.bits_per_seed = bits_per_seed;
-}
-
-#[no_mangle]
-pub extern "C" fn queryPhast(struct_ptr: *mut PhastWrapper, key_c_s: *const c_char, length: usize) -> u64 {
-    let struct_instance = unsafe { &mut *struct_ptr };
-    let key = unsafe { slice::from_raw_parts(key_c_s as *const u8, length + 1) };
-    if struct_instance.bits_per_seed == 8 {
-        struct_instance.hash_func8.get(key) as u64
-    } else {
-        struct_instance.hash_func.get(key) as u64
+        )),
     }
 }
 
 #[no_mangle]
-pub extern "C" fn queryPhastAll(struct_ptr: *mut PhastWrapper, keys_ptr: *mut Vec<&'static [u8]>) {
-    let struct_instance = unsafe { &mut *struct_ptr };
-    let keys = unsafe { &mut *keys_ptr };
-    if struct_instance.bits_per_seed == 8 {
-        for key in keys {
-            black_box(struct_instance.hash_func8.get(*key));
-        }
-    } else {
-        for key in keys {
-            black_box(struct_instance.hash_func.get(*key));
-        }
+pub extern "C" fn queryPhast(struct_ptr: *const PHastVariant, key_c_s: *const c_char, length: usize) -> u64 {
+    let key = unsafe { slice::from_raw_parts(key_c_s as *const u8, length) };
+    match unsafe { &*struct_ptr } {
+        PHastVariant::Bits(function) => function.get(key) as u64,
+        PHastVariant::Bits8(function) => function.get(key) as u64,
+        PHastVariant::Bits4(function) => function.get(key) as u64,
+        PHastVariant::None => panic!("PHast not constructed yet"),
     }
 }
 
 #[no_mangle]
-pub extern "C" fn sizePhast(struct_ptr: *mut PhastWrapper) -> usize {
-    let struct_instance = unsafe { &mut *struct_ptr };
-    if struct_instance.bits_per_seed == 8 {
-        struct_instance.hash_func8.size_bytes()
-    } else {
-        struct_instance.hash_func.size_bytes()
+pub extern "C" fn queryPhastAll(struct_ptr: *const PHastVariant, keys_ptr: *const Box<[Box<[u8]>]>) {
+    let keys = unsafe { &*keys_ptr };
+    match unsafe { &*struct_ptr } {
+        PHastVariant::Bits(function) =>
+            for key in keys { black_box(function.get(key.as_ref())); },
+        PHastVariant::Bits8(function) => 
+            for key in keys { black_box(function.get(key.as_ref())); },
+        PHastVariant::Bits4(function) => 
+            for key in keys { black_box(function.get(key.as_ref())); },
+        PHastVariant::None => panic!("PHast not constructed yet"),
     }
 }
 
 #[no_mangle]
-pub extern "C" fn destroyPhastStruct(struct_instance: *mut PhastWrapper) {
+pub extern "C" fn sizePhast(struct_ptr: *const PHastVariant) -> usize {
+    match unsafe { &*struct_ptr } {
+        PHastVariant::Bits(function) => function.size_bytes(),
+        PHastVariant::Bits8(function) => function.size_bytes(),
+        PHastVariant::Bits4(function) => function.size_bytes(),
+        PHastVariant::None => panic!("PHast not constructed yet"),
+    }
+}
+
+#[no_mangle]
+pub extern "C" fn destroyPhastStruct(struct_instance: *mut PHastVariant) {
     unsafe { let _ = Box::from_raw(struct_instance); }
 }
