@@ -18,7 +18,7 @@ class RustPhastContender : public RustContender {
         uint16_t bucket_size100;
     public:
         RustPhastContender(size_t N, uint8_t bits_per_seed, uint16_t bucket_size100)
-            : RustContender(N, RUST_INPUT_VEC_SLICE), bits_per_seed(bits_per_seed), bucket_size100(bucket_size100) {
+            : RustContender(N), bits_per_seed(bits_per_seed), bucket_size100(bucket_size100) {
             rustStruct = createPhastStruct();
         }
 

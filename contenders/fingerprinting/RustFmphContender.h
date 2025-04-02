@@ -18,7 +18,7 @@ class RustFmphContender : public RustContender {
     public:
 
         RustFmphContender(size_t N, double gamma)
-            : RustContender(N, RUST_INPUT_VEC_STRING), gamma(gamma) {
+            : RustContender(N), gamma(gamma) {
             rustStruct = createFmphStruct();
         }
 
