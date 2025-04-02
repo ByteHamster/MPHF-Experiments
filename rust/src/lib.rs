@@ -12,6 +12,7 @@ static mut THREAD_POOL_INITIALIZED: bool = false;
 #[no_mangle]
 pub extern "C" fn initializeRayonThreadPool(threads: usize) {
     if unsafe {THREAD_POOL_INITIALIZED} {
+        assert!(rayon::current_num_threads() == threads);
         return;
     }
     rayon::ThreadPoolBuilder::new().num_threads(threads).build_global().unwrap();
