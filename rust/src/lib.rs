@@ -7,9 +7,15 @@ use std::os::raw::c_char;
 use libc::strlen;
 use std::slice;
 
+static mut THREAD_POOL_INITIALIZED: bool = false;
+
 #[no_mangle]
 pub extern "C" fn initializeRayonThreadPool(threads: usize) {
+    if unsafe {THREAD_POOL_INITIALIZED} {
+        return;
+    }
     rayon::ThreadPoolBuilder::new().num_threads(threads).build_global().unwrap();
+    unsafe { THREAD_POOL_INITIALIZED = true; }
 }
 
 #[no_mangle]

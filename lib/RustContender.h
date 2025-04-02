@@ -15,6 +15,7 @@ class RustContender : public Contender {
     public:
         RustContender(size_t N): Contender(N, 1.0) {
             keysAsCString = static_cast<const char **>(malloc(std::max(N, Contender::numQueries) * sizeof(char*)));
+            initializeRayonThreadPool(numThreads);
         }
 
         ~RustContender() override {
