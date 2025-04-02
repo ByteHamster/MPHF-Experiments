@@ -23,14 +23,7 @@ class RustContender : public Contender {
             freeKeysWrapper();
         }
 
-        void beforeConstruction(const std::vector<std::string> &keys) override {
-            std::cout << "Converting input for Rust" << std::endl;
-            for (size_t i = 0; i < keys.size(); i++) {
-                keysAsCString[i] = keys[i].c_str();
-            }
-            freeKeysWrapper();
-            keysRustWrapper = convertToVecSlice(keys.size(), keysAsCString);
-        }
+        void beforeConstruction(const std::vector<std::string> &keys) override; // In cpp file
 
         void construct(const std::vector<std::string> &keys) final {
             (void) keys;
@@ -39,14 +32,7 @@ class RustContender : public Contender {
 
         virtual void construct(void *keysRustWrapper) = 0;
 
-        void beforeQueries(const std::span<std::string> &keys) override {
-            std::cout << "Converting input for Rust" << std::endl;
-            for (size_t i = 0; i < keys.size(); i++) {
-                keysAsCString[i] = keys[i].c_str();
-            }
-            freeKeysWrapper();
-            keysRustWrapper = convertToVecSlice(keys.size(), keysAsCString);
-        }
+        void beforeQueries(const std::span<std::string> &keys) override; // In cpp file
 
         void performQueries(const std::span<std::string> keys) final {
             (void) keys;
