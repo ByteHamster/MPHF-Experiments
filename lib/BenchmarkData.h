@@ -27,6 +27,6 @@ std::vector<std::string> generateInputData(size_t N, uint64_t seed) {
         string[length] = 0;
         inputData.emplace_back(string, length);
     }
-    std::cout<<"\rInput generation complete (seed "<<seed<<")"<<std::endl;
+    std::cout<<"\rInput generation complete."<<std::endl;
     return inputData;
 }

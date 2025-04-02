@@ -48,13 +48,19 @@ class Contender {
         virtual void performTest(const std::span<std::string> keys) = 0;
 
         void run(bool shouldPrintResult = true) {
+            std::cout << std::endl;
+            std::cout << "Contender: " << name().substr(0, name().find(' ')) << std::endl;
+
             if (seed == 0) {
                 auto time = std::chrono::system_clock::now();
                 seed = std::chrono::duration_cast<std::chrono::milliseconds>(time.time_since_epoch()).count();
             }
-            std::cout << std::endl;
-            std::cout << "Contender: " << name().substr(0, name().find(' ')) << std::endl;
-            std::vector<std::string> keys = generateInputData(N, seed);
+            bytehamster::util::XorShift64 prng(seed);
+            for (size_t i = 0; i < 10; i++) {
+                prng(); // Ensure that first few generated seeds don't have too many zeroes when users pick small seeds
+            }
+            std::cout << "Seed: " << seed << std::endl;
+            std::vector<std::string> keys = generateInputData(N, prng());
             beforeConstruction(keys);
 
             std::cout << "Cooldown" << std::endl;
@@ -81,7 +87,6 @@ class Contender {
                 std::cout<<"Preparing query plan"<<std::endl;
                 std::vector<std::string> queryPlan;
                 queryPlan.reserve(numQueries * numQueryThreads);
-                bytehamster::util::XorShift64 prng(seed);
                 for (size_t i = 0; i < numQueries * numQueryThreads; i++) {
                     queryPlan.push_back(keys[prng(N)]);
                 }
