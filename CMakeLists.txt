@@ -145,6 +145,10 @@ add_executable(ScalingThesisLehmann src/scalingThesisLehmann.cpp)
 target_link_libraries(ScalingThesisLehmann PRIVATE PerfectHashingCompetitors Sux)
 target_compile_features(ScalingThesisLehmann PRIVATE cxx_std_20)
 
+add_executable(ScalingSurvey src/scalingSurvey.cpp)
+target_link_libraries(ScalingSurvey PRIVATE PerfectHashingCompetitors Sux)
+target_compile_features(ScalingSurvey PRIVATE cxx_std_20)
+
 add_executable(TablePhobic src/tablePhobic.cpp)
 target_link_libraries(TablePhobic PRIVATE PerfectHashingCompetitors Sux)
 target_compile_features(TablePhobic PRIVATE cxx_std_20)
