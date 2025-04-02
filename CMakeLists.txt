@@ -125,7 +125,9 @@ foreach(filename IN LISTS contendersCpp)
     target_link_libraries(PerfectHashingCompetitorParetoRunners INTERFACE ${name})
 endforeach()
 target_link_libraries(PerfectHashingCompetitors INTERFACE Contender)
-target_link_libraries(PerfectHashingCompetitorsCuda INTERFACE Contender)
+if (CMAKE_CUDA_COMPILER)
+    target_link_libraries(PerfectHashingCompetitorsCuda INTERFACE Contender)
+endif()
 
 ################### Benchmark build targets ###################
 add_executable(Comparison src/comparison.cpp)
