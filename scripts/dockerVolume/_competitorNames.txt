@@ -13,7 +13,7 @@ RESULT store_code=BBHash					store_name=BBHash				showIn=legend,heatmap	store_at
 RESULT store_code=SIMDRecSplit				store_name=SIMDRecSplit			showIn=legend			store_attr=mark=+,color=colorSimdRecSplit,solid
 RESULT store_code=RustFmphContender			store_name=FMPH					showIn=legend			store_attr=mark=asterisk,color=colorRustFmph,solid
 RESULT store_code=RustFmphGoContender		store_name=FMPHGO				showIn=legend			store_attr=mark=diamond,color=colorRustFmphGo,solid
-RESULT store_code=RustPHast                 store_name=PHast				showIn=legend			store_attr=mark=o,color=colorRustPHast,solid
+RESULT store_code=RustPHast			store_name=PHast				showIn=legend		store_attr=mark=triangle,color=colorRustPHast,solid
 RESULT store_code=ShockHashSIMD				store_name=ShockHash-RS			showIn=legend			store_attr=mark=star,color=colorShockHash,solid
 RESULT store_code=BipartiteShockHash		store_name=Bip. ShockH-RS		showIn=legend			store_attr=mark=triangle,color=colorBipartiteShockHash,solid
 RESULT store_code=BipartiteShockHashFlat	store_name=Bip. ShockH-Flat		showIn=legend			store_attr=mark=10-pointed star,color=colorBipartiteShockHashFlat,densely dotted
