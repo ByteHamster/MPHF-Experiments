@@ -5,10 +5,10 @@
 spack:
   # add package specs to the `specs` list
   specs:
-  - gcc@14.2.0
-  - cmake@3.30.2
+  - gcc@14.2
+  - cmake@3.30
   - intel-oneapi-tbb
-  - rust@1.85.0
+  - rust@1.85
   view: true
   concretizer:
     unify: true
