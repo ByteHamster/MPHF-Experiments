@@ -3,6 +3,9 @@ name: Build
 on:
   push:
   pull_request:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 0 * * 1"
 
 jobs:
   build:
@@ -19,7 +22,7 @@ jobs:
           sudo apt-get install --assume-yes --no-install-recommends libtbb-dev gcc-${{ matrix.version }} g++-${{ matrix.version }}
           sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-${{ matrix.version }} ${{ matrix.version }}
           sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-${{ matrix.version }} ${{ matrix.version }}
-          rustup update nightly && rustup default nightly
+          rustup update stable && rustup default stable
       - uses: actions/checkout@v4
         with:
           submodules: recursive
